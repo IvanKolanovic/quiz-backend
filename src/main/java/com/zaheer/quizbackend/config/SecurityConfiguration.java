@@ -38,7 +38,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         .csrf()
         .disable()
         .authorizeRequests()
-        .antMatchers("/quiz-backend/auth")
+        .antMatchers("/quiz/auth")
         .permitAll()
         .anyRequest()
         .authenticated()
