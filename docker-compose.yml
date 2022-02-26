@@ -1,19 +1,6 @@
 version: "3"
 services:
-  mariadb:
-    container_name: quiz_db
-    image: mariadb:10.6
-    volumes:
-      - quizdb:/var/lib/mysql
-    environment:
-      MYSQL_ALLOW_EMPTY_PASSWORD: "no"
-      MYSQL_ROOT_PASSWORD: "root"
-      MYSQL_DATABASE: "quiz_db"
-      MYSQL_USER: "iste442"
-      MYSQL_PASSWORD: "iste442"
+  quiz-backend:
+    build: .
     ports:
-      - 3306:3306
-
-volumes:
-  quizdb:
-
+      - "8080:8080"

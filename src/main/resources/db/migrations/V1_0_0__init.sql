@@ -20,4 +20,3 @@ VALUES ('admin@rit.com', '$2a$10$.xaYSfiMMA1mWtZcNe9HjODlWtaOBoq6azpoEy445YFX8al
 INSERT INTO user (email, password, roles, first_name, last_name)
 VALUES ('user@rit.com', '$2a$10$.xaYSfiMMA1mWtZcNe9HjODlWtaOBoq6azpoEy445YFX8alxHPJJC', 'ROLE_USER', 'Marko',
         'Milic Bucevic');
-
