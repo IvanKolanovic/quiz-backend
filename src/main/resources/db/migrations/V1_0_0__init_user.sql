@@ -18,5 +18,8 @@ INSERT INTO user (email, password, roles, first_name, last_name)
 VALUES ('admin@rit.com', '$2a$10$.xaYSfiMMA1mWtZcNe9HjODlWtaOBoq6azpoEy445YFX8alxHPJJC', 'ROLE_ADMIN', 'Ivan',
         'Kolanovic');
 INSERT INTO user (email, password, roles, first_name, last_name)
-VALUES ('user@rit.com', '$2a$10$.xaYSfiMMA1mWtZcNe9HjODlWtaOBoq6azpoEy445YFX8alxHPJJC', 'ROLE_USER', 'Marko',
+VALUES ('mili@rit.com', '$2a$10$.xaYSfiMMA1mWtZcNe9HjODlWtaOBoq6azpoEy445YFX8alxHPJJC', 'ROLE_USER', 'Marko',
         'Milic Bucevic');
+INSERT INTO user (email, password, roles, first_name, last_name)
+VALUES ('juric@rit.com', '$2a$10$.xaYSfiMMA1mWtZcNe9HjODlWtaOBoq6azpoEy445YFX8alxHPJJC', 'ROLE_USER', 'Marko',
+        'Juric');
