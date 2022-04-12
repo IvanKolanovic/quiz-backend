@@ -1,6 +1,6 @@
 package com.zaheer.quizbackend.models.security;
 
-import com.zaheer.quizbackend.models.User;
+import com.zaheer.quizbackend.models.db.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

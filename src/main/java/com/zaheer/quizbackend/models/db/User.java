@@ -1,4 +1,4 @@
-package com.zaheer.quizbackend.models;
+package com.zaheer.quizbackend.models.db;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
@@ -18,26 +18,25 @@ public class User {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Basic
   @Column(unique = true, nullable = false)
   private String email;
 
-  @Basic
   @Column(nullable = false)
   @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
   private String password;
 
-  @Basic
   @Column(name = "first_name", nullable = false)
   private String firstName;
 
-  @Basic
   @Column(name = "last_name", nullable = false)
   private String lastName;
 
-  @Basic
   @Column(nullable = false)
   private String roles;
+
+  @OneToOne(cascade = CascadeType.ALL)
+  @JoinColumn(name = "user_statistics_id")
+  private UserStatistics userStatistics;
 
   @Transient private String fullName;
 
