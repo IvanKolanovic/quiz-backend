@@ -1,6 +1,6 @@
 package com.zaheer.quizbackend.models.security;
 
-import com.zaheer.quizbackend.models.User;
+import com.zaheer.quizbackend.models.db.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

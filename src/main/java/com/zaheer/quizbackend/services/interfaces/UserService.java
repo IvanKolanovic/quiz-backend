@@ -1,6 +1,6 @@
 package com.zaheer.quizbackend.services.interfaces;
 
-import com.zaheer.quizbackend.models.User;
+import com.zaheer.quizbackend.models.db.User;
 
 import java.util.List;
 

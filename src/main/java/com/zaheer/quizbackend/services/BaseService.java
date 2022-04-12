@@ -1,7 +1,7 @@
 package com.zaheer.quizbackend.services;
 
 import com.zaheer.quizbackend.exceptions.ResourceNotFoundException;
-import com.zaheer.quizbackend.models.User;
+import com.zaheer.quizbackend.models.db.User;
 import com.zaheer.quizbackend.models.security.MyUserDetails;
 import lombok.Getter;
 import org.springframework.security.core.Authentication;

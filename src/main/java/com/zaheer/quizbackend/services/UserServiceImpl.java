@@ -2,9 +2,10 @@ package com.zaheer.quizbackend.services;
 
 import com.zaheer.quizbackend.exceptions.RequestFailedException;
 import com.zaheer.quizbackend.exceptions.ResourceNotFoundException;
-import com.zaheer.quizbackend.models.User;
+import com.zaheer.quizbackend.models.db.User;
 import com.zaheer.quizbackend.repos.UserRepository;
 import com.zaheer.quizbackend.services.interfaces.UserService;
+import com.zaheer.quizbackend.services.interfaces.UserStatisticsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ public class UserServiceImpl extends BaseService implements UserService {
 
   private final UserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
+  private final UserStatisticsService userStatisticsService;
 
   @Override
   @Transactional
@@ -33,6 +35,7 @@ public class UserServiceImpl extends BaseService implements UserService {
 
     user.setRoles("ROLE_USER");
     user.setPassword(passwordEncoder.encode(user.getPassword()));
+    user.setUserStatistics(userStatisticsService.createStatistic());
 
     return userRepository.saveAndFlush(user);
   }

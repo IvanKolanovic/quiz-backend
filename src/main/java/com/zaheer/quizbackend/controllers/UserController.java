@@ -1,6 +1,6 @@
 package com.zaheer.quizbackend.controllers;
 
-import com.zaheer.quizbackend.models.User;
+import com.zaheer.quizbackend.models.db.User;
 import com.zaheer.quizbackend.models.security.annotations.isAdmin;
 import com.zaheer.quizbackend.services.interfaces.UserService;
 import lombok.RequiredArgsConstructor;
@@ -33,13 +33,11 @@ public class UserController {
     return ResponseEntity.ok(userService.deleteUser(id));
   }
 
-  @isAdmin
   @GetMapping("/user/{id}")
   public ResponseEntity<Object> getUser(@PathVariable(value = "id") Long id) {
     return ResponseEntity.ok(userService.getUser(id));
   }
 
-  @isAdmin
   @GetMapping("/users")
   public ResponseEntity<Object> getAllUsers() {
     return ResponseEntity.ok(userService.getAllUsers());

@@ -1,6 +1,6 @@
-package com.zaheer.quizbackend.services;
+package com.zaheer.quizbackend.services.security;
 
-import com.zaheer.quizbackend.models.User;
+import com.zaheer.quizbackend.models.db.User;
 import com.zaheer.quizbackend.models.security.MyUserDetails;
 import com.zaheer.quizbackend.repos.UserRepository;
 import lombok.RequiredArgsConstructor;
