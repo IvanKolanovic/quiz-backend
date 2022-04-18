@@ -9,6 +9,8 @@ public interface UserStatisticsService {
 
   UserStatistics getStatistic(Long id);
 
+  UserStatistics getStatisticByUserId(Long userId);
+
   List<UserStatistics> getAllStatistics();
 
   UserStatistics updateStatistic(Long id, UserStatistics input);

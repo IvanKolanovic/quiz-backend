@@ -1,5 +1,6 @@
 package com.zaheer.quizbackend.models.db;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -28,4 +29,8 @@ public class UserStatistics {
   @ManyToOne(optional = false)
   @JoinColumn(name = "rank_id", referencedColumnName = "id", nullable = false)
   private Rank rank;
+
+  @JsonIgnore
+  @OneToOne(cascade = CascadeType.ALL, mappedBy = "userStatistics")
+  private User user;
 }

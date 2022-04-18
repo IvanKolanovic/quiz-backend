@@ -18,12 +18,17 @@ public class UserStatisticsController {
     return ResponseEntity.ok(userStatisticsService.getStatistic(id));
   }
 
+  @GetMapping("/stat/user/{id}")
+  public ResponseEntity<Object> getStatisticByUserId(@PathVariable(value = "id") Long id) {
+    return ResponseEntity.ok(userStatisticsService.getStatisticByUserId(id));
+  }
+
   @GetMapping("/stats")
   public ResponseEntity<Object> getAllStatistics() {
     return ResponseEntity.ok(userStatisticsService.getAllStatistics());
   }
 
-  @PutMapping("stat/{id}")
+  @PutMapping("/stat/user/{id}")
   public ResponseEntity<Object> updateStat(
       @PathVariable(value = "id") Long id, @RequestBody UserStatistics userStatistics) {
     return ResponseEntity.ok(userStatisticsService.updateStatistic(id, userStatistics));

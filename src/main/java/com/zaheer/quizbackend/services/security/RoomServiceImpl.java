@@ -32,7 +32,7 @@ public class RoomServiceImpl extends BaseService implements RoomService {
     room.setPassword(passwordEncoder.encode(room.getPassword()));
     room.setStart(false);
     room.setPlayers(1);
-    return null;
+    return roomRepository.saveAndFlush(room);
   }
 
   @Override
@@ -47,17 +47,27 @@ public class RoomServiceImpl extends BaseService implements RoomService {
     return roomRepository.findAll();
   }
 
-  // TODO: Mili rijesi kako hendlat kad user ude u room itd.
+    // TODO: Mili rijesi kako hendlat kad user ude u room itd.
   @Override
   public Room updateRoom(Long id, Room input) {
-    return null;
+    return roomRepository
+        .findById(id)
+        .map(
+            room -> {
+              room.setName(input.getName());
+              room.setPassword(passwordEncoder.encode(input.getPassword()));
+              room.setPlayers(input.getPlayers());
+              if (room.getPlayers() == 2) room.setStart(true);
+              return room;
+            })
+        .orElseThrow(resourceNotFound("Room with id: " + id + " was not found."));
   }
 
   @Override
   public void deleteRoom(Long id) {
     Room room = getRoom(id);
 
-    if (!room.getStart() && room.getPlayers() < 2) roomRepository.delete(room);
+    roomRepository.delete(room);
   }
 
   @Override

@@ -12,6 +12,7 @@ import javax.persistence.*;
 @Entity
 @Table
 @Builder
+@ToString
 public class User {
 
   @Id

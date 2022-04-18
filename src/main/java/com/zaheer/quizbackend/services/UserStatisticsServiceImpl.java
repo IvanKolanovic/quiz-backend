@@ -41,6 +41,13 @@ public class UserStatisticsServiceImpl extends BaseService implements UserStatis
   }
 
   @Override
+  public UserStatistics getStatisticByUserId(Long userId) {
+    return userStatisticsRepository
+        .findByUserId(userId)
+        .orElseThrow(resourceNotFound("Statistic with user id: " + userId + " was not found."));
+  }
+
+  @Override
   @Transactional
   public List<UserStatistics> getAllStatistics() {
     return userStatisticsRepository.findAllByOrderByIdAsc();
@@ -51,7 +58,7 @@ public class UserStatisticsServiceImpl extends BaseService implements UserStatis
   public UserStatistics updateStatistic(Long id, UserStatistics input) {
 
     return userStatisticsRepository
-        .findById(id)
+        .findByUserId(id)
         .map(
             statistic -> {
               statistic.setTotalPoints(input.getTotalPoints());
@@ -60,6 +67,6 @@ public class UserStatisticsServiceImpl extends BaseService implements UserStatis
 
               return statistic;
             })
-        .orElseThrow(resourceNotFound("Statistic with id: " + id + " was not found."));
+        .orElseThrow(resourceNotFound("Statistic with user id: " + id + " was not found."));
   }
 }
