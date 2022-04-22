@@ -1,11 +1,13 @@
 package com.zaheer.quizbackend.models.db;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -30,4 +32,8 @@ public class Country {
 
   @Column(name = "name_abbr", nullable = false)
   private String nameAbbr;
+
+  @JsonIgnore
+  @OneToMany(mappedBy = "choice")
+  private List<QuestionChoices> questionChoices = List.of();
 }

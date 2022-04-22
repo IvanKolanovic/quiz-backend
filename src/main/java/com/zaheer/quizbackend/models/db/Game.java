@@ -1,11 +1,13 @@
 package com.zaheer.quizbackend.models.db;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -19,12 +21,12 @@ public class Game {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @ManyToOne(optional = false)
-  @JoinColumn(name = "player_one", referencedColumnName = "id", nullable = false)
+  @ManyToOne
+  @JoinColumn(name = "player_one", referencedColumnName = "id")
   private User playerOne;
 
-  @ManyToOne(optional = false)
-  @JoinColumn(name = "player_two", referencedColumnName = "id", nullable = false)
+  @ManyToOne
+  @JoinColumn(name = "player_two", referencedColumnName = "id")
   private User playerTwo;
 
   @Column(name = "player_one_score", nullable = false)
@@ -36,4 +38,12 @@ public class Game {
   @ManyToOne(optional = false)
   @JoinColumn(name = "room_id", referencedColumnName = "id", nullable = false)
   private Room room;
+
+  @JsonIgnore
+  @OneToMany(mappedBy = "game")
+  private List<Question> questions = List.of();
+
+  @JsonIgnore
+  @OneToMany(mappedBy = "game")
+  private List<UserAnswer> userAnswers = List.of();
 }

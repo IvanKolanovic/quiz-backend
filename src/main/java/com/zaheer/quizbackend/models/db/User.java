@@ -1,9 +1,11 @@
 package com.zaheer.quizbackend.models.db;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @Setter
@@ -40,6 +42,10 @@ public class User {
   private UserStatistics userStatistics;
 
   @Transient private String fullName;
+
+  @JsonIgnore
+  @OneToMany(mappedBy = "user")
+  private List<UserAnswer> userAnswers = List.of();
 
   public String getFullName() {
     return this.firstName + " " + this.lastName;
