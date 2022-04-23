@@ -20,114 +20,123 @@ import static org.springframework.http.HttpStatus.CONFLICT;
 @RequiredArgsConstructor
 public class UserServiceImpl extends BaseService implements UserService {
 
-  private final UserRepository userRepository;
-  private final PasswordEncoder passwordEncoder;
-  private final UserStatisticsService userStatisticsService;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final UserStatisticsService userStatisticsService;
 
-  @Override
-  @Transactional
-  public User createUser(User user) {
+    @Override
+    @Transactional
+    public User createUser(User user) {
 
-    if (isEmailInUse(user.getEmail())) {
-      throw new RequestFailedException(
-          CONFLICT, "User email:" + user.getEmail() + " is already taken!");
+        if (isEmailInUse(user.getEmail())) {
+            throw new RequestFailedException(
+                    CONFLICT, "User email:" + user.getEmail() + " is already taken!");
+        }
+
+        if (isUsernameInUse(user.getUsername())) {
+            throw new RequestFailedException(
+                    CONFLICT, "Username:" + user.getUsername() + " is already taken!");
+        }
+
+        user.setLearningIndex(0);
+        user.setActive(true);
+        user.setRoles("ROLE_USER");
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setUserStatistics(userStatisticsService.createStatistic());
+
+        return userRepository.saveAndFlush(user);
     }
 
-    if (isUsernameInUse(user.getUsername())) {
-      throw new RequestFailedException(
-          CONFLICT, "Username:" + user.getUsername() + " is already taken!");
+    @Override
+    public User getUser(Long id) {
+        return userRepository
+                .findByIdAndActiveTrue(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User with id:" + id + " not found."));
     }
 
-    user.setLearningIndex(0);
-    user.setActive(true);
-    user.setRoles("ROLE_USER");
-    user.setPassword(passwordEncoder.encode(user.getPassword()));
-    user.setUserStatistics(userStatisticsService.createStatistic());
+    @Override
+    public List<User> getAllUsers() {
+        return userRepository.findAllByActiveTrue();
+    }
 
-    return userRepository.saveAndFlush(user);
-  }
+    @Override
+    @Transactional
+    public boolean deleteUser(Long userId) {
+        User user =
+                userRepository
+                        .findByIdAndActiveTrue(userId)
+                        .orElseThrow(
+                                () -> new ResourceNotFoundException("User with id:" + userId + " not found."));
 
-  @Override
-  public User getUser(Long id) {
-    return userRepository
-        .findByIdAndActiveTrue(id)
-        .orElseThrow(() -> new ResourceNotFoundException("User with id:" + id + " not found."));
-  }
+        userRepository.delete(user);
+        return true;
+    }
 
-  @Override
-  public List<User> getAllUsers() {
-    return userRepository.findAllByActiveTrue();
-  }
+    @Override
+    @Transactional
+    public User banUser(Long userId) {
+        User user =
+                userRepository
+                        .findByIdAndActiveTrue(userId)
+                        .orElseThrow(
+                                () -> new ResourceNotFoundException("User with id:" + userId + " not found."));
 
-  @Override
-  @Transactional
-  public boolean deleteUser(Long userId) {
-    User user =
-        userRepository
-            .findByIdAndActiveTrue(userId)
-            .orElseThrow(
-                () -> new ResourceNotFoundException("User with id:" + userId + " not found."));
+        user.setActive(false);
+        return userRepository.saveAndFlush(user);
+    }
 
-    userRepository.delete(user);
-    return true;
-  }
+    @Override
+    @Transactional
+    public User updateUser(Long id, User input) {
+        User updatedUser =
+                userRepository
+                        .findById(id)
+                        .map(
+                                user -> {
+                                    if (!user.getEmail().equals(input.getEmail())) {
+                                        if (isEmailInUse(input.getEmail())) {
+                                            throw new RequestFailedException(
+                                                    CONFLICT, "User email:" + input.getEmail() + " is already taken!");
+                                        }
+                                        user.setEmail(input.getEmail());
+                                    }
 
-  @Override
-  @Transactional
-  public User banUser(Long userId) {
-    User user =
-        userRepository
-            .findByIdAndActiveTrue(userId)
-            .orElseThrow(
-                () -> new ResourceNotFoundException("User with id:" + userId + " not found."));
+                                    if (!user.getUsername().equals(input.getUsername())) {
+                                        if (isUsernameInUse(input.getUsername())) {
+                                            throw new RequestFailedException(
+                                                    CONFLICT, "Username:" + input.getUsername() + " is already taken!");
+                                        }
+                                        user.setEmail(input.getUsername());
+                                    }
 
-    user.setActive(false);
-    return userRepository.saveAndFlush(user);
-  }
+                                    user.setLearningIndex(input.getLearningIndex());
+                                    user.setFirstName(input.getFirstName());
+                                    user.setLastName(input.getLastName());
+                                    return user;
+                                })
+                        .orElseThrow(resourceNotFound("User with id " + id + " does not exist."));
 
-  @Override
-  @Transactional
-  public User updateUser(Long id, User input) {
-    User updatedUser =
-        userRepository
-            .findById(id)
-            .map(
-                user -> {
-                  if (!user.getEmail().equals(input.getEmail())) {
-                    if (isEmailInUse(input.getEmail())) {
-                      throw new RequestFailedException(
-                          CONFLICT, "User email:" + input.getEmail() + " is already taken!");
-                    }
-                    user.setEmail(input.getEmail());
-                  }
+        return userRepository.saveAndFlush(updatedUser);
+    }
 
-                  if (!user.getUsername().equals(input.getUsername())) {
-                    if (isUsernameInUse(input.getUsername())) {
-                      throw new RequestFailedException(
-                          CONFLICT, "Username:" + input.getUsername() + " is already taken!");
-                    }
-                    user.setEmail(input.getUsername());
-                  }
+    @Override
+    @Transactional
+    public User updateUserLearningIndex(Long id, int learningIndex) {
+        User updatedUser = userRepository.findByIdAndActiveTrue(id).orElseThrow(resourceNotFound("User with id " + id + " does not exist."));
+        updatedUser.setLearningIndex(learningIndex);
 
-                  user.setLearningIndex(input.getLearningIndex());
-                  user.setFirstName(input.getFirstName());
-                  user.setLastName(input.getLastName());
-                  return user;
-                })
-            .orElseThrow(resourceNotFound("User with id " + id + " does not exist."));
+        return userRepository.saveAndFlush(updatedUser);
+    }
 
-    return userRepository.saveAndFlush(updatedUser);
-  }
+    @Override
+    public boolean isEmailInUse(String email) {
+        Optional<User> dbUser = userRepository.findByEmailAndActiveTrue(email);
+        return dbUser.isPresent();
+    }
 
-  @Override
-  public boolean isEmailInUse(String email) {
-    Optional<User> dbUser = userRepository.findByEmailAndActiveTrue(email);
-    return dbUser.isPresent();
-  }
-
-  @Override
-  public boolean isUsernameInUse(String name) {
-    Optional<User> dbUser = userRepository.findByUsernameAndActiveTrue(name);
-    return dbUser.isPresent();
-  }
+    @Override
+    public boolean isUsernameInUse(String name) {
+        Optional<User> dbUser = userRepository.findByUsernameAndActiveTrue(name);
+        return dbUser.isPresent();
+    }
 }

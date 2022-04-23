@@ -22,5 +22,7 @@ public interface UserService {
 
     User updateUser(Long id, User input);
 
+    User updateUserLearningIndex(Long id, int learningIndex);
+
     boolean isUsernameInUse(String name);
 }
