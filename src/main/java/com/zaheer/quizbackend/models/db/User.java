@@ -24,6 +24,9 @@ public class User {
   @Column(unique = true, nullable = false)
   private String email;
 
+  @Column(unique = true, nullable = false)
+  private String username;
+
   @Column(nullable = false)
   @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
   private String password;
@@ -43,6 +46,9 @@ public class User {
   @OneToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "user_statistics_id")
   private UserStatistics userStatistics;
+
+  @Column(nullable = false, name = "learning_index")
+  private int learningIndex;
 
   @Transient private String fullName;
 

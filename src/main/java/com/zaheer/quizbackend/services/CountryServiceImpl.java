@@ -42,6 +42,7 @@ public class CountryServiceImpl extends BaseService implements CountryService {
         .findById(id)
         .map(
             country -> {
+              country.setDescription(input.getDescription());
               country.setContinent(input.getContinent());
               country.setName(input.getName());
               country.setCapital(input.getCapital());

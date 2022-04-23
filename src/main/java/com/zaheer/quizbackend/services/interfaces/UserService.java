@@ -21,4 +21,6 @@ public interface UserService {
     User banUser(Long userId);
 
     User updateUser(Long id, User input);
+
+    boolean isUsernameInUse(String name);
 }

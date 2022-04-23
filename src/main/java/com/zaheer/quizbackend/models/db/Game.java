@@ -35,6 +35,9 @@ public class Game {
   @Column(name = "started")
   private Boolean started;
 
+  @Column(name = "active")
+  private Boolean active;
+
   @JsonIgnore
   @OneToMany(mappedBy = "game")
   private List<Question> questions = List.of();

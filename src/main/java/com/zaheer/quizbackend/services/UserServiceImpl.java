@@ -33,6 +33,12 @@ public class UserServiceImpl extends BaseService implements UserService {
           CONFLICT, "User email:" + user.getEmail() + " is already taken!");
     }
 
+    if (isUsernameInUse(user.getUsername())) {
+      throw new RequestFailedException(
+          CONFLICT, "Username:" + user.getUsername() + " is already taken!");
+    }
+
+    user.setLearningIndex(0);
     user.setActive(true);
     user.setRoles("ROLE_USER");
     user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -70,10 +76,10 @@ public class UserServiceImpl extends BaseService implements UserService {
   @Transactional
   public User banUser(Long userId) {
     User user =
-            userRepository
-                    .findByIdAndActiveTrue(userId)
-                    .orElseThrow(
-                            () -> new ResourceNotFoundException("User with id:" + userId + " not found."));
+        userRepository
+            .findByIdAndActiveTrue(userId)
+            .orElseThrow(
+                () -> new ResourceNotFoundException("User with id:" + userId + " not found."));
 
     user.setActive(false);
     return userRepository.saveAndFlush(user);
@@ -95,12 +101,17 @@ public class UserServiceImpl extends BaseService implements UserService {
                     user.setEmail(input.getEmail());
                   }
 
-                  if (Optional.ofNullable(input.getFirstName()).isPresent())
-                    user.setFirstName(input.getFirstName());
+                  if (!user.getUsername().equals(input.getUsername())) {
+                    if (isUsernameInUse(input.getUsername())) {
+                      throw new RequestFailedException(
+                          CONFLICT, "Username:" + input.getUsername() + " is already taken!");
+                    }
+                    user.setEmail(input.getUsername());
+                  }
 
-                  if (Optional.ofNullable(input.getLastName()).isPresent())
-                    user.setLastName(input.getLastName());
-
+                  user.setLearningIndex(input.getLearningIndex());
+                  user.setFirstName(input.getFirstName());
+                  user.setLastName(input.getLastName());
                   return user;
                 })
             .orElseThrow(resourceNotFound("User with id " + id + " does not exist."));
@@ -111,6 +122,12 @@ public class UserServiceImpl extends BaseService implements UserService {
   @Override
   public boolean isEmailInUse(String email) {
     Optional<User> dbUser = userRepository.findByEmailAndActiveTrue(email);
+    return dbUser.isPresent();
+  }
+
+  @Override
+  public boolean isUsernameInUse(String name) {
+    Optional<User> dbUser = userRepository.findByUsernameAndActiveTrue(name);
     return dbUser.isPresent();
   }
 }

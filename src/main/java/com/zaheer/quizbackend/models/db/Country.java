@@ -30,6 +30,9 @@ public class Country {
   @Column(nullable = false)
   private String capital;
 
+  @Column(nullable = false)
+  private String description;
+
   @Column(name = "name_abbr", nullable = false)
   private String nameAbbr;
 

@@ -24,7 +24,7 @@ public class GameController {
   }
 
   @PutMapping("/game/join/{id}")
-  public ResponseEntity<Object> create(
+  public ResponseEntity<Object> joinGame(
       @PathVariable(value = "id") Long id, @RequestBody Game game) {
     return ResponseEntity.ok(gameService.joinGame(id, game));
   }

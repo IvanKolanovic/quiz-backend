@@ -26,6 +26,7 @@ public class GameServiceImpl extends BaseService implements GameService {
       throw new RequestFailedException(
           HttpStatus.BAD_REQUEST, "Game name: " + game.getName() + " is taken.");
 
+    game.setActive(true);
     game.setStarted(false);
     game.setPlayers(1);
     return gameRepository.saveAndFlush(game);
@@ -34,13 +35,13 @@ public class GameServiceImpl extends BaseService implements GameService {
   @Override
   public Game get(Long id) {
     return gameRepository
-        .findById(id)
+        .findByIdAndActiveTrue(id)
         .orElseThrow(resourceNotFound("Game with id: " + id + " was not found."));
   }
 
   @Override
   public List<Game> getAll() {
-    return gameRepository.findAll();
+    return gameRepository.findAllByActiveTrue();
   }
 
   @Override
@@ -48,12 +49,19 @@ public class GameServiceImpl extends BaseService implements GameService {
   public Game joinGame(Long id, Game input) {
     Game g =
         gameRepository
-            .findById(id)
+            .findByIdAndActiveTrue(id)
             .map(
                 game -> {
+                  if (game.getPlayers() == 2)
+                    throw new RequestFailedException(HttpStatus.CONFLICT, "Game is full.");
                   if (input.getName().equals(game.getName())) {
-                    if (input.getPassword().equals(game.getPassword()))
-                      game.setPlayers(game.getPlayers() + 1);
+                    if (Optional.ofNullable(input.getPassword()).isPresent()) {
+                      if (input.getPassword().equals(game.getPassword()))
+                        game.setPlayers(game.getPlayers() + 1);
+                      else throw new RequestFailedException(HttpStatus.CONFLICT, "Wrong password.");
+                    } else game.setPlayers(game.getPlayers() + 1);
+                  } else {
+                    throw new RequestFailedException(HttpStatus.CONFLICT, "Wrong game name.");
                   }
                   return game;
                 })
@@ -63,8 +71,24 @@ public class GameServiceImpl extends BaseService implements GameService {
   }
 
   @Override
+  @Transactional
+  public void checkAndDeleteGame(Long id, Game input) {
+    Game g =
+        gameRepository
+            .findByIdAndActiveTrue(id)
+            .orElseThrow(resourceNotFound("Game with id: " + id + " was not found."));
+
+    if (input.getPlayers() < 2 && input.getStarted()) {
+      g.setActive(false);
+      gameRepository.saveAndFlush(g);
+    } else if (input.getPlayers() == 0 && !input.getStarted()) {
+      gameRepository.delete(g);
+    }
+  }
+
+  @Override
   public boolean isNameInUse(String name) {
-    Optional<Game> game = gameRepository.findByName(name);
+    Optional<Game> game = gameRepository.findByNameAndActiveTrue(name);
     return game.isPresent();
   }
 }

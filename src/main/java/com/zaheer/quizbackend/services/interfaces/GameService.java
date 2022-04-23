@@ -15,5 +15,8 @@ public interface GameService {
   @Transactional
   Game joinGame(Long id, Game input);
 
-  boolean isNameInUse(String name);
+    @Transactional
+    void checkAndDeleteGame(Long id, Game input);
+
+    boolean isNameInUse(String name);
 }
