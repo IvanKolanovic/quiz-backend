@@ -12,13 +12,12 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
   @Override
   public void configureMessageBroker(MessageBrokerRegistry config) {
-      //TODO: dodati destination prefixe kad se dogovorimo
-    config.enableSimpleBroker("/game");
-    config.setApplicationDestinationPrefixes("/ws");
+    config.enableSimpleBroker("/ws");
+    config.setApplicationDestinationPrefixes("/api");
   }
 
   @Override
   public void registerStompEndpoints(StompEndpointRegistry registry) {
-    registry.addEndpoint("/guiz").withSockJS();
+    registry.addEndpoint("/ws-quiz").withSockJS();
   }
 }

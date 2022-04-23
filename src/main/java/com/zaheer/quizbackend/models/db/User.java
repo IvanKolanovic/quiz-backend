@@ -14,7 +14,6 @@ import java.util.List;
 @Entity
 @Table
 @Builder
-@ToString
 public class User {
 
   @Id

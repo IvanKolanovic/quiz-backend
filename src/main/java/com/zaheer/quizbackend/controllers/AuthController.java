@@ -26,6 +26,7 @@ public class AuthController {
   private final AuthenticationManager authenticationManager;
   private final UserDetailsService userDetailsService;
   private final UserRepository userRepository;
+  private final UserService userService;
   private final JwtUtil jwtUtil;
 
   @RequestMapping(value = "/auth/login", method = RequestMethod.POST)
@@ -51,8 +52,6 @@ public class AuthController {
     return ResponseEntity.ok(
         new AuthenticationResponse(userDetails.getUser(), jwt, jwtUtil.extractExpiration(jwt)));
   }
-
-  private final UserService userService;
 
   @PostMapping("/auth/register")
   public ResponseEntity<Object> createUser(@RequestBody User user) {
