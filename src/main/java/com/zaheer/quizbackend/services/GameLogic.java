@@ -12,10 +12,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class GameLogic {
 
-    private final GameService gameService;
+  private final GameService gameService;
 
-    public void joinGame(WebsocketPayload<Game> payload){
-
-
-    }
+  public void joinGame(WebsocketPayload<Game> payload) {}
 }

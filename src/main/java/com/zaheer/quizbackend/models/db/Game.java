@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 @AllArgsConstructor
@@ -30,7 +31,7 @@ public class Game {
   private String password;
 
   @Column(nullable = false)
-  private int players;
+  private Integer players;
 
   @Column(name = "started")
   private Boolean started;
@@ -49,4 +50,10 @@ public class Game {
   @JsonIgnore
   @OneToMany(mappedBy = "game")
   private List<Participants> participants = List.of();
+
+  @Transient List<User> users;
+
+  public List<User> getUsers() {
+    return participants.stream().map(Participants::getUser).collect(Collectors.toList());
+  }
 }
