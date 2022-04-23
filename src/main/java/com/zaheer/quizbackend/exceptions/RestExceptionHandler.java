@@ -24,7 +24,7 @@ import static org.springframework.http.HttpStatus.*;
 
 @Slf4j
 @Order(Ordered.HIGHEST_PRECEDENCE)
-@ControllerAdvice(basePackages = "com.ikolanovic")
+@ControllerAdvice(basePackages = "com.zaheer")
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
   @Override
@@ -94,7 +94,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
   @ExceptionHandler(AccessDeniedException.class)
   protected ResponseEntity<Object> handleNoPermission(AccessDeniedException ex) {
-    ApiError apiError = new ApiError(FORBIDDEN, ex.getMessage(), ex);
+    ApiError apiError = new ApiError(UNAUTHORIZED, ex.getMessage(), ex);
     log.info(ex.getMessage(), ex);
     return buildResponseEntity(apiError);
   }
