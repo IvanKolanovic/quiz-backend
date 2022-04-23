@@ -1,6 +1,7 @@
 package com.zaheer.quizbackend.controllers;
 
 import com.zaheer.quizbackend.models.db.Room;
+import com.zaheer.quizbackend.models.security.annotations.isAdmin;
 import com.zaheer.quizbackend.services.interfaces.RoomService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +35,7 @@ public class RoomController {
     return ResponseEntity.ok(roomService.updateRoom(id, room));
   }
 
+  @isAdmin
   @DeleteMapping("/room/{id}")
   public ResponseEntity<Object> delete(@PathVariable(value = "id") Long id) {
     roomService.deleteRoom(id);

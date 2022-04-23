@@ -22,8 +22,8 @@ public class GameServiceImpl extends BaseService implements GameService {
 
     @Override
     public Game create(Game game) {
-        game.setPlayerOneScore(0);
-        game.setPlayerTwoScore(0);
+     //   game.setPlayerOneScore(0);
+      //  game.setPlayerTwoScore(0);
         //TODO: Kole napravi ovo skupa s websocketom
 
         return gameRepository.saveAndFlush(game);

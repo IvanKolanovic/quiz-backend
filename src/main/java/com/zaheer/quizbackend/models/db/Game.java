@@ -21,20 +21,6 @@ public class Game {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @ManyToOne
-  @JoinColumn(name = "player_one", referencedColumnName = "id")
-  private User playerOne;
-
-  @ManyToOne
-  @JoinColumn(name = "player_two", referencedColumnName = "id")
-  private User playerTwo;
-
-  @Column(name = "player_one_score", nullable = false)
-  private Integer playerOneScore;
-
-  @Column(name = "player_two_score", nullable = false)
-  private Integer playerTwoScore;
-
   @ManyToOne(optional = false)
   @JoinColumn(name = "room_id", referencedColumnName = "id", nullable = false)
   private Room room;
