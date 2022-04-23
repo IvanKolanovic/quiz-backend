@@ -22,5 +22,14 @@ public interface UserRepository extends JpaRepository<User, Long> {
   List<User> findAllByActiveTrue();
 
   @Query("select u from User u order by u.userStatistics.totalPoints ASC")
-  Page<User> findTop20(Pageable pageable);
+  Page<User> findTop20ByTotalPoints(Pageable pageable);
+
+  @Query("select u from User u order by u.userStatistics.gamesWon ASC")
+  Page<User> findTop20ByGamesWon(Pageable pageable);
+
+  @Query("select u from User u order by u.userStatistics.totalGames ASC")
+  Page<User> findTop20ByTotalGames(Pageable pageable);
+
+  @Query("select u from User u order by u.userStatistics.pointAverage ASC")
+  Page<User> findTop20ByPointAverage(Pageable pageable);
 }

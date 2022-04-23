@@ -31,7 +31,6 @@ public class UserController {
     return ResponseEntity.ok(userService.banUser(id));
   }
 
-  @isAdmin
   @PutMapping("/user/{id}/updateIndex")
   public ResponseEntity<Object> updateLearningIndex(
       @PathVariable(value = "id") Long id, @RequestParam int learningIndex) {
@@ -49,9 +48,27 @@ public class UserController {
     return ResponseEntity.ok(userService.getUser(id));
   }
 
-  @GetMapping("/user/stats")
-  public ResponseEntity<Object> getTop20() {
-    Page<User> page = userRepository.findTop20(PageRequest.of(0, 20));
+  @GetMapping("/user/top/points")
+  public ResponseEntity<Object> getTop20ByTotalPoints() {
+    Page<User> page = userRepository.findTop20ByTotalPoints(PageRequest.of(0, 20));
+    return ResponseEntity.ok(page.getContent());
+  }
+
+  @GetMapping("/user/top/won")
+  public ResponseEntity<Object> getTop20ByGamesWon() {
+    Page<User> page = userRepository.findTop20ByGamesWon(PageRequest.of(0, 20));
+    return ResponseEntity.ok(page.getContent());
+  }
+
+  @GetMapping("/user/top/games")
+  public ResponseEntity<Object> getTop20ByTotalGames() {
+    Page<User> page = userRepository.findTop20ByTotalGames(PageRequest.of(0, 20));
+    return ResponseEntity.ok(page.getContent());
+  }
+
+  @GetMapping("/user/top/average")
+  public ResponseEntity<Object> getTop20ByPointAverage() {
+    Page<User> page = userRepository.findTop20ByPointAverage(PageRequest.of(0, 20));
     return ResponseEntity.ok(page.getContent());
   }
 
