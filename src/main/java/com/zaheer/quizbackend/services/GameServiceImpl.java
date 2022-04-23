@@ -2,8 +2,10 @@ package com.zaheer.quizbackend.services;
 
 import com.zaheer.quizbackend.exceptions.RequestFailedException;
 import com.zaheer.quizbackend.models.db.Game;
+import com.zaheer.quizbackend.models.db.Participants;
 import com.zaheer.quizbackend.repos.GameRepository;
 import com.zaheer.quizbackend.services.interfaces.GameService;
+import com.zaheer.quizbackend.websockets.models.WebsocketPayload;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -19,6 +21,7 @@ import java.util.Optional;
 public class GameServiceImpl extends BaseService implements GameService {
 
   private final GameRepository gameRepository;
+  private final ParticipantsServiceImpl participantsUserService;
 
   @Override
   public Game create(Game game) {
@@ -46,10 +49,12 @@ public class GameServiceImpl extends BaseService implements GameService {
 
   @Override
   @Transactional
-  public Game joinGame(Long id, Game input) {
+  public Game joinGame(WebsocketPayload<Game> payload) {
+
+    Game input = payload.getData();
     Game g =
         gameRepository
-            .findByIdAndActiveTrue(id)
+            .findByIdAndActiveTrue(input.getId())
             .map(
                 game -> {
                   if (game.getPlayers() == 2)
@@ -65,7 +70,10 @@ public class GameServiceImpl extends BaseService implements GameService {
                   }
                   return game;
                 })
-            .orElseThrow(resourceNotFound("Game with id: " + id + " was not found."));
+            .orElseThrow(resourceNotFound("Game with id: " + input.getId() + " was not found."));
+
+    Participants p = Participants.builder().user(payload.getClient()).game(g).build();
+    participantsUserService.create(p);
 
     return gameRepository.saveAndFlush(g);
   }

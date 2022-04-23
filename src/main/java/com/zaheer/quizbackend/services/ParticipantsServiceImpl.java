@@ -13,7 +13,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class ParticipantsUserServiceImpl extends BaseService implements ParticipantsService {
+public class ParticipantsServiceImpl extends BaseService implements ParticipantsService {
 
   private final ParticipantsRepository participantsRepository;
 

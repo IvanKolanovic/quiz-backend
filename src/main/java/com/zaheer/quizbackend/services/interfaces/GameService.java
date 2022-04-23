@@ -1,6 +1,7 @@
 package com.zaheer.quizbackend.services.interfaces;
 
 import com.zaheer.quizbackend.models.db.Game;
+import com.zaheer.quizbackend.websockets.models.WebsocketPayload;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -13,10 +14,10 @@ public interface GameService {
   List<Game> getAll();
 
   @Transactional
-  Game joinGame(Long id, Game input);
+  Game joinGame(WebsocketPayload<Game> payload);
 
-    @Transactional
-    void checkAndDeleteGame(Long id, Game input);
+  @Transactional
+  void checkAndDeleteGame(Long id, Game input);
 
-    boolean isNameInUse(String name);
+  boolean isNameInUse(String name);
 }
