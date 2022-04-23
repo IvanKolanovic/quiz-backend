@@ -32,7 +32,7 @@ public class AuthController {
       @RequestBody AuthenticationRequest authenticationRequest) {
 
     userRepository
-        .findByEmail(authenticationRequest.getEmail())
+        .findByEmailAndActiveTrue(authenticationRequest.getEmail())
         .orElseThrow(() -> new RequestFailedException(HttpStatus.CONFLICT, "User does not exist."));
 
     authenticationManager.authenticate(
