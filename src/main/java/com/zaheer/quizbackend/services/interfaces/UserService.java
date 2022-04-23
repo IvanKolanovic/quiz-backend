@@ -1,6 +1,7 @@
 package com.zaheer.quizbackend.services.interfaces;
 
 import com.zaheer.quizbackend.models.db.User;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -16,5 +17,8 @@ public interface UserService {
 
   boolean isEmailInUse(String email);
 
-  User updateUser(Long id, User input);
+    @Transactional
+    User banUser(Long userId);
+
+    User updateUser(Long id, User input);
 }

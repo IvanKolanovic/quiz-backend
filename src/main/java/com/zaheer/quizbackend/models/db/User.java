@@ -37,6 +37,9 @@ public class User {
   @Column(nullable = false)
   private String roles;
 
+  @Column(name = "active")
+  private Boolean active;
+
   @OneToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "user_statistics_id")
   private UserStatistics userStatistics;

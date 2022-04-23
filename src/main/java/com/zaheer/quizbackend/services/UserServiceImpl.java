@@ -33,6 +33,7 @@ public class UserServiceImpl extends BaseService implements UserService {
           CONFLICT, "User email:" + user.getEmail() + " is already taken!");
     }
 
+    user.setActive(true);
     user.setRoles("ROLE_USER");
     user.setPassword(passwordEncoder.encode(user.getPassword()));
     user.setUserStatistics(userStatisticsService.createStatistic());
@@ -43,13 +44,13 @@ public class UserServiceImpl extends BaseService implements UserService {
   @Override
   public User getUser(Long id) {
     return userRepository
-        .findById(id)
+        .findByIdAndActiveTrue(id)
         .orElseThrow(() -> new ResourceNotFoundException("User with id:" + id + " not found."));
   }
 
   @Override
   public List<User> getAllUsers() {
-    return userRepository.findAll();
+    return userRepository.findAllByActiveTrue();
   }
 
   @Override
@@ -57,12 +58,25 @@ public class UserServiceImpl extends BaseService implements UserService {
   public boolean deleteUser(Long userId) {
     User user =
         userRepository
-            .findById(userId)
+            .findByIdAndActiveTrue(userId)
             .orElseThrow(
                 () -> new ResourceNotFoundException("User with id:" + userId + " not found."));
 
     userRepository.delete(user);
     return true;
+  }
+
+  @Override
+  @Transactional
+  public User banUser(Long userId) {
+    User user =
+            userRepository
+                    .findByIdAndActiveTrue(userId)
+                    .orElseThrow(
+                            () -> new ResourceNotFoundException("User with id:" + userId + " not found."));
+
+    user.setActive(false);
+    return userRepository.saveAndFlush(user);
   }
 
   @Override
@@ -96,7 +110,7 @@ public class UserServiceImpl extends BaseService implements UserService {
 
   @Override
   public boolean isEmailInUse(String email) {
-    Optional<User> dbUser = userRepository.findByEmail(email);
+    Optional<User> dbUser = userRepository.findByEmailAndActiveTrue(email);
     return dbUser.isPresent();
   }
 }

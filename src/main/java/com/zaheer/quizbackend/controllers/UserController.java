@@ -28,6 +28,12 @@ public class UserController {
   }
 
   @isAdmin
+  @PutMapping("/user/ban/{id}")
+  public ResponseEntity<Object> banUser(@PathVariable(value = "id") Long id) {
+    return ResponseEntity.ok(userService.banUser(id));
+  }
+
+  @isAdmin
   @DeleteMapping("/user/{id}")
   public ResponseEntity<Object> deleteUser(@PathVariable(value = "id") Long id) {
     return ResponseEntity.ok(userService.deleteUser(id));
