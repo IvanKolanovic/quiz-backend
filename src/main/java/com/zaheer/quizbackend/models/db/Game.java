@@ -1,6 +1,7 @@
 package com.zaheer.quizbackend.models.db;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,9 +22,18 @@ public class Game {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @ManyToOne(optional = false)
-  @JoinColumn(name = "room_id", referencedColumnName = "id", nullable = false)
-  private Room room;
+  @Column(unique = true, nullable = false)
+  private String name;
+
+  @Column
+  @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+  private String password;
+
+  @Column(nullable = false)
+  private int players;
+
+  @Column(name = "started")
+  private Boolean started;
 
   @JsonIgnore
   @OneToMany(mappedBy = "game")

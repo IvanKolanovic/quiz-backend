@@ -23,9 +23,14 @@ public class GameController {
     return ResponseEntity.ok(gameService.get(id));
   }
 
+  @PutMapping("/game/join/{id}")
+  public ResponseEntity<Object> create(
+      @PathVariable(value = "id") Long id, @RequestBody Game game) {
+    return ResponseEntity.ok(gameService.joinGame(id, game));
+  }
+
   @GetMapping("/games")
   public ResponseEntity<Object> getAll() {
     return ResponseEntity.ok(gameService.getAll());
   }
-
 }

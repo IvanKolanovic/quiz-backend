@@ -1,26 +1,15 @@
 package com.zaheer.quizbackend.services;
 
-import com.zaheer.quizbackend.exceptions.RequestFailedException;
-import com.zaheer.quizbackend.models.db.Room;
-import com.zaheer.quizbackend.repos.RoomRepository;
-import com.zaheer.quizbackend.services.interfaces.RoomService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class RoomServiceImpl extends BaseService implements RoomService {
+public class RoomServiceImpl {
 
-  private final RoomRepository roomRepository;
-  private final PasswordEncoder passwordEncoder;
+ /* private final RoomRepository roomRepository;
 
   @Override
   public Room createRoom(Room room) {
@@ -29,7 +18,6 @@ public class RoomServiceImpl extends BaseService implements RoomService {
       throw new RequestFailedException(
           HttpStatus.BAD_REQUEST, "Room name " + room.getName() + " is taken.");
 
-    room.setPassword(passwordEncoder.encode(room.getPassword()));
     room.setStart(false);
     room.setPlayers(1);
     return roomRepository.saveAndFlush(room);
@@ -55,15 +43,31 @@ public class RoomServiceImpl extends BaseService implements RoomService {
         .map(
             room -> {
               room.setName(input.getName());
-              room.setPassword(passwordEncoder.encode(input.getPassword()));
+              room.setPassword(input.getPassword());
               room.setPlayers(input.getPlayers());
-              if (room.getPlayers() == 2) room.setStart(true);
               return room;
             })
         .orElseThrow(resourceNotFound("Room with id: " + id + " was not found."));
   }
 
+  @Override
+  @Transactional
+  public Room joinRoom(Long id, Room input) {
+    Room r =
+        roomRepository
+            .findById(id)
+            .map(
+                room -> {
+                  if (input.getName().equals(room.getName())
+                      && input.getPassword().equals(room.getPassword())) {
+                    room.setPlayers(room.getPlayers() + 1);
+                  }
+                  return room;
+                })
+            .orElseThrow(resourceNotFound("Room with id: " + id + " was not found."));
 
+    return roomRepository.saveAndFlush(r);
+  }
 
   @Override
   public void deleteRoom(Long id) {
@@ -76,5 +80,5 @@ public class RoomServiceImpl extends BaseService implements RoomService {
   public boolean isNameInUse(String name) {
     Optional<Room> room = roomRepository.findByName(name);
     return room.isPresent();
-  }
+  }*/
 }
