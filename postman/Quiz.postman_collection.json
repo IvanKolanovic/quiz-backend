@@ -27,7 +27,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"admin@rit.com\",\n    \"password\": \"tessst\"\n}",
+							"raw": "{\n    \"email\": \"admin@rit.com\",\n    \"password\": \"test\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -60,7 +60,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"ik3130@rit.edu\",\r\n    \"password\": \"test\",\r\n    \"firstName\": \"Ivan\",\r\n    \"lastName\": \"Kolanovic\"\r\n}",
+							"raw": "{\r\n    \"email\": \"ik3130@rit.edu\",\r\n    \"password\": \"test\",\r\n    \"firstName\": \"Ivan\",\r\n    \"lastName\": \"Kolanovic\",\r\n    \"username\": \"klosar\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -238,38 +238,9 @@
 						}
 					},
 					"response": []
-				}
-			]
-		},
-		{
-			"name": "Rooms",
-			"item": [
-				{
-					"name": "DELETE",
-					"request": {
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "Authorization",
-								"type": "text",
-								"value": "Bearer {{token}}"
-							}
-						],
-						"url": {
-							"raw": "{{url}}/room/1",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"room",
-								"1"
-							]
-						}
-					},
-					"response": []
 				},
 				{
-					"name": "GET Room by ID",
+					"name": "GET Top 20",
 					"request": {
 						"method": "GET",
 						"header": [
@@ -280,109 +251,12 @@
 							}
 						],
 						"url": {
-							"raw": "{{url}}/room/1",
+							"raw": "{{url}}/users",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
-								"room",
-								"1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "PUT edit",
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "PUT",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{token}}",
-								"type": "text"
-							},
-							{
-								"key": "Organization",
-								"value": "1",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"name\": \"My Room\",\n    \"password\": \"test\",\n    \"players\": 1\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{url}}/room/1",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"room",
-								"1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "GET All Users",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{token}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{url}}/rooms",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"rooms"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "POST create",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{token}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"My Room\",\r\n    \"password\": \"test\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{url}}/room",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"room"
+								"users"
 							]
 						}
 					},
@@ -644,7 +518,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"Croatia\",\n    \"continent\": \"Europe\",\n    \"capital\": \"Zagreb\",\n    \"nameAbbr\": \"hr\"\n}",
+							"raw": "{\n    \"name\": \"Croatia\",\n    \"continent\": \"Europe\",\n    \"capital\": \"Zagreb\",\n    \"nameAbbr\": \"hr\",\n    \"description\": \"Nesto\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -704,6 +578,132 @@
 							],
 							"path": [
 								"country",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Game",
+			"item": [
+				{
+					"name": "Create new game",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Orion\",\n    \"password\": \"ispraviMe\"\n}       ",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/game",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"game"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Game by id",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/game/1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"game",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET All games",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/games",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"games"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Join game",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							},
+							{
+								"key": "Organization",
+								"value": "1",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Orion BiH\",\n    \"password\": \"ispraviMe\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/game/join/1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"game",
+								"join",
 								"1"
 							]
 						}

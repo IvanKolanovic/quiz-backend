@@ -13,5 +13,4 @@ public interface UserStatisticsRepository extends JpaRepository<UserStatistics, 
 
   Optional<UserStatistics> findByUserId(Long userId);
 
-  List<UserStatistics> findUserStatisticsByTotalGames();
 }

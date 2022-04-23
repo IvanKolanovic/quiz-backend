@@ -2,8 +2,11 @@ package com.zaheer.quizbackend.controllers;
 
 import com.zaheer.quizbackend.models.db.User;
 import com.zaheer.quizbackend.models.security.annotations.isAdmin;
+import com.zaheer.quizbackend.repos.UserRepository;
 import com.zaheer.quizbackend.services.interfaces.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
   private final UserService userService;
+  private final UserRepository userRepository;
 
   @isAdmin
   @PutMapping("/user/{id}")
@@ -29,7 +33,8 @@ public class UserController {
 
   @isAdmin
   @PutMapping("/user/{id}/updateIndex")
-  public ResponseEntity<Object> updateLearningIndex(@PathVariable(value = "id") Long id, @RequestParam int learningIndex) {
+  public ResponseEntity<Object> updateLearningIndex(
+      @PathVariable(value = "id") Long id, @RequestParam int learningIndex) {
     return ResponseEntity.ok(userService.updateUserLearningIndex(id, learningIndex));
   }
 
@@ -42,6 +47,12 @@ public class UserController {
   @GetMapping("/user/{id}")
   public ResponseEntity<Object> getUser(@PathVariable(value = "id") Long id) {
     return ResponseEntity.ok(userService.getUser(id));
+  }
+
+  @GetMapping("/user/stats")
+  public ResponseEntity<Object> getTop20() {
+    Page<User> page = userRepository.findTop20(PageRequest.of(0, 20));
+    return ResponseEntity.ok(page.getContent());
   }
 
   @GetMapping("/users")

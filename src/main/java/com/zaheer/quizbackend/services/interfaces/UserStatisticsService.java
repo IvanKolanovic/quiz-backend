@@ -13,7 +13,5 @@ public interface UserStatisticsService {
 
   List<UserStatistics> getAllStatistics();
 
-  List<UserStatistics> getStatisticsByTotalGames();
-
   UserStatistics updateStatistic(Long id, UserStatistics input);
 }

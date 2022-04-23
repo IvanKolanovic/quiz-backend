@@ -55,11 +55,6 @@ public class UserStatisticsServiceImpl extends BaseService implements UserStatis
     return userStatisticsRepository.findAllByOrderByIdAsc();
   }
 
-  @Override
-  @Transactional
-  public List<UserStatistics> getStatisticsByTotalGames() {
-      return userStatisticsRepository.findUserStatisticsByTotalGames();
-  }
 
   @Override
   @Transactional

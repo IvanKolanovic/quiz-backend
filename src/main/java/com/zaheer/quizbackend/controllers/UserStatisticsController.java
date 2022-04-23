@@ -28,11 +28,6 @@ public class UserStatisticsController {
     return ResponseEntity.ok(userStatisticsService.getAllStatistics());
   }
 
-  @GetMapping("/stats/total")
-  public ResponseEntity<Object> getAllStatisticsByTotalGames() {
-    return ResponseEntity.ok(userStatisticsService.getStatisticsByTotalGames());
-  }
-
   @PutMapping("/stat/user/{id}")
   public ResponseEntity<Object> updateStat(
       @PathVariable(value = "id") Long id, @RequestBody UserStatistics userStatistics) {
