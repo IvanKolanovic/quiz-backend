@@ -1,3 +1,15 @@
 package com.zaheer.quizbackend.services.interfaces;
 
-public interface ParticipantsService {}
+import com.zaheer.quizbackend.models.db.Participants;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
+public interface ParticipantsService {
+    @Transactional
+    Participants create(Participants participants);
+
+    List<Participants> getParticipants();
+
+    Participants getParticipantById(Long id);
+}

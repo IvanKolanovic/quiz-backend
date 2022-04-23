@@ -27,7 +27,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"admin@rit.com\",\n    \"password\": \"test\"\n}",
+							"raw": "{\n    \"email\": \"admin@rit.com\",\n    \"password\": \"tessst\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -35,12 +35,46 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}/auth",
+							"raw": "{{url}}/auth/login",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
-								"auth"
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST register",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"ik3130@rit.edu\",\r\n    \"password\": \"test\",\r\n    \"firstName\": \"Ivan\",\r\n    \"lastName\": \"Kolanovic\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/auth/register",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"auth",
+								"register"
 							]
 						}
 					},
@@ -158,38 +192,6 @@
 							],
 							"path": [
 								"users"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "POST create",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{token}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"ik3130@rit.edu\",\r\n    \"password\": \"test\",\r\n    \"firstName\": \"Ivan\",\r\n    \"lastName\": \"Kolanovic\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{url}}/user",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"user"
 							]
 						}
 					},

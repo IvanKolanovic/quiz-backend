@@ -15,12 +15,6 @@ public class UserController {
   private final UserService userService;
 
   @isAdmin
-  @PostMapping("/user")
-  public ResponseEntity<Object> createUser(@RequestBody User user) {
-    return ResponseEntity.ok(userService.createUser(user));
-  }
-
-  @isAdmin
   @PutMapping("/user/{id}")
   public ResponseEntity<Object> updateUser(
       @PathVariable(value = "id") Long id, @RequestBody User user) {

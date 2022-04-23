@@ -16,34 +16,24 @@ import java.util.List;
 @Slf4j
 public class GameServiceImpl extends BaseService implements GameService {
 
-    private final GameRepository gameRepository;
-    private final CountryRepository countryRepository;
-    private final QuestionRepository questionRepository;
+  private final GameRepository gameRepository;
+  private final CountryRepository countryRepository;
+  private final QuestionRepository questionRepository;
 
-    @Override
-    public Game create(Game game) {
-     //   game.setPlayerOneScore(0);
-      //  game.setPlayerTwoScore(0);
-        //TODO: Kole napravi ovo skupa s websocketom
+  @Override
+  public Game create(Game game) {
+    return gameRepository.saveAndFlush(game);
+  }
 
-        return gameRepository.saveAndFlush(game);
-    }
+  @Override
+  public Game get(Long id) {
+    return gameRepository
+        .findById(id)
+        .orElseThrow(resourceNotFound("Game with id: " + id + " was not found."));
+  }
 
-    @Override
-    public Game get(Long id) {
-        return gameRepository
-                .findById(id)
-                .orElseThrow(resourceNotFound("Game with id: " + id + " was not found."));
-    }
-
-    @Override
-    public List<Game> getAll() {
-        return gameRepository.findAll();
-    }
-
-    //TODO: KOLE ws
-    @Override
-    public Game updateScore(Long id, Game input) {
-        return null;
-    }
+  @Override
+  public List<Game> getAll() {
+    return gameRepository.findAll();
+  }
 }

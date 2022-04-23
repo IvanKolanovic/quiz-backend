@@ -10,6 +10,4 @@ public interface GameService {
   Game get(Long id);
 
   List<Game> getAll();
-
-  Game updateScore(Long id, Game input);
 }
