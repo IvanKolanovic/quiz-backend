@@ -21,7 +21,7 @@ public class UserStatistics {
   private Long id;
 
   @Column(name = "total_points",nullable = false)
-  private Integer totalPoints;
+  private Double totalPoints;
 
   @Column(nullable = false,name = "games_won")
   private Integer gamesWon;

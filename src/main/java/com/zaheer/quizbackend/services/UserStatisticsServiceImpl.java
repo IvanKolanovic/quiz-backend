@@ -24,8 +24,10 @@ public class UserStatisticsServiceImpl extends BaseService implements UserStatis
   public UserStatistics createStatistic() {
     return userStatisticsRepository.saveAndFlush(
         UserStatistics.builder()
-            .totalPoints(0)
+            .totalPoints(0.0)
             .gamesWon(0)
+            .pointAverage(0.0)
+            .totalGames(0)
             .rank(
                 rankRepository
                     .findById(1L)
@@ -63,6 +65,8 @@ public class UserStatisticsServiceImpl extends BaseService implements UserStatis
             statistic -> {
               statistic.setTotalPoints(input.getTotalPoints());
               statistic.setGamesWon(input.getGamesWon());
+              statistic.setTotalGames(input.getTotalGames());
+              statistic.setPointAverage(input.getTotalPoints()/input.getTotalGames());
               statistic.setRank(input.getRank());
 
               return statistic;
