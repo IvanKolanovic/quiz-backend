@@ -33,7 +33,7 @@ public class UserController {
 
   @PutMapping("/user/{id}/updateIndex")
   public ResponseEntity<Object> updateLearningIndex(
-      @PathVariable(value = "id") Long id, @RequestParam int learningIndex) {
+      @PathVariable(value = "id") Long id, @RequestParam(name = "learning_index") int learningIndex) {
     return ResponseEntity.ok(userService.updateUserLearningIndex(id, learningIndex));
   }
 
