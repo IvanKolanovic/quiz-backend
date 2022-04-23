@@ -57,6 +57,12 @@ public class UserStatisticsServiceImpl extends BaseService implements UserStatis
 
   @Override
   @Transactional
+  public List<UserStatistics> getStatisticsByTotalGames() {
+      return userStatisticsRepository.findUserStatisticsByTotalGames();
+  }
+
+  @Override
+  @Transactional
   public UserStatistics updateStatistic(Long id, UserStatistics input) {
 
     return userStatisticsRepository
