@@ -1,15 +1,15 @@
-package com.zaheer.quizbackend.services.security;
+package com.zaheer.quizbackend.services;
 
 import com.zaheer.quizbackend.exceptions.RequestFailedException;
 import com.zaheer.quizbackend.models.db.Room;
 import com.zaheer.quizbackend.repos.RoomRepository;
-import com.zaheer.quizbackend.services.BaseService;
 import com.zaheer.quizbackend.services.interfaces.RoomService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -47,8 +47,8 @@ public class RoomServiceImpl extends BaseService implements RoomService {
     return roomRepository.findAll();
   }
 
-    // TODO: Mili rijesi kako hendlat kad user ude u room itd.
   @Override
+  @Transactional
   public Room updateRoom(Long id, Room input) {
     return roomRepository
         .findById(id)
@@ -62,6 +62,8 @@ public class RoomServiceImpl extends BaseService implements RoomService {
             })
         .orElseThrow(resourceNotFound("Room with id: " + id + " was not found."));
   }
+
+
 
   @Override
   public void deleteRoom(Long id) {
