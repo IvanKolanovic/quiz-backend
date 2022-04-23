@@ -50,6 +50,10 @@ public class User {
   @OneToMany(mappedBy = "user")
   private List<UserAnswer> userAnswers = List.of();
 
+  @JsonIgnore
+  @OneToMany(mappedBy = "user")
+  private List<Participants> participants = List.of();
+
   public String getFullName() {
     return this.firstName + " " + this.lastName;
   }

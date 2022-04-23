@@ -46,4 +46,8 @@ public class Game {
   @JsonIgnore
   @OneToMany(mappedBy = "game")
   private List<UserAnswer> userAnswers = List.of();
+
+  @JsonIgnore
+  @OneToMany(mappedBy = "game")
+  private List<Participants> participants = List.of();
 }
