@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.annotation.SendToUser;
@@ -37,7 +38,7 @@ public class WebsocketController {
 
   @MessageMapping("/user-connected")
   @SendToUser("/queue/connected")
-  public Object connected(User user) {
+  public Object connected(@Payload User user) {
     return convert(webSocketService.connected(user));
   }
 
