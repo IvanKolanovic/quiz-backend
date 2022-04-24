@@ -58,7 +58,7 @@ public class UserServiceImpl extends BaseService implements UserService {
 
     @Override
     public List<User> getAllUsers() {
-        return userRepository.findAllByActiveTrue();
+        return userRepository.findAll();
     }
 
     @Override
@@ -77,15 +77,13 @@ public class UserServiceImpl extends BaseService implements UserService {
     @Override
     @Transactional
     public User banUser(Long userId) {
-        User user =
-                userRepository
-                        .findByIdAndActiveTrue(userId)
-                        .orElseThrow(
-                                () -> new ResourceNotFoundException("User with id:" + userId + " not found."));
+        User user = userRepository.findUserById(userId).orElseThrow(
+                () -> new ResourceNotFoundException("User with id:" + userId + " not found."));
+        user.setActive(!user.getActive());
 
-        user.setActive(false);
         return userRepository.saveAndFlush(user);
     }
+
 
     @Override
     @Transactional

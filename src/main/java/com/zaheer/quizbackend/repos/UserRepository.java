@@ -12,6 +12,7 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
+  Optional<User> findUserById(Long id);
 
   Optional<User> findByEmailAndActiveTrue(String email);
 
@@ -19,7 +20,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
   Optional<User> findByIdAndActiveTrue(Long id);
 
-  List<User> findAllByActiveTrue();
+  List<User> findAll();
 
   @Query("select u from User u order by u.userStatistics.totalPoints ASC")
   Page<User> findTop20ByTotalPoints(Pageable pageable);
