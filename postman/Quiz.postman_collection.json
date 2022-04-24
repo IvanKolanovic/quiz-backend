@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "d4313ce0-a392-4c15-b24e-896ec8a4f196",
+		"_postman_id": "bf0b9d28-1fc4-4ec5-9a08-24b3ca81d71a",
 		"name": "Quiz",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -134,6 +134,129 @@
 					"response": []
 				},
 				{
+					"name": "GET All Users",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/users",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Top 20 Total Points",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/user/top/points",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								"top",
+								"points"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Top 20 By Games Won",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/user/top/won",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								"top",
+								"won"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Top 20 By Total Games",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/user/top/games",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								"top",
+								"games"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Top 20 By Average Points",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/user/top/average",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								"top",
+								"average"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "PUT Users edit",
 					"request": {
 						"auth": {
@@ -169,29 +292,6 @@
 							"path": [
 								"user",
 								"1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "GET All Users",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{token}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{url}}/users",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"users"
 							]
 						}
 					},
@@ -240,23 +340,43 @@
 					"response": []
 				},
 				{
-					"name": "GET Top 20",
+					"name": "PUT Users Learning Index",
 					"request": {
-						"method": "GET",
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
 						"header": [
 							{
 								"key": "Authorization",
 								"value": "Bearer {{token}}",
 								"type": "text"
+							},
+							{
+								"key": "Organization",
+								"value": "1",
+								"type": "text"
 							}
 						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "learningIndex",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
 						"url": {
-							"raw": "{{url}}/users",
+							"raw": "{{url}}/user/1/updateIndex",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
-								"users"
+								"user",
+								"1",
+								"updateIndex"
 							]
 						}
 					},
@@ -317,6 +437,37 @@
 					"response": []
 				},
 				{
+					"name": "GET All",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/stats",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"stats"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
 					"name": "PUT edit",
 					"request": {
 						"auth": {
@@ -352,29 +503,6 @@
 							"path": [
 								"stat",
 								"1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "GET All",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{token}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{url}}/stats",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"stats"
 							]
 						}
 					},
@@ -503,6 +631,29 @@
 					"response": []
 				},
 				{
+					"name": "GET All",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/countries",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"countries"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Create",
 					"request": {
 						"auth": {
@@ -532,29 +683,6 @@
 							],
 							"path": [
 								"country"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "GET All",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{token}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{url}}/countries",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"countries"
 							]
 						}
 					},
