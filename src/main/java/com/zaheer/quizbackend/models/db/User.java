@@ -42,14 +42,12 @@ public class User {
   @Column(name = "active")
   private Boolean active;
 
-  @OneToOne(cascade = CascadeType.ALL)
+  @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   @JoinColumn(name = "user_statistics_id")
   private UserStatistics userStatistics;
 
   @Column(nullable = false, name = "learning_index")
   private int learningIndex;
-
-  @Transient private String fullName = this.firstName + " " + this.lastName;
 
   @JsonIgnore
   @OneToMany(mappedBy = "user")

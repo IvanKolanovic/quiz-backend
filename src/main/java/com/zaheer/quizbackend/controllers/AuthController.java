@@ -34,11 +34,11 @@ public class AuthController {
       @RequestBody AuthenticationRequest authenticationRequest) {
 
     User user =
-        userRepository.findByEmailAndActiveTrue(authenticationRequest.getEmail()).orElse(null);
+        userRepository.findByEmail(authenticationRequest.getEmail()).orElse(null);
 
     if (user != null && !user.getActive()) {
-      log.info("User is removed!");
-      throw new RequestFailedException(HttpStatus.CONFLICT, "User is removed!");
+      log.info("User is banned!");
+      throw new RequestFailedException(HttpStatus.CONFLICT, "User is banned!");
     }
 
     authenticationManager.authenticate(

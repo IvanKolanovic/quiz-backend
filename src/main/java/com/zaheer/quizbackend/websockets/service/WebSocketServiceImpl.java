@@ -9,6 +9,7 @@ import com.zaheer.quizbackend.websockets.service.interfaces.WebSocketService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
@@ -17,10 +18,11 @@ import java.time.LocalDateTime;
 @Slf4j
 public class WebSocketServiceImpl extends BaseService implements WebSocketService {
 
-  private final GameLogic gameLogic;
+
   private final UserService userService;
 
   @Override
+  @Transactional
   public WebsocketPayload<String> connected() {
     User user = getCurrentUser();
     log.info("=== User Connected: {}", user);

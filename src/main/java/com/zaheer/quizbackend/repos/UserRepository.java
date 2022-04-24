@@ -22,6 +22,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
   List<User> findAll();
 
+  Optional<User> findByEmail(String mail);
+
   @Query("select u from User u order by u.userStatistics.totalPoints ASC")
   Page<User> findTop20ByTotalPoints(Pageable pageable);
 
