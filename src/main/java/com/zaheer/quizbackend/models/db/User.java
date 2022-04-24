@@ -42,14 +42,12 @@ public class User {
   @Column(name = "active")
   private Boolean active;
 
-  @OneToOne(cascade = CascadeType.ALL)
+  @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   @JoinColumn(name = "user_statistics_id")
   private UserStatistics userStatistics;
 
   @Column(nullable = false, name = "learning_index")
   private int learningIndex;
-
-  @Transient private String fullName;
 
   @JsonIgnore
   @OneToMany(mappedBy = "user")
@@ -58,8 +56,4 @@ public class User {
   @JsonIgnore
   @OneToMany(mappedBy = "user")
   private List<Participants> participants = List.of();
-
-  public String getFullName() {
-    return this.firstName + " " + this.lastName;
-  }
 }

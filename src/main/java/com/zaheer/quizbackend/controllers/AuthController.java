@@ -34,13 +34,13 @@ public class AuthController {
     public ResponseEntity<?> createAuthToken(
             @RequestBody AuthenticationRequest authenticationRequest) {
 
-        User user =
-                userRepository.findByEmailAndActiveTrue(authenticationRequest.getEmail()).orElse(null);
+    User user =
+        userRepository.findByEmail(authenticationRequest.getEmail()).orElse(null);
 
-        if (user != null && !user.getActive()) {
-            log.info("User is removed!");
-            throw new RequestFailedException(HttpStatus.CONFLICT, "User is removed!");
-        }
+    if (user != null && !user.getActive()) {
+      log.info("User is banned!");
+      throw new RequestFailedException(HttpStatus.CONFLICT, "User is banned!");
+    }
 
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(

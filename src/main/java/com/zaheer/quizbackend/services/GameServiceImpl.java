@@ -52,7 +52,7 @@ public class GameServiceImpl extends BaseService implements GameService {
   @Transactional
   public Game joinGame(WebsocketPayload<Game> payload) {
 
-    Game input = payload.getData();
+    Game input = payload.getContent();
     Game g =
         gameRepository
             .findByIdAndActiveTrue(input.getId())
@@ -73,7 +73,7 @@ public class GameServiceImpl extends BaseService implements GameService {
                 })
             .orElseThrow(resourceNotFound("Game with id: " + input.getId() + " was not found."));
 
-    Participants p = Participants.builder().user(payload.getClient()).game(g).build();
+    Participants p = Participants.builder().user(payload.getUser()).game(g).build();
     participantsUserService.create(p);
 
     return gameRepository.saveAndFlush(g);

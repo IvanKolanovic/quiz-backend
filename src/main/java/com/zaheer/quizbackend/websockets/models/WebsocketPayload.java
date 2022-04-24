@@ -14,6 +14,6 @@ import java.time.LocalDateTime;
 public class WebsocketPayload<T> {
 
   private LocalDateTime time;
-  private User client;
-  private T data;
+  private User user;
+  private T content;
 }
