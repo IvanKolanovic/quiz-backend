@@ -6,7 +6,6 @@ import com.zaheer.quizbackend.exceptions.RequestFailedException;
 import com.zaheer.quizbackend.models.db.User;
 import com.zaheer.quizbackend.websockets.Greeting;
 import com.zaheer.quizbackend.websockets.HelloMessage;
-import com.zaheer.quizbackend.websockets.models.WebsocketPayload;
 import com.zaheer.quizbackend.websockets.service.interfaces.WebSocketService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +14,6 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.util.HtmlUtils;
 
@@ -31,18 +29,16 @@ public class WebsocketController {
   @MessageMapping("/hello")
   @SendTo("/topic/greetings")
   public Greeting greeting(HelloMessage message) throws Exception {
-    Thread.sleep(1000); // simulated delay
-    log.info("Radi jer si " + message.getName());
     return new Greeting("Hello! " + HtmlUtils.htmlEscape(message.getName()));
   }
 
   @MessageMapping("/user-connected")
-  @SendToUser("/queue/connected")
-  public Object connected(@Payload User user) {
-    return convert(webSocketService.connected(user));
+  public void connected(@Payload User user) {
+    simpMessagingTemplate.convertAndSendToUser(
+        user.getUsername(), "/queue/connected", webSocketService.connected(user));
   }
 
-  public Object convert(Object o) {
+  public String convert(Object o) {
     try {
       return objectMapper.writeValueAsString(o);
     } catch (JsonProcessingException e) {

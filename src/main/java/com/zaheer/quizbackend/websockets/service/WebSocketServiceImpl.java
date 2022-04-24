@@ -24,9 +24,9 @@ public class WebSocketServiceImpl extends BaseService implements WebSocketServic
   public WebsocketPayload<String> connected(User user) {
     log.info("=== User Connected: {}", user);
     return WebsocketPayload.<String>builder()
-        .client(user)
+        .user(user)
         .time(LocalDateTime.now())
-        .data("Welcome " + user.getUsername() + " to Flaginator. Enjoy!")
+        .content("Welcome " + user.getUsername() + " to Flaginator. Enjoy!")
         .build();
   }
 }
