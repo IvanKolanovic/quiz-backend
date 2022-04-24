@@ -1,6 +1,7 @@
 package com.zaheer.quizbackend.controllers;
 
 import com.zaheer.quizbackend.models.db.Country;
+import com.zaheer.quizbackend.models.security.annotations.isAdmin;
 import com.zaheer.quizbackend.services.interfaces.CountryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,7 @@ public class CountryController {
 
   private final CountryService countryService;
 
+  @isAdmin
   @PostMapping("/country")
   public ResponseEntity<Object> createCountry(@RequestBody Country country) {
     return ResponseEntity.ok(countryService.createCountry(country));
@@ -23,9 +25,19 @@ public class CountryController {
     return ResponseEntity.ok(countryService.getCountry(id));
   }
 
+  @GetMapping("/country")
+  public ResponseEntity<Object> getCountryByName(@RequestBody Country country) {
+    return ResponseEntity.ok(countryService.getCountryByName(country));
+  }
+
   @GetMapping("/countries")
   public ResponseEntity<Object> getAllCountries() {
     return ResponseEntity.ok(countryService.getAllCountries());
+  }
+
+  @GetMapping("/countries/num")
+  public ResponseEntity<Object> getNumOfCountries() {
+    return ResponseEntity.ok(countryService.getNumOfCountries());
   }
 
   @PutMapping("/country/{id}")

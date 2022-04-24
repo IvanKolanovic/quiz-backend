@@ -13,5 +13,9 @@ public interface CountryService {
 
   Country updateCountry(Long id, Country input);
 
+  Integer getNumOfCountries();
+
+  Long getCountryByName(Country country);
+
   void deleteCountry(Long id);
 }

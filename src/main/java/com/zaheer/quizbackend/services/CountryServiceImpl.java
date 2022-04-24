@@ -53,6 +53,18 @@ public class CountryServiceImpl extends BaseService implements CountryService {
   }
 
   @Override
+  public Integer getNumOfCountries() {
+    return countryRepository.findAll().size();
+  }
+
+  @Override
+  public Long getCountryByName(Country country) {
+    return countryRepository
+        .findByNameContainingIgnoreCase(country.getName())
+        .orElseThrow(resourceNotFound("Country with name: " + country.getName() + " was not found.")).getId();
+  }
+
+  @Override
   @Transactional
   public void deleteCountry(Long id) {
     countryRepository.delete(getCountry(id));

@@ -29,6 +29,7 @@ public class GameServiceImpl extends BaseService implements GameService {
       throw new RequestFailedException(
           HttpStatus.BAD_REQUEST, "Game name: " + game.getName() + " is taken.");
 
+    game.setLocked(Optional.ofNullable(game.getPassword()).isPresent());
     game.setActive(true);
     game.setStarted(false);
     game.setPlayers(1);

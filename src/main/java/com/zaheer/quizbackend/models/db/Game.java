@@ -39,6 +39,9 @@ public class  Game {
   @Column(name = "active")
   private Boolean active;
 
+  @Column(name = "locked")
+  private Boolean locked;
+
   @JsonIgnore
   @OneToMany(mappedBy = "game")
   private List<Question> questions = List.of();
