@@ -8,15 +8,15 @@ import java.util.List;
 
 public interface UserService {
 
-  User createUser(User user);
+    User createUser(User user);
 
-  User getUser(Long id);
+    User getUser(Long id);
 
-  List<User> getAllUsers();
+    List<User> getAllUsers();
 
-  boolean deleteUser(Long userId);
+    boolean deleteUser(Long userId);
 
-  boolean isEmailInUse(String email);
+    boolean isEmailInUse(String email);
 
     @Transactional
     User banUser(Long userId);

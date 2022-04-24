@@ -79,6 +79,43 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "PUT Password",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\" : \"2\",\r\n    \"oldPassword\": \"test\",\r\n    \"newPassword\": \"test2\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/auth/updatePassword",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"auth",
+								"updatePassword"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -326,14 +363,14 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}/user/ban/1",
+							"raw": "{{url}}/user/ban/2",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
 								"user",
 								"ban",
-								"1"
+								"2"
 							]
 						}
 					},
@@ -393,13 +430,14 @@
 							}
 						],
 						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"learningIndex\": 1\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "index",
+									"value": "50",
+									"type": "text"
 								}
-							}
+							]
 						},
 						"url": {
 							"raw": "{{url}}/user/1/setIndex",
@@ -410,13 +448,6 @@
 								"user",
 								"1",
 								"setIndex"
-							],
-							"query": [
-								{
-									"key": "index",
-									"value": "-1",
-									"disabled": true
-								}
 							]
 						}
 					},
