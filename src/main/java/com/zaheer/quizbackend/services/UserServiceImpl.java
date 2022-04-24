@@ -113,7 +113,7 @@ public class UserServiceImpl extends BaseService implements UserService {
                                         }
                                         user.setUsername(input.getUsername());
                                     }
-
+                                    user.setRoles(input.getRoles());
                                     user.setLearningIndex(input.getLearningIndex());
                                     user.setFirstName(input.getFirstName());
                                     user.setLastName(input.getLastName());
