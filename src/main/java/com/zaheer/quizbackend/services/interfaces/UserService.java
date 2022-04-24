@@ -1,5 +1,6 @@
 package com.zaheer.quizbackend.services.interfaces;
 
+import com.zaheer.quizbackend.dto.UserDto;
 import com.zaheer.quizbackend.models.db.User;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +26,8 @@ public interface UserService {
     User updateUserLearningIndex(Long id, int learningIndex);
 
     User updateUserSetLearningIndex(Long id, int learningIndex);
+
+    User updateUserPassword(UserDto userDto);
 
     boolean isUsernameInUse(String name);
 }

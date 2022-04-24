@@ -1,5 +1,6 @@
 package com.zaheer.quizbackend.services;
 
+import com.zaheer.quizbackend.dto.UserDto;
 import com.zaheer.quizbackend.exceptions.RequestFailedException;
 import com.zaheer.quizbackend.exceptions.ResourceNotFoundException;
 import com.zaheer.quizbackend.models.db.User;
@@ -115,6 +116,41 @@ public class UserServiceImpl extends BaseService implements UserService {
                                     return user;
                                 })
                         .orElseThrow(resourceNotFound("User with id " + id + " does not exist."));
+
+        return userRepository.saveAndFlush(updatedUser);
+    }
+
+    /*@Override
+    @Transactional
+    public User updateUserPassword(Long id, String oldPassword, String newPassword) {
+        User updatedUser =
+                userRepository
+                        .findById(id)
+                        .orElseThrow(resourceNotFound("User with id " + id + " does not exist."));
+
+        if (passwordEncoder.matches(updatedUser.getPassword(), oldPassword)) {
+            throw new RequestFailedException(CONFLICT, "Old password is incorrect.");
+        }
+
+        updatedUser.setPassword(passwordEncoder.encode(newPassword));
+
+        return userRepository.saveAndFlush(updatedUser);
+    }*/
+
+    @Override
+    @Transactional
+    public User updateUserPassword(UserDto userDto) {
+
+        User updatedUser =
+                userRepository
+                        .findByUsernameAndActiveTrue(userDto.getUsername())
+                        .orElseThrow(resourceNotFound("User with username " + userDto.getUsername() + " does not exist."));
+
+        if (!passwordEncoder.matches(userDto.getOldPassword(), updatedUser.getPassword())) {
+            throw new RequestFailedException(CONFLICT, "Old password is incorrect.");
+        }
+
+        updatedUser.setPassword(passwordEncoder.encode(userDto.getNewPassword()));
 
         return userRepository.saveAndFlush(updatedUser);
     }
