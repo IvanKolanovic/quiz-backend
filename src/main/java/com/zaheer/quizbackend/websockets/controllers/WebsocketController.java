@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zaheer.quizbackend.exceptions.RequestFailedException;
 import com.zaheer.quizbackend.websockets.Greeting;
 import com.zaheer.quizbackend.websockets.HelloMessage;
+import com.zaheer.quizbackend.websockets.models.WebsocketPayload;
 import com.zaheer.quizbackend.websockets.service.interfaces.WebSocketService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,8 +36,8 @@ public class WebsocketController {
 
   @MessageMapping("/user-connected")
   @SendToUser("/queue/connected")
-  public Object connected() {
-    return convert(webSocketService.connected());
+  public Object connected(WebsocketPayload payload) {
+    return convert(webSocketService.connected(payload.getClient()));
   }
 
   public Object convert(Object o) {
