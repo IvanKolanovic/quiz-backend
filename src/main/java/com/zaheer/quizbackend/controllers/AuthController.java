@@ -1,5 +1,6 @@
 package com.zaheer.quizbackend.controllers;
 
+import com.zaheer.quizbackend.dto.UserDto;
 import com.zaheer.quizbackend.exceptions.RequestFailedException;
 import com.zaheer.quizbackend.models.db.User;
 import com.zaheer.quizbackend.models.security.AuthenticationRequest;
@@ -23,15 +24,15 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 public class AuthController {
 
-  private final AuthenticationManager authenticationManager;
-  private final UserDetailsService userDetailsService;
-  private final UserRepository userRepository;
-  private final UserService userService;
-  private final JwtUtil jwtUtil;
+    private final AuthenticationManager authenticationManager;
+    private final UserDetailsService userDetailsService;
+    private final UserRepository userRepository;
+    private final UserService userService;
+    private final JwtUtil jwtUtil;
 
-  @RequestMapping(value = "/auth/login", method = RequestMethod.POST)
-  public ResponseEntity<?> createAuthToken(
-      @RequestBody AuthenticationRequest authenticationRequest) {
+    @RequestMapping(value = "/auth/login", method = RequestMethod.POST)
+    public ResponseEntity<?> createAuthToken(
+            @RequestBody AuthenticationRequest authenticationRequest) {
 
     User user =
         userRepository.findByEmail(authenticationRequest.getEmail()).orElse(null);
@@ -41,20 +42,25 @@ public class AuthController {
       throw new RequestFailedException(HttpStatus.CONFLICT, "User is banned!");
     }
 
-    authenticationManager.authenticate(
-        new UsernamePasswordAuthenticationToken(
-            authenticationRequest.getEmail(), authenticationRequest.getPassword()));
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        authenticationRequest.getEmail(), authenticationRequest.getPassword()));
 
-    MyUserDetails userDetails =
-        (MyUserDetails) userDetailsService.loadUserByUsername(authenticationRequest.getEmail());
-    String jwt = jwtUtil.generateToken(userDetails);
+        MyUserDetails userDetails =
+                (MyUserDetails) userDetailsService.loadUserByUsername(authenticationRequest.getEmail());
+        String jwt = jwtUtil.generateToken(userDetails);
 
-    return ResponseEntity.ok(
-        new AuthenticationResponse(userDetails.getUser(), jwt, jwtUtil.extractExpiration(jwt)));
-  }
+        return ResponseEntity.ok(
+                new AuthenticationResponse(userDetails.getUser(), jwt, jwtUtil.extractExpiration(jwt)));
+    }
 
-  @PostMapping("/auth/register")
-  public ResponseEntity<Object> createUser(@RequestBody User user) {
-    return ResponseEntity.ok(userService.createUser(user));
-  }
+    @PostMapping("/auth/register")
+    public ResponseEntity<Object> createUser(@RequestBody User user) {
+        return ResponseEntity.ok(userService.createUser(user));
+    }
+
+    @PutMapping("/auth/updatePassword")
+    public ResponseEntity<Object> updateUserPassword(@RequestBody UserDto userDto) {
+        return ResponseEntity.ok(userService.updateUserPassword(userDto));
+    }
 }

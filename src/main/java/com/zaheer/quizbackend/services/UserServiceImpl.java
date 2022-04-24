@@ -1,10 +1,12 @@
 package com.zaheer.quizbackend.services;
 
+import com.zaheer.quizbackend.dto.UserDto;
 import com.zaheer.quizbackend.exceptions.RequestFailedException;
 import com.zaheer.quizbackend.exceptions.ResourceNotFoundException;
 import com.zaheer.quizbackend.models.db.User;
 import com.zaheer.quizbackend.repos.UserRepository;
 import com.zaheer.quizbackend.services.interfaces.CountryService;
+import com.zaheer.quizbackend.services.interfaces.CurrentUserService;
 import com.zaheer.quizbackend.services.interfaces.UserService;
 import com.zaheer.quizbackend.services.interfaces.UserStatisticsService;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.springframework.http.HttpStatus.CONFLICT;
+import static org.springframework.http.HttpStatus.FORBIDDEN;
 
 @Service
 @RequiredArgsConstructor
@@ -26,18 +29,20 @@ public class UserServiceImpl extends BaseService implements UserService {
     private final UserStatisticsService userStatisticsService;
     private final CountryService countryService;
 
+    private final CurrentUserService currentUserService;
+
     @Override
     @Transactional
     public User createUser(User user) {
 
         if (isEmailInUse(user.getEmail())) {
             throw new RequestFailedException(
-                    CONFLICT, "User email:" + user.getEmail() + " is already taken!");
+                    CONFLICT, "User email:" + user.getEmail() + " is already taken!", "Email");
         }
 
         if (isUsernameInUse(user.getUsername())) {
             throw new RequestFailedException(
-                    CONFLICT, "Username:" + user.getUsername() + " is already taken!");
+                    CONFLICT, "Username:" + user.getUsername() + " is already taken!", "Username");
         }
 
         user.setLearningIndex(0);
@@ -106,15 +111,41 @@ public class UserServiceImpl extends BaseService implements UserService {
                                             throw new RequestFailedException(
                                                     CONFLICT, "Username:" + input.getUsername() + " is already taken!");
                                         }
-                                        user.setEmail(input.getUsername());
+                                        user.setUsername(input.getUsername());
                                     }
-
+                                    user.setRoles(input.getRoles());
                                     user.setLearningIndex(input.getLearningIndex());
                                     user.setFirstName(input.getFirstName());
                                     user.setLastName(input.getLastName());
                                     return user;
                                 })
                         .orElseThrow(resourceNotFound("User with id " + id + " does not exist."));
+
+        return userRepository.saveAndFlush(updatedUser);
+    }
+
+    @Override
+    @Transactional
+    public User updateUserPassword(UserDto userDto) {
+
+        if (userDto.getOldPassword() == null && !currentUserService.isLoggedInUserAdmin()) {
+            throw new RequestFailedException(FORBIDDEN, "You must provide an old password.");
+        }
+
+        User authorUser = userRepository.findByEmailAndActiveTrue(currentUserService.getLoggedInUserEmail())
+                .orElseThrow(resourceNotFound("User with username " + currentUserService.getLoggedInUserEmail() + " does not exist."));
+
+        User updatedUser =
+                userRepository
+                        .findUserById(userDto.getId())
+                        .orElseThrow(resourceNotFound("User with id " + userDto.getId() + " does not exist."));
+
+        if (!authorUser.getRoles().equals("ROLE_ADMIN")) {
+            if (!passwordEncoder.matches(userDto.getOldPassword(), updatedUser.getPassword())) {
+                throw new RequestFailedException(FORBIDDEN, "Old password is incorrect.");
+            }
+        }
+        updatedUser.setPassword(passwordEncoder.encode(userDto.getNewPassword()));
 
         return userRepository.saveAndFlush(updatedUser);
     }
