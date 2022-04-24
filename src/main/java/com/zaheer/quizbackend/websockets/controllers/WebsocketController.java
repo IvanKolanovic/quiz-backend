@@ -3,6 +3,7 @@ package com.zaheer.quizbackend.websockets.controllers;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zaheer.quizbackend.exceptions.RequestFailedException;
+import com.zaheer.quizbackend.models.db.User;
 import com.zaheer.quizbackend.websockets.Greeting;
 import com.zaheer.quizbackend.websockets.HelloMessage;
 import com.zaheer.quizbackend.websockets.models.WebsocketPayload;
@@ -36,8 +37,8 @@ public class WebsocketController {
 
   @MessageMapping("/user-connected")
   @SendToUser("/queue/connected")
-  public Object connected(WebsocketPayload payload) {
-    return convert(webSocketService.connected(payload.getClient()));
+  public Object connected(User user) {
+    return convert(webSocketService.connected(user));
   }
 
   public Object convert(Object o) {
