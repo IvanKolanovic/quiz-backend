@@ -15,7 +15,7 @@ public interface CountryService {
 
   Integer getNumOfCountries();
 
-  Long getCountryByName(Country country);
+  Long getCountryByName(String countryName);
 
   void deleteCountry(Long id);
 }

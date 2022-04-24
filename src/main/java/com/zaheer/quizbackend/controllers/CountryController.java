@@ -26,8 +26,8 @@ public class CountryController {
   }
 
   @GetMapping("/country")
-  public ResponseEntity<Object> getCountryByName(@RequestBody Country country) {
-    return ResponseEntity.ok(countryService.getCountryByName(country));
+  public ResponseEntity<Object> getCountryByName(@RequestParam(name = "name") String countryName) {
+    return ResponseEntity.ok(countryService.getCountryByName(countryName));
   }
 
   @GetMapping("/countries")

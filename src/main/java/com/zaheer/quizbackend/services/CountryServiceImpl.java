@@ -58,10 +58,10 @@ public class CountryServiceImpl extends BaseService implements CountryService {
   }
 
   @Override
-  public Long getCountryByName(Country country) {
+  public Long getCountryByName(String countryName) {
     return countryRepository
-        .findByNameContainingIgnoreCase(country.getName())
-        .orElseThrow(resourceNotFound("Country with name: " + country.getName() + " was not found.")).getId();
+            .findByNameContainingIgnoreCase(countryName)
+            .orElseThrow(resourceNotFound("Country with name: " + countryName + " was not found.")).getId();
   }
 
   @Override
