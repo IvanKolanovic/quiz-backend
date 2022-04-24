@@ -61,12 +61,13 @@ public class CountryServiceImpl extends BaseService implements CountryService {
     }
 
     @Override
+    @Transactional
     public User getCountryByName(String countryName, Long userID) {
         Long learningIndex = countryRepository
-                .findByNameContainingIgnoreCase(countryName)
+                .findCountriesByNameIgnoreCase(countryName)
                 .orElseThrow(resourceNotFound("Country with name: " + countryName + " was not found.")).getId();
 
-        User updatedUser = userRepository.findByIdAndActiveTrue(userID)
+        User updatedUser = userRepository.findById(userID)
                 .orElseThrow(resourceNotFound("User with id: " + userID + " was not found."));
         updatedUser.setLearningIndex(Math.toIntExact(learningIndex));
 
