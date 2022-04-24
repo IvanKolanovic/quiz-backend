@@ -1,7 +1,9 @@
 package com.zaheer.quizbackend.services;
 
 import com.zaheer.quizbackend.models.db.Country;
+import com.zaheer.quizbackend.models.db.User;
 import com.zaheer.quizbackend.repos.CountryRepository;
+import com.zaheer.quizbackend.repos.UserRepository;
 import com.zaheer.quizbackend.services.interfaces.CountryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +18,7 @@ import java.util.List;
 public class CountryServiceImpl extends BaseService implements CountryService {
 
   private final CountryRepository countryRepository;
+  private final UserRepository userRepository;
 
   @Override
   @Transactional
@@ -58,10 +61,13 @@ public class CountryServiceImpl extends BaseService implements CountryService {
   }
 
   @Override
-  public Long getCountryByName(String countryName) {
-    return countryRepository
+  public User getCountryByName(String countryName, Long userID) {
+    Long learningIndex = countryRepository
             .findByNameContainingIgnoreCase(countryName)
             .orElseThrow(resourceNotFound("Country with name: " + countryName + " was not found.")).getId();
+    User user = userRepository.findByIdAndActiveTrue(userID).orElseThrow(resourceNotFound("User with id: " + userID + " was not found."));
+    user.setLearningIndex(Math.toIntExact(learningIndex));
+    return user;
   }
 
   @Override

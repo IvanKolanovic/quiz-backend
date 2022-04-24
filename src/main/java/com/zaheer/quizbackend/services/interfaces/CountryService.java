@@ -1,6 +1,7 @@
 package com.zaheer.quizbackend.services.interfaces;
 
 import com.zaheer.quizbackend.models.db.Country;
+import com.zaheer.quizbackend.models.db.User;
 
 import java.util.List;
 
@@ -15,7 +16,7 @@ public interface CountryService {
 
   Integer getNumOfCountries();
 
-  Long getCountryByName(String countryName);
+  User getCountryByName(String countryName, Long userID);
 
   void deleteCountry(Long id);
 }
