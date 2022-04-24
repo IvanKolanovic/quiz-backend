@@ -3,6 +3,8 @@ package com.zaheer.quizbackend.websockets.models;
 import com.zaheer.quizbackend.models.db.User;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -11,6 +13,7 @@ import lombok.*;
 @ToString
 public class WebsocketPayload<T> {
 
+  private LocalDateTime time;
   private User client;
   private T data;
 }

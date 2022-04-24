@@ -4,12 +4,14 @@ import com.zaheer.quizbackend.exceptions.ResourceNotFoundException;
 import com.zaheer.quizbackend.models.db.User;
 import com.zaheer.quizbackend.models.security.MyUserDetails;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.function.Supplier;
 
 @Getter
+@Slf4j
 public class BaseService {
 
   protected Supplier<RuntimeException> resourceNotFound(String str) {
