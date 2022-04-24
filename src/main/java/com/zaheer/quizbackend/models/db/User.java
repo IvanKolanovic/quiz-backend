@@ -49,7 +49,7 @@ public class User {
   @Column(nullable = false, name = "learning_index")
   private int learningIndex;
 
-  @Transient private String fullName;
+  @Transient private String fullName = this.firstName + " " + this.lastName;
 
   @JsonIgnore
   @OneToMany(mappedBy = "user")
@@ -58,8 +58,4 @@ public class User {
   @JsonIgnore
   @OneToMany(mappedBy = "user")
   private List<Participants> participants = List.of();
-
-  public String getFullName() {
-    return this.firstName + " " + this.lastName;
-  }
 }
