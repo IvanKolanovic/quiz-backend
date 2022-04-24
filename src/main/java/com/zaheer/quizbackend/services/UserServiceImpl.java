@@ -131,8 +131,32 @@ public class UserServiceImpl extends BaseService implements UserService {
 
     int numOfCountries = countryService.getNumOfCountries();
     updatedUser.setLearningIndex(updatedUser.getLearningIndex() + learningIndex);
-    if (updatedUser.getLearningIndex() == 0) updatedUser.setLearningIndex(numOfCountries);
-    else if (updatedUser.getLearningIndex() == numOfCountries + 1) updatedUser.setLearningIndex(1);
+    if (updatedUser.getLearningIndex() == 0) {
+      updatedUser.setLearningIndex(numOfCountries);
+    }
+    else if (updatedUser.getLearningIndex() == numOfCountries + 1) {
+      updatedUser.setLearningIndex(1);
+    }
+
+    return userRepository.saveAndFlush(updatedUser);
+  }
+
+  @Override
+  @Transactional
+  public User updateUserJumpToIndex(Long id, int learningIndex) {
+    User updatedUser =
+            userRepository
+                    .findByIdAndActiveTrue(id)
+                    .orElseThrow(resourceNotFound("User with id " + id + " does not exist."));
+
+    int numOfCountries = countryService.getNumOfCountries();
+    updatedUser.setLearningIndex(learningIndex);
+    if (updatedUser.getLearningIndex() == 0) {
+      updatedUser.setLearningIndex(numOfCountries);
+    }
+    else if (updatedUser.getLearningIndex() == numOfCountries + 1) {
+      updatedUser.setLearningIndex(1);
+    }
 
     return userRepository.saveAndFlush(updatedUser);
   }

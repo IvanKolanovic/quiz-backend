@@ -17,62 +17,65 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CountryServiceImpl extends BaseService implements CountryService {
 
-  private final CountryRepository countryRepository;
-  private final UserRepository userRepository;
+    private final CountryRepository countryRepository;
+    private final UserRepository userRepository;
 
-  @Override
-  @Transactional
-  public Country createCountry(Country country) {
-    return countryRepository.saveAndFlush(country);
-  }
+    @Override
+    @Transactional
+    public Country createCountry(Country country) {
+        return countryRepository.saveAndFlush(country);
+    }
 
-  @Override
-  public Country getCountry(Long id) {
-    return countryRepository
-        .findById(id)
-        .orElseThrow(resourceNotFound("Country with id: " + id + " was not found."));
-  }
+    @Override
+    public Country getCountry(Long id) {
+        return countryRepository
+                .findById(id)
+                .orElseThrow(resourceNotFound("Country with id: " + id + " was not found."));
+    }
 
-  @Override
-  public List<Country> getAllCountries() {
-    return countryRepository.findAll();
-  }
+    @Override
+    public List<Country> getAllCountries() {
+        return countryRepository.findAll();
+    }
 
-  @Override
-  @Transactional
-  public Country updateCountry(Long id, Country input) {
-    return countryRepository
-        .findById(id)
-        .map(
-            country -> {
-              country.setDescription(input.getDescription());
-              country.setContinent(input.getContinent());
-              country.setName(input.getName());
-              country.setCapital(input.getCapital());
-              country.setNameAbbr(input.getNameAbbr());
-              return country;
-            })
-        .orElseThrow(resourceNotFound("Country with id: " + id + " was not found."));
-  }
+    @Override
+    @Transactional
+    public Country updateCountry(Long id, Country input) {
+        return countryRepository
+                .findById(id)
+                .map(
+                        country -> {
+                            country.setDescription(input.getDescription());
+                            country.setContinent(input.getContinent());
+                            country.setName(input.getName());
+                            country.setCapital(input.getCapital());
+                            country.setNameAbbr(input.getNameAbbr());
+                            return country;
+                        })
+                .orElseThrow(resourceNotFound("Country with id: " + id + " was not found."));
+    }
 
-  @Override
-  public Integer getNumOfCountries() {
-    return countryRepository.findAll().size();
-  }
+    @Override
+    public Integer getNumOfCountries() {
+        return countryRepository.findAll().size();
+    }
 
-  @Override
-  public User getCountryByName(String countryName, Long userID) {
-    Long learningIndex = countryRepository
-            .findByNameContainingIgnoreCase(countryName)
-            .orElseThrow(resourceNotFound("Country with name: " + countryName + " was not found.")).getId();
-    User user = userRepository.findByIdAndActiveTrue(userID).orElseThrow(resourceNotFound("User with id: " + userID + " was not found."));
-    user.setLearningIndex(Math.toIntExact(learningIndex));
-    return user;
-  }
+    @Override
+    public User getCountryByName(String countryName, Long userID) {
+        Long learningIndex = countryRepository
+                .findByNameContainingIgnoreCase(countryName)
+                .orElseThrow(resourceNotFound("Country with name: " + countryName + " was not found.")).getId();
 
-  @Override
-  @Transactional
-  public void deleteCountry(Long id) {
-    countryRepository.delete(getCountry(id));
-  }
+        User updatedUser = userRepository.findByIdAndActiveTrue(userID)
+                .orElseThrow(resourceNotFound("User with id: " + userID + " was not found."));
+        updatedUser.setLearningIndex(Math.toIntExact(learningIndex));
+
+        return userRepository.saveAndFlush(updatedUser);
+    }
+
+    @Override
+    @Transactional
+    public void deleteCountry(Long id) {
+        countryRepository.delete(getCountry(id));
+    }
 }

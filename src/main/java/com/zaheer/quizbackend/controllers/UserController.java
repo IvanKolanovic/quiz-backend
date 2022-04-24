@@ -37,6 +37,12 @@ public class UserController {
     return ResponseEntity.ok(userService.updateUserLearningIndex(id, learningIndex));
   }
 
+  @PutMapping("/user/{id}/jumpToIndex")
+  public ResponseEntity<Object> updateJumpToIndex(
+          @PathVariable(value = "id") Long id, @RequestParam(name = "index") Integer learningIndex) {
+    return ResponseEntity.ok(userService.updateUserJumpToIndex(id, learningIndex));
+  }
+
   @isAdmin
   @DeleteMapping("/user/{id}")
   public ResponseEntity<Object> deleteUser(@PathVariable(value = "id") Long id) {
