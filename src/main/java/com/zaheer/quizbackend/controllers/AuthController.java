@@ -34,13 +34,13 @@ public class AuthController {
     public ResponseEntity<?> createAuthToken(
             @RequestBody AuthenticationRequest authenticationRequest) {
 
-    User user =
-        userRepository.findByEmail(authenticationRequest.getEmail()).orElse(null);
+        User user =
+                userRepository.findByEmail(authenticationRequest.getEmail()).orElse(null);
 
-    if (user != null && !user.getActive()) {
-      log.info("User is banned!");
-      throw new RequestFailedException(HttpStatus.CONFLICT, "User is banned!");
-    }
+        if (user != null && !user.getActive()) {
+            log.info("User is banned!");
+            throw new RequestFailedException(HttpStatus.CONFLICT, "User is banned!");
+        }
 
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -48,6 +48,7 @@ public class AuthController {
 
         MyUserDetails userDetails =
                 (MyUserDetails) userDetailsService.loadUserByUsername(authenticationRequest.getEmail());
+
         String jwt = jwtUtil.generateToken(userDetails);
 
         return ResponseEntity.ok(

@@ -28,7 +28,6 @@ public class UserServiceImpl extends BaseService implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserStatisticsService userStatisticsService;
     private final CountryService countryService;
-
     private final CurrentUserService currentUserService;
 
     @Override
@@ -84,6 +83,11 @@ public class UserServiceImpl extends BaseService implements UserService {
     public User banUser(Long userId) {
         User user = userRepository.findUserById(userId).orElseThrow(
                 () -> new ResourceNotFoundException("User with id:" + userId + " not found."));
+
+        if (user.getRoles().equals("ROLE_ADMIN")) {
+            throw new RequestFailedException(CONFLICT, "Admin cannot be banned.");
+        }
+
         user.setActive(!user.getActive());
 
         return userRepository.saveAndFlush(user);
