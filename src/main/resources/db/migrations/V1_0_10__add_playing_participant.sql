@@ -1,0 +1,1 @@
+ALTER TABLE participants ADD in_game tinyint(1) NOT NULL;

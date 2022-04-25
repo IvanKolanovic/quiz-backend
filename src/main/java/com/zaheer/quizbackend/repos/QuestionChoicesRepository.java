@@ -9,5 +9,5 @@ import java.util.List;
 @Repository
 public interface QuestionChoicesRepository extends JpaRepository<QuestionChoices, Long> {
 
-    List<QuestionChoices> findAllByQuestionIdOrderByIdAsc(Long id);
+  List<QuestionChoices> findAllByQuestionIdOrderByIdAsc(Long id);
 }

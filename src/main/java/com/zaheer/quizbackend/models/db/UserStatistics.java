@@ -20,16 +20,16 @@ public class UserStatistics {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(name = "total_points",nullable = false)
+  @Column(name = "total_points", nullable = false)
   private Double totalPoints;
 
-  @Column(nullable = false,name = "games_won")
+  @Column(nullable = false, name = "games_won")
   private Integer gamesWon;
 
-  @Column(nullable = false,name = "total_game")
+  @Column(nullable = false, name = "total_game")
   private Integer totalGames;
 
-  @Column(nullable = false,name = "point_average")
+  @Column(nullable = false, name = "point_average")
   private Double pointAverage;
 
   @ManyToOne(optional = false)

@@ -7,10 +7,10 @@ import java.util.List;
 
 public interface QuestionService {
 
-    @Transactional
-    Question createQuestion(Question question);
+  @Transactional
+  Question createQuestion(Question question);
 
-    Question getQuestion(Long id);
+  Question getQuestion(Long id);
 
-    List<Question> getAllQuestionsByGame(Long gameId);
+  List<Question> getAllQuestionsByGame(Long gameId);
 }

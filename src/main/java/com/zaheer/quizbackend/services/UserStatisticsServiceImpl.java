@@ -55,7 +55,6 @@ public class UserStatisticsServiceImpl extends BaseService implements UserStatis
     return userStatisticsRepository.findAllByOrderByIdAsc();
   }
 
-
   @Override
   @Transactional
   public UserStatistics updateStatistic(Long id, UserStatistics input) {
@@ -67,7 +66,7 @@ public class UserStatisticsServiceImpl extends BaseService implements UserStatis
               statistic.setTotalPoints(input.getTotalPoints());
               statistic.setGamesWon(input.getGamesWon());
               statistic.setTotalGames(input.getTotalGames());
-              statistic.setPointAverage(input.getTotalPoints()/input.getTotalGames());
+              statistic.setPointAverage(input.getTotalPoints() / input.getTotalGames());
               statistic.setRank(input.getRank());
 
               return statistic;

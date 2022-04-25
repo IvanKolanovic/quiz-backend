@@ -2,6 +2,7 @@ package com.zaheer.quizbackend.models.db;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,24 +14,25 @@ import java.util.List;
 @NoArgsConstructor
 @Table(name = "question_choices")
 @Entity
+@Builder
 public class QuestionChoices {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "question_id", referencedColumnName = "id")
-    private Question question;
+  @ManyToOne(optional = false)
+  @JoinColumn(name = "question_id", referencedColumnName = "id")
+  private Question question;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "choice", referencedColumnName = "id")
-    private Country choice;
+  @ManyToOne(optional = false)
+  @JoinColumn(name = "choice", referencedColumnName = "id")
+  private Country choice;
 
-    @Column(name = "is_right")
-    private Boolean isRight;
+  @Column(name = "is_right")
+  private Boolean isRight;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "choice")
-    private List<UserAnswer> userAnswers = List.of();
+  @JsonIgnore
+  @OneToMany(mappedBy = "choice")
+  private List<UserAnswer> userAnswers = List.of();
 }

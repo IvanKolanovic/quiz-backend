@@ -29,4 +29,11 @@ public class Participants {
 
   @Column(name = "user_score", nullable = false)
   private Integer userScore;
+
+  @Column(name = "in_game")
+  private Boolean inGame;
+
+  public void updateScore(int score) {
+    this.userScore = this.userScore + score;
+  }
 }

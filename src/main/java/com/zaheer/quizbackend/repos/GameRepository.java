@@ -9,9 +9,9 @@ import java.util.Optional;
 
 @Repository
 public interface GameRepository extends JpaRepository<Game, Long> {
-    Optional<Game> findByNameAndActiveTrue(String name);
+  Optional<Game> findByNameAndActiveTrue(String name);
 
-    Optional<Game> findByIdAndActiveTrue(Long id);
+  Optional<Game> findByIdAndActiveTrue(Long id);
 
-    List<Game> findAllByActiveTrue();
+  List<Game> findAllByActiveTrue();
 }

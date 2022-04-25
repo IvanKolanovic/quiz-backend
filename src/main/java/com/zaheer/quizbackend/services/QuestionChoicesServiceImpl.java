@@ -26,7 +26,8 @@ public class QuestionChoicesServiceImpl extends BaseService implements QuestionC
   @Transactional
   public QuestionChoices createQuestionChoice(QuestionChoices questionChoices) {
     Question question = questionChoices.getQuestion();
-    questionChoices.setIsRight(question.getAbbr().equals(questionChoices.getChoice().getNameAbbr()));
+    questionChoices.setIsRight(
+        question.getAbbr().equals(questionChoices.getChoice().getNameAbbr()));
     return questionChoicesRepository.saveAndFlush(questionChoices);
   }
 

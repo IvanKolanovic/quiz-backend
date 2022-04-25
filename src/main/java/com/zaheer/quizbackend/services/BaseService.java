@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Supplier;
 
 @Getter
@@ -25,5 +26,9 @@ public class BaseService {
   protected User getCurrentUser() {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     return ((MyUserDetails) authentication.getPrincipal()).getUser();
+  }
+
+  public long randomNumberBetween(int lowerExclusive, int upperInclusive) {
+    return ThreadLocalRandom.current().nextLong(lowerExclusive, upperInclusive);
   }
 }

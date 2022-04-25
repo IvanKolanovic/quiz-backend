@@ -15,71 +15,71 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class UserController {
 
-    private final UserService userService;
-    private final UserRepository userRepository;
+  private final UserService userService;
+  private final UserRepository userRepository;
 
-    @isAdmin
-    @PutMapping("/user/{id}")
-    public ResponseEntity<Object> updateUser(
-            @PathVariable(value = "id") Long id, @RequestBody User user) {
-        return ResponseEntity.ok(userService.updateUser(id, user));
-    }
+  @isAdmin
+  @PutMapping("/user/{id}")
+  public ResponseEntity<Object> updateUser(
+      @PathVariable(value = "id") Long id, @RequestBody User user) {
+    return ResponseEntity.ok(userService.updateUser(id, user));
+  }
 
-    @isAdmin
-    @PutMapping("/user/ban/{id}")
-    public ResponseEntity<Object> banUser(@PathVariable(value = "id") Long id) {
-        return ResponseEntity.ok(userService.banUser(id));
-    }
+  @isAdmin
+  @PutMapping("/user/ban/{id}")
+  public ResponseEntity<Object> banUser(@PathVariable(value = "id") Long id) {
+    return ResponseEntity.ok(userService.banUser(id));
+  }
 
-    @PutMapping("/user/{id}/updateIndex")
-    public ResponseEntity<Object> updateLearningIndex(
-            @PathVariable(value = "id") Long id, @RequestParam(name = "index") Integer learningIndex) {
-        return ResponseEntity.ok(userService.updateUserLearningIndex(id, learningIndex));
-    }
+  @PutMapping("/user/{id}/updateIndex")
+  public ResponseEntity<Object> updateLearningIndex(
+      @PathVariable(value = "id") Long id, @RequestParam(name = "index") Integer learningIndex) {
+    return ResponseEntity.ok(userService.updateUserLearningIndex(id, learningIndex));
+  }
 
-    @PutMapping("/user/{id}/setIndex")
-    public ResponseEntity<Object> updateSetLearningIndex(
-            @PathVariable(value = "id") Long id, @RequestParam(name = "index") Integer learningIndex) {
-        return ResponseEntity.ok(userService.updateUserSetLearningIndex(id, learningIndex));
-    }
+  @PutMapping("/user/{id}/setIndex")
+  public ResponseEntity<Object> updateSetLearningIndex(
+      @PathVariable(value = "id") Long id, @RequestParam(name = "index") Integer learningIndex) {
+    return ResponseEntity.ok(userService.updateUserSetLearningIndex(id, learningIndex));
+  }
 
-    @isAdmin
-    @DeleteMapping("/user/{id}")
-    public ResponseEntity<Object> deleteUser(@PathVariable(value = "id") Long id) {
-        return ResponseEntity.ok(userService.deleteUser(id));
-    }
+  @isAdmin
+  @DeleteMapping("/user/{id}")
+  public ResponseEntity<Object> deleteUser(@PathVariable(value = "id") Long id) {
+    return ResponseEntity.ok(userService.deleteUser(id));
+  }
 
-    @GetMapping("/user/{id}")
-    public ResponseEntity<Object> getUser(@PathVariable(value = "id") Long id) {
-        return ResponseEntity.ok(userService.getUser(id));
-    }
+  @GetMapping("/user/{id}")
+  public ResponseEntity<Object> getUser(@PathVariable(value = "id") Long id) {
+    return ResponseEntity.ok(userService.getUser(id));
+  }
 
-    @GetMapping("/user/top/points")
-    public ResponseEntity<Object> getTop20ByTotalPoints() {
-        Page<User> page = userRepository.findTop20ByTotalPoints(PageRequest.of(0, 20));
-        return ResponseEntity.ok(page.getContent());
-    }
+  @GetMapping("/user/top/points")
+  public ResponseEntity<Object> getTop20ByTotalPoints() {
+    Page<User> page = userRepository.findTop20ByTotalPoints(PageRequest.of(0, 20));
+    return ResponseEntity.ok(page.getContent());
+  }
 
-    @GetMapping("/user/top/won")
-    public ResponseEntity<Object> getTop20ByGamesWon() {
-        Page<User> page = userRepository.findTop20ByGamesWon(PageRequest.of(0, 20));
-        return ResponseEntity.ok(page.getContent());
-    }
+  @GetMapping("/user/top/won")
+  public ResponseEntity<Object> getTop20ByGamesWon() {
+    Page<User> page = userRepository.findTop20ByGamesWon(PageRequest.of(0, 20));
+    return ResponseEntity.ok(page.getContent());
+  }
 
-    @GetMapping("/user/top/games")
-    public ResponseEntity<Object> getTop20ByTotalGames() {
-        Page<User> page = userRepository.findTop20ByTotalGames(PageRequest.of(0, 20));
-        return ResponseEntity.ok(page.getContent());
-    }
+  @GetMapping("/user/top/games")
+  public ResponseEntity<Object> getTop20ByTotalGames() {
+    Page<User> page = userRepository.findTop20ByTotalGames(PageRequest.of(0, 20));
+    return ResponseEntity.ok(page.getContent());
+  }
 
-    @GetMapping("/user/top/average")
-    public ResponseEntity<Object> getTop20ByPointAverage() {
-        Page<User> page = userRepository.findTop20ByPointAverage(PageRequest.of(0, 20));
-        return ResponseEntity.ok(page.getContent());
-    }
+  @GetMapping("/user/top/average")
+  public ResponseEntity<Object> getTop20ByPointAverage() {
+    Page<User> page = userRepository.findTop20ByPointAverage(PageRequest.of(0, 20));
+    return ResponseEntity.ok(page.getContent());
+  }
 
-    @GetMapping("/users")
-    public ResponseEntity<Object> getAllUsers() {
-        return ResponseEntity.ok(userService.getAllUsers());
-    }
+  @GetMapping("/users")
+  public ResponseEntity<Object> getAllUsers() {
+    return ResponseEntity.ok(userService.getAllUsers());
+  }
 }

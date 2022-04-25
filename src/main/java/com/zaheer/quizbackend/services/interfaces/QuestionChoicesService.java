@@ -6,10 +6,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 public interface QuestionChoicesService {
-    @Transactional
-    QuestionChoices createQuestionChoice(QuestionChoices questionChoices);
+  @Transactional
+  QuestionChoices createQuestionChoice(QuestionChoices questionChoices);
 
-    QuestionChoices getChoice(Long id);
+  QuestionChoices getChoice(Long id);
 
-    List<QuestionChoices> getAllChoicesByQuestion(Long questionId);
+  List<QuestionChoices> getAllChoicesByQuestion(Long questionId);
 }

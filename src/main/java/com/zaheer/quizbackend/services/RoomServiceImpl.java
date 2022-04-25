@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class RoomServiceImpl {
 
- /* private final RoomRepository roomRepository;
+  /* private final RoomRepository roomRepository;
 
   @Override
   public Room createRoom(Room room) {

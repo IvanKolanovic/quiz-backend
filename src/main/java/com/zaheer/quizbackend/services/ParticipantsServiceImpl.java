@@ -21,6 +21,7 @@ public class ParticipantsServiceImpl extends BaseService implements Participants
   @Transactional
   public Participants create(Participants participants) {
     participants.setUserScore(0);
+    participants.setInGame(false);
     return participantsRepository.saveAndFlush(participants);
   }
 
@@ -34,5 +35,18 @@ public class ParticipantsServiceImpl extends BaseService implements Participants
     return participantsRepository
         .findById(id)
         .orElseThrow(resourceNotFound("Participant with id: " + id + " was not found."));
+  }
+
+  @Override
+  @Transactional
+  public Participants updateInGame(Long id, Boolean bool) {
+    Participants p = getParticipantById(id);
+    p.setInGame(bool);
+    return participantsRepository.saveAndFlush(p);
+  }
+
+  @Override
+  public List<Participants> getParticipantsByGame(Long gameId) {
+    return participantsRepository.findAllByGameId(gameId);
   }
 }

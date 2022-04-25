@@ -34,9 +34,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
-    http.cors()
-        .and()
-        .csrf()
+    http.csrf()
         .disable()
         .authorizeRequests()
         .antMatchers("/quiz/auth/login")
@@ -53,6 +51,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
   }
+
   @Override
   public void configure(WebSecurity web) {
     web.ignoring().antMatchers("/ws/**");

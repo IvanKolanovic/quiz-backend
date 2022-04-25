@@ -12,43 +12,45 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class CountryController {
 
-    private final CountryService countryService;
+  private final CountryService countryService;
 
-    @isAdmin
-    @PostMapping("/country")
-    public ResponseEntity<Object> createCountry(@RequestBody Country country) {
-        return ResponseEntity.ok(countryService.createCountry(country));
-    }
+  @isAdmin
+  @PostMapping("/country")
+  public ResponseEntity<Object> createCountry(@RequestBody Country country) {
+    return ResponseEntity.ok(countryService.createCountry(country));
+  }
 
-    @GetMapping("/country/{id}")
-    public ResponseEntity<Object> getCountry(@PathVariable(value = "id") Long id) {
-        return ResponseEntity.ok(countryService.getCountry(id));
-    }
+  @GetMapping("/country/{id}")
+  public ResponseEntity<Object> getCountry(@PathVariable(value = "id") Long id) {
+    return ResponseEntity.ok(countryService.getCountry(id));
+  }
 
-    @GetMapping("/country")
-    public ResponseEntity<Object> getCountryByName(@RequestParam(name = "name") String countryName, @RequestParam(value = "userID") Long userID) {
-        return ResponseEntity.ok(countryService.getCountryByName(countryName, userID));
-    }
+  @GetMapping("/country")
+  public ResponseEntity<Object> getCountryByName(
+      @RequestParam(name = "name") String countryName,
+      @RequestParam(value = "userID") Long userID) {
+    return ResponseEntity.ok(countryService.getCountryByName(countryName, userID));
+  }
 
-    @GetMapping("/countries")
-    public ResponseEntity<Object> getAllCountries() {
-        return ResponseEntity.ok(countryService.getAllCountries());
-    }
+  @GetMapping("/countries")
+  public ResponseEntity<Object> getAllCountries() {
+    return ResponseEntity.ok(countryService.getAllCountries());
+  }
 
-    @GetMapping("/countries/num")
-    public ResponseEntity<Object> getNumOfCountries() {
-        return ResponseEntity.ok(countryService.getNumOfCountries());
-    }
+  @GetMapping("/countries/num")
+  public ResponseEntity<Object> getNumOfCountries() {
+    return ResponseEntity.ok(countryService.getNumOfCountries());
+  }
 
-    @PutMapping("/country/{id}")
-    public ResponseEntity<Object> updateCountry(
-            @PathVariable(value = "id") Long id, @RequestBody Country country) {
-        return ResponseEntity.ok(countryService.updateCountry(id, country));
-    }
+  @PutMapping("/country/{id}")
+  public ResponseEntity<Object> updateCountry(
+      @PathVariable(value = "id") Long id, @RequestBody Country country) {
+    return ResponseEntity.ok(countryService.updateCountry(id, country));
+  }
 
-    @DeleteMapping("/country/{id}")
-    public ResponseEntity<Object> delete(@PathVariable(value = "id") Long id) {
-        countryService.deleteCountry(id);
-        return ResponseEntity.ok("True");
-    }
+  @DeleteMapping("/country/{id}")
+  public ResponseEntity<Object> delete(@PathVariable(value = "id") Long id) {
+    countryService.deleteCountry(id);
+    return ResponseEntity.ok("True");
+  }
 }
