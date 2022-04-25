@@ -44,7 +44,7 @@ public class UserServiceImpl extends BaseService implements UserService {
                     CONFLICT, "Username:" + user.getUsername() + " is already taken!", "Username");
         }
 
-        user.setLearningIndex(0);
+        user.setLearningIndex(1);
         user.setActive(true);
         user.setRoles("ROLE_USER");
         user.setPassword(passwordEncoder.encode(user.getPassword()));
