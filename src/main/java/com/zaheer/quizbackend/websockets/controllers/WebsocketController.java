@@ -48,6 +48,7 @@ public class WebsocketController {
 
   @MessageMapping("/join-game")
   public void joinGame(@Payload WebsocketPayload<Game> payload) {
+    log.info("=== Payload: {}", payload);
     WebsocketPayload<Game> newPayload = webSocketService.joinGame(payload);
 
     newPayload
