@@ -101,7 +101,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
   @ExceptionHandler(RequestFailedException.class)
   protected ResponseEntity<Object> handleRequestFailed(RequestFailedException ex) {
-    ApiError apiError = new ApiError(ex.getStatus(), ex.getMessage(), ex);
+    ApiError apiError = new ApiError(ex.getStatus(), ex.getMessage(), ex, ex.getType());
     log.error(ex.getMessage(), ex);
     return buildResponseEntity(apiError);
   }

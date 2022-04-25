@@ -14,6 +14,8 @@ public class ApiError {
   private int statusCode;
   private HttpStatus status;
 
+  private String type;
+
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
   private LocalDateTime timestamp;
 
@@ -51,5 +53,14 @@ public class ApiError {
     this.statusCode = status.value();
     this.message = message;
     this.debugMessage = ex.getLocalizedMessage();
+  }
+
+  ApiError(HttpStatus status, String message, Throwable ex, String type) {
+    this();
+    this.status = status;
+    this.statusCode = status.value();
+    this.message = message;
+    this.debugMessage = ex.getLocalizedMessage();
+    this.type = type;
   }
 }
