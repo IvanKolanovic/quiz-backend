@@ -35,9 +35,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     //    http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
-    http.csrf()
+    http.cors()
         .and()
-        .cors()
+        .csrf()
         .disable()
         .authorizeRequests()
         .antMatchers("/quiz/auth/login")
