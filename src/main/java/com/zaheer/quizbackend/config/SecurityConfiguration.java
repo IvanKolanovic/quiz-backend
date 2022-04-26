@@ -62,16 +62,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
   }
 
-  @Bean
-  public WebMvcConfigurer corsConfigurer() {
-    return new WebMvcConfigurer() {
-      @Override
-      public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**").allowedMethods("*").allowedOrigins("*").allowedHeaders("*");
-      }
-    };
-  }
-
   @Override
   public void configure(WebSecurity web) {
     web.ignoring().antMatchers("/ws/**");
