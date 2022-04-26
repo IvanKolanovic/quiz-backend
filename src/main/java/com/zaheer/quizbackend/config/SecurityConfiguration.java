@@ -52,7 +52,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         .antMatchers("/quiz/auth/register")
         .permitAll()
         .antMatchers("/ws/**")
-        .permitAll()
+        .authenticated()
         .anyRequest()
         .authenticated()
         .and()
@@ -62,10 +62,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
   }
 
-  @Override
+  /*@Override
   public void configure(WebSecurity web) {
     web.ignoring().antMatchers("/ws/**");
-  }
+  }*/
 
   @Bean
   public PasswordEncoder passwordEncoder() {
