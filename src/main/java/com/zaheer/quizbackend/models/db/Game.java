@@ -20,28 +20,38 @@ import java.util.stream.Collectors;
 public class Game {
 
   @Transient List<User> users;
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
+
   @Column(unique = true, nullable = false)
   private String name;
+
   @Column
   @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
   private String password;
+
   @Column(nullable = false)
   private Integer players;
+
   @Column(name = "started")
   private Boolean started;
+
   @Column(name = "active")
   private Boolean active;
+
   @Column(name = "locked")
   private Boolean locked;
+
   @JsonIgnore
   @OneToMany(mappedBy = "game")
   private List<Question> questions = List.of();
+
   @JsonIgnore
   @OneToMany(mappedBy = "game")
   private List<UserAnswer> userAnswers = List.of();
+
   @JsonIgnore
   @OneToMany(mappedBy = "game")
   private List<Participants> participants = List.of();
