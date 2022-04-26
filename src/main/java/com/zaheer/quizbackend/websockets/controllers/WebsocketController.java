@@ -12,6 +12,7 @@ import com.zaheer.quizbackend.websockets.HelloMessage;
 import com.zaheer.quizbackend.websockets.models.WebsocketPayload;
 import com.zaheer.quizbackend.websockets.models.generics.EvaluatedAnswer;
 import com.zaheer.quizbackend.websockets.models.generics.GameQuestion;
+import com.zaheer.quizbackend.websockets.models.generics.JoinGame;
 import com.zaheer.quizbackend.websockets.service.interfaces.WebSocketService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -47,9 +48,8 @@ public class WebsocketController {
   }
 
   @MessageMapping("/join-game")
-  public void joinGame(@Payload WebsocketPayload<Game> payload) {
-    log.info("=== Payload: {}", payload);
-    WebsocketPayload<Game> newPayload = webSocketService.joinGame(payload);
+  public void joinGame(@Payload JoinGame joinGame) {
+    WebsocketPayload<Game> newPayload = webSocketService.joinGame(joinGame);
 
     newPayload
         .getUsers()
@@ -109,15 +109,5 @@ public class WebsocketController {
                 simpMessagingTemplate.convertAndSendToUser(
                     user.getUsername(), "/queue", newPayload));
     log.info("=== Evaluate Answer: {}", newPayload);
-  }
-
-  public String convert(Object o) {
-    try {
-      return objectMapper.writeValueAsString(o);
-    } catch (JsonProcessingException e) {
-      log.error("Error mapping Object to JSON!");
-      throw new RequestFailedException(
-          HttpStatus.INTERNAL_SERVER_ERROR, "Error mapping Object to JSON!");
-    }
   }
 }

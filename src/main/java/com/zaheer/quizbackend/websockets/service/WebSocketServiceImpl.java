@@ -11,6 +11,7 @@ import com.zaheer.quizbackend.services.interfaces.ParticipantsService;
 import com.zaheer.quizbackend.websockets.models.WebsocketPayload;
 import com.zaheer.quizbackend.websockets.models.generics.EvaluatedAnswer;
 import com.zaheer.quizbackend.websockets.models.generics.GameQuestion;
+import com.zaheer.quizbackend.websockets.models.generics.JoinGame;
 import com.zaheer.quizbackend.websockets.service.interfaces.WebSocketService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,8 +44,8 @@ public class WebSocketServiceImpl extends BaseService implements WebSocketServic
 
   @Override
   @Transactional
-  public WebsocketPayload<Game> joinGame(WebsocketPayload<Game> payload) {
-    Game game = gameService.joinGame(payload);
+  public WebsocketPayload<Game> joinGame(JoinGame input) {
+    Game game = gameService.joinGame(input);
     log.info("=== Joined game: {}", game);
     return WebsocketPayload.<Game>builder()
         .users(

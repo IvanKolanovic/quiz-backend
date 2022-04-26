@@ -8,6 +8,7 @@ import com.zaheer.quizbackend.services.interfaces.GameService;
 import com.zaheer.quizbackend.websockets.models.WebsocketPayload;
 import com.zaheer.quizbackend.websockets.models.generics.EvaluatedAnswer;
 import com.zaheer.quizbackend.websockets.models.generics.GameQuestion;
+import com.zaheer.quizbackend.websockets.models.generics.JoinGame;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -62,19 +63,20 @@ public class GameServiceImpl extends BaseService implements GameService {
 
   @Override
   @Transactional
-  public Game joinGame(WebsocketPayload<Game> payload) {
+  public Game joinGame(JoinGame input) {
 
-    Game input = payload.getContent();
+    Game myGame = input.getGame();
+
     Game g =
         gameRepository
-            .findByIdAndActiveTrue(input.getId())
+            .findByIdAndActiveTrue(myGame.getId())
             .map(
                 game -> {
                   if (game.getPlayers() == 2)
                     throw new RequestFailedException(HttpStatus.CONFLICT, "Game is full.");
-                  if (input.getName().equals(game.getName())) {
-                    if (Optional.ofNullable(input.getPassword()).isPresent()) {
-                      if (input.getPassword().equals(game.getPassword()))
+                  if (myGame.getName().equals(game.getName())) {
+                    if (Optional.ofNullable(myGame.getPassword()).isPresent()) {
+                      if (myGame.getPassword().equals(game.getPassword()))
                         game.setPlayers(game.getPlayers() + 1);
                       else throw new RequestFailedException(HttpStatus.CONFLICT, "Wrong password.");
                     } else game.setPlayers(game.getPlayers() + 1);
@@ -83,9 +85,9 @@ public class GameServiceImpl extends BaseService implements GameService {
                   }
                   return game;
                 })
-            .orElseThrow(resourceNotFound("Game with id: " + input.getId() + " was not found."));
+            .orElseThrow(resourceNotFound("Game with id: " + myGame.getId() + " was not found."));
 
-    Participants p = Participants.builder().user(payload.getUsers().get(0)).game(g).build();
+    Participants p = Participants.builder().user(input.getJoining()).game(g).build();
     participantsService.create(p);
 
     return gameRepository.saveAndFlush(g);
