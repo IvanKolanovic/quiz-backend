@@ -5,10 +5,7 @@ import com.zaheer.quizbackend.exceptions.RequestFailedException;
 import com.zaheer.quizbackend.exceptions.ResourceNotFoundException;
 import com.zaheer.quizbackend.models.db.User;
 import com.zaheer.quizbackend.repos.UserRepository;
-import com.zaheer.quizbackend.services.interfaces.CountryService;
-import com.zaheer.quizbackend.services.interfaces.CurrentUserService;
-import com.zaheer.quizbackend.services.interfaces.UserService;
-import com.zaheer.quizbackend.services.interfaces.UserStatisticsService;
+import com.zaheer.quizbackend.services.interfaces.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -30,6 +27,8 @@ public class UserServiceImpl extends BaseService implements UserService {
     private final CountryService countryService;
     private final CurrentUserService currentUserService;
 
+    private final NotificationEmailService notificationEmailService;
+
     @Override
     @Transactional
     public User createUser(User user) {
@@ -49,6 +48,8 @@ public class UserServiceImpl extends BaseService implements UserService {
         user.setRoles("ROLE_USER");
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setUserStatistics(userStatisticsService.createStatistic());
+
+        notificationEmailService.sendConfirmationEmailOnRegistration(user);
 
         return userRepository.saveAndFlush(user);
     }
@@ -150,6 +151,8 @@ public class UserServiceImpl extends BaseService implements UserService {
             }
         }
         updatedUser.setPassword(passwordEncoder.encode(userDto.getNewPassword()));
+
+        notificationEmailService.sendConfirmationEmailOnPasswordChange(updatedUser);
 
         return userRepository.saveAndFlush(updatedUser);
     }
