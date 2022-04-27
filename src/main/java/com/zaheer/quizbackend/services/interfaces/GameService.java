@@ -1,10 +1,9 @@
 package com.zaheer.quizbackend.services.interfaces;
 
 import com.zaheer.quizbackend.models.db.*;
-import com.zaheer.quizbackend.websockets.models.WebsocketPayload;
 import com.zaheer.quizbackend.websockets.models.generics.EvaluatedAnswer;
 import com.zaheer.quizbackend.websockets.models.generics.GameQuestion;
-import com.zaheer.quizbackend.websockets.models.generics.JoinGame;
+import com.zaheer.quizbackend.websockets.models.generics.UserGame;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -17,7 +16,7 @@ public interface GameService {
   List<Game> getAll();
 
   @Transactional
-  Game joinGame(JoinGame payload);
+  Game joinGame(UserGame payload);
 
   @Transactional
   Game startGame(Game game);

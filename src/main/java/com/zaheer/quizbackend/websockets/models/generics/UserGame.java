@@ -9,8 +9,8 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class JoinGame {
+public class UserGame {
 
   private Game game;
-  private User joining;
+  private User user;
 }

@@ -5,13 +5,16 @@ import com.zaheer.quizbackend.models.db.Game;
 import com.zaheer.quizbackend.models.db.Participants;
 import com.zaheer.quizbackend.models.db.User;
 import com.zaheer.quizbackend.models.db.UserAnswer;
+import com.zaheer.quizbackend.repos.GameRepository;
+import com.zaheer.quizbackend.repos.ParticipantsRepository;
+import com.zaheer.quizbackend.repos.UserRepository;
 import com.zaheer.quizbackend.services.BaseService;
 import com.zaheer.quizbackend.services.interfaces.GameService;
 import com.zaheer.quizbackend.services.interfaces.ParticipantsService;
 import com.zaheer.quizbackend.websockets.models.WebsocketPayload;
 import com.zaheer.quizbackend.websockets.models.generics.EvaluatedAnswer;
 import com.zaheer.quizbackend.websockets.models.generics.GameQuestion;
-import com.zaheer.quizbackend.websockets.models.generics.JoinGame;
+import com.zaheer.quizbackend.websockets.models.generics.UserGame;
 import com.zaheer.quizbackend.websockets.service.interfaces.WebSocketService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +32,9 @@ public class WebSocketServiceImpl extends BaseService implements WebSocketServic
 
   private final GameService gameService;
   private final ParticipantsService participantsService;
+  private final GameRepository gameRepository;
+  private final ParticipantsRepository participantsRepository;
+  private final UserRepository userRepository;
 
   @Override
   @Transactional
@@ -44,7 +50,7 @@ public class WebSocketServiceImpl extends BaseService implements WebSocketServic
 
   @Override
   @Transactional
-  public WebsocketPayload<Game> joinGame(JoinGame input) {
+  public WebsocketPayload<Game> joinGame(UserGame input) {
     Game game = gameService.joinGame(input);
     log.info("=== Joined game: {}", game);
     return WebsocketPayload.<Game>builder()
@@ -60,10 +66,11 @@ public class WebSocketServiceImpl extends BaseService implements WebSocketServic
 
   @Override
   @Transactional
-  public WebsocketPayload<List<Participants>> startGame(WebsocketPayload<Game> payload) {
-    Game game = gameService.startGame(payload.getContent());
-
+  public WebsocketPayload<List<Participants>> startGame(Game game) {
     List<Participants> participants = participantsService.getParticipantsByGame(game.getId());
+    participants.forEach(participants1 -> participants1.setInGame(true));
+    participants = participantsRepository.saveAllAndFlush(participants);
+
     return WebsocketPayload.<List<Participants>>builder()
         .users(participants.stream().map(Participants::getUser).collect(Collectors.toList()))
         .type(SocketRequestType.Start_Game)
@@ -98,6 +105,34 @@ public class WebSocketServiceImpl extends BaseService implements WebSocketServic
         .type(SocketRequestType.Evaluate_Answer)
         .time(LocalDateTime.now())
         .content(evaluatedAnswer)
+        .build();
+  }
+
+  @Override
+  @Transactional
+  public WebsocketPayload<List<Participants>> finishedGame(UserGame userGame) {
+    Game game = userGame.getGame();
+    List<Participants> participants = participantsService.getParticipantsByGame(game.getId());
+
+    game.setPlayers(game.getPlayers() - 1);
+    game = gameRepository.saveAndFlush(game);
+    participants.forEach(
+        participant -> {
+          if (participant.getUser().getId().equals(userGame.getUser().getId())) {
+            participant.setInGame(false);
+            participantsRepository.saveAndFlush(participant);
+          }
+        });
+
+    if (game.getPlayers() != 0) {
+      return null;
+    }
+
+    return WebsocketPayload.<List<Participants>>builder()
+        .users(participants.stream().map(Participants::getUser).collect(Collectors.toList()))
+        .type(SocketRequestType.Evaluate_Answer)
+        .time(LocalDateTime.now())
+        .content(participants)
         .build();
   }
 

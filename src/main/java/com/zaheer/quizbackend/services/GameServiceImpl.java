@@ -5,10 +5,9 @@ import com.zaheer.quizbackend.models.db.*;
 import com.zaheer.quizbackend.repos.*;
 import com.zaheer.quizbackend.services.interfaces.CountryService;
 import com.zaheer.quizbackend.services.interfaces.GameService;
-import com.zaheer.quizbackend.websockets.models.WebsocketPayload;
 import com.zaheer.quizbackend.websockets.models.generics.EvaluatedAnswer;
 import com.zaheer.quizbackend.websockets.models.generics.GameQuestion;
-import com.zaheer.quizbackend.websockets.models.generics.JoinGame;
+import com.zaheer.quizbackend.websockets.models.generics.UserGame;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -63,7 +62,7 @@ public class GameServiceImpl extends BaseService implements GameService {
 
   @Override
   @Transactional
-  public Game joinGame(JoinGame input) {
+  public Game joinGame(UserGame input) {
 
     Game myGame = input.getGame();
 
@@ -87,7 +86,7 @@ public class GameServiceImpl extends BaseService implements GameService {
                 })
             .orElseThrow(resourceNotFound("Game with id: " + myGame.getId() + " was not found."));
 
-    Participants p = Participants.builder().user(input.getJoining()).game(g).build();
+    Participants p = Participants.builder().user(input.getUser()).game(g).build();
     participantsService.create(p);
 
     return gameRepository.saveAndFlush(g);

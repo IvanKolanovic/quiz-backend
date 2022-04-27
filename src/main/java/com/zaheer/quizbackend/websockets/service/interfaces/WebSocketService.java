@@ -7,7 +7,7 @@ import com.zaheer.quizbackend.models.db.UserAnswer;
 import com.zaheer.quizbackend.websockets.models.WebsocketPayload;
 import com.zaheer.quizbackend.websockets.models.generics.EvaluatedAnswer;
 import com.zaheer.quizbackend.websockets.models.generics.GameQuestion;
-import com.zaheer.quizbackend.websockets.models.generics.JoinGame;
+import com.zaheer.quizbackend.websockets.models.generics.UserGame;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -18,16 +18,19 @@ public interface WebSocketService {
   WebsocketPayload<String> connected(User user);
 
   @Transactional
-  WebsocketPayload<Game> joinGame(JoinGame game);
+  WebsocketPayload<Game> joinGame(UserGame game);
 
   @Transactional
-  WebsocketPayload<List<Participants>> startGame(WebsocketPayload<Game> payload);
+  WebsocketPayload<List<Participants>> startGame(Game payload);
 
   @Transactional
   WebsocketPayload<List<GameQuestion>> prepareQuestions(Game game);
 
   @Transactional
   WebsocketPayload<EvaluatedAnswer> evaluateAnswer(UserAnswer userAnswer);
+
+  @Transactional
+  WebsocketPayload<List<Participants>> finishedGame(UserGame userGame);
 
   @Transactional
   WebsocketPayload<Participants> leaveLiveGame(Participants payload);

@@ -1,28 +1,20 @@
 package com.zaheer.quizbackend.websockets.controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.zaheer.quizbackend.exceptions.RequestFailedException;
 import com.zaheer.quizbackend.models.db.Game;
 import com.zaheer.quizbackend.models.db.Participants;
 import com.zaheer.quizbackend.models.db.User;
 import com.zaheer.quizbackend.models.db.UserAnswer;
-import com.zaheer.quizbackend.websockets.Greeting;
-import com.zaheer.quizbackend.websockets.HelloMessage;
 import com.zaheer.quizbackend.websockets.models.WebsocketPayload;
 import com.zaheer.quizbackend.websockets.models.generics.EvaluatedAnswer;
 import com.zaheer.quizbackend.websockets.models.generics.GameQuestion;
-import com.zaheer.quizbackend.websockets.models.generics.JoinGame;
+import com.zaheer.quizbackend.websockets.models.generics.UserGame;
 import com.zaheer.quizbackend.websockets.service.interfaces.WebSocketService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.util.HtmlUtils;
 
 import java.util.List;
 
@@ -32,14 +24,7 @@ import java.util.List;
 public class WebsocketController {
 
   private final SimpMessagingTemplate simpMessagingTemplate;
-  private final ObjectMapper objectMapper;
   private final WebSocketService webSocketService;
-
-  @MessageMapping("/hello")
-  @SendTo("/topic/greetings")
-  public Greeting greeting(HelloMessage message) {
-    return new Greeting("Hello! " + HtmlUtils.htmlEscape(message.getName()));
-  }
 
   @MessageMapping("/user-connected")
   public void connected(@Payload User user) {
@@ -48,7 +33,7 @@ public class WebsocketController {
   }
 
   @MessageMapping("/join-game")
-  public void joinGame(@Payload JoinGame joinGame) {
+  public void joinGame(@Payload UserGame joinGame) {
     WebsocketPayload<Game> newPayload = webSocketService.joinGame(joinGame);
 
     newPayload
@@ -61,8 +46,8 @@ public class WebsocketController {
   }
 
   @MessageMapping("/start-game")
-  public void startGame(@Payload WebsocketPayload<Game> payload) {
-    WebsocketPayload<List<Participants>> newPayload = webSocketService.startGame(payload);
+  public void startGame(@Payload Game game) {
+    WebsocketPayload<List<Participants>> newPayload = webSocketService.startGame(game);
     newPayload
         .getContent()
         .forEach(
@@ -72,10 +57,9 @@ public class WebsocketController {
     log.info("=== Game Started: {}", newPayload);
   }
 
-  @MessageMapping("/leave-game")
-  public void leaveLiveGame(@Payload WebsocketPayload<Participants> payload) {
-    WebsocketPayload<Participants> newPayload =
-        webSocketService.leaveLiveGame(payload.getContent());
+  @MessageMapping("/leave-live-game")
+  public void leaveLiveGame(@Payload Participants payload) {
+    WebsocketPayload<Participants> newPayload = webSocketService.leaveLiveGame(payload);
     newPayload
         .getUsers()
         .forEach(
@@ -86,9 +70,8 @@ public class WebsocketController {
   }
 
   @MessageMapping("/send-questions")
-  public void sendQuestions(@Payload WebsocketPayload<Game> payload) {
-    WebsocketPayload<List<GameQuestion>> newPayload =
-        webSocketService.prepareQuestions(payload.getContent());
+  public void sendQuestions(@Payload Game payload) {
+    WebsocketPayload<List<GameQuestion>> newPayload = webSocketService.prepareQuestions(payload);
     newPayload
         .getUsers()
         .forEach(
@@ -99,9 +82,8 @@ public class WebsocketController {
   }
 
   @MessageMapping("/evaluate-answer")
-  public void evaluateUserAnswer(@Payload WebsocketPayload<UserAnswer> payload) {
-    WebsocketPayload<EvaluatedAnswer> newPayload =
-        webSocketService.evaluateAnswer(payload.getContent());
+  public void evaluateUserAnswer(@Payload UserAnswer payload) {
+    WebsocketPayload<EvaluatedAnswer> newPayload = webSocketService.evaluateAnswer(payload);
     newPayload
         .getUsers()
         .forEach(
@@ -109,5 +91,19 @@ public class WebsocketController {
                 simpMessagingTemplate.convertAndSendToUser(
                     user.getUsername(), "/queue", newPayload));
     log.info("=== Evaluate Answer: {}", newPayload);
+  }
+
+  @MessageMapping("/finished-game")
+  public void finishedGame(@Payload UserGame payload) {
+    WebsocketPayload<List<Participants>> newPayload = webSocketService.finishedGame(payload);
+    if (newPayload == null) return;
+
+    newPayload
+        .getUsers()
+        .forEach(
+            user ->
+                simpMessagingTemplate.convertAndSendToUser(
+                    user.getUsername(), "/queue", newPayload));
+    log.info("=== Game Finished: {}", newPayload);
   }
 }
