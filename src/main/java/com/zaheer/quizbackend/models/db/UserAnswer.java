@@ -24,7 +24,6 @@ public class UserAnswer {
   @JoinColumn(name = "user_id", referencedColumnName = "id")
   private User user;
 
-  @JsonIgnore
   @ManyToOne(optional = false)
   @JoinColumn(name = "question_id", referencedColumnName = "id")
   private Question question;

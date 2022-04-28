@@ -20,7 +20,7 @@ public class QuestionChoices {
   private Long id;
 
   @JsonIgnore
-  @ManyToOne(optional = false)
+  @ManyToOne
   @JoinColumn(name = "question_id", referencedColumnName = "id")
   private Question question;
 

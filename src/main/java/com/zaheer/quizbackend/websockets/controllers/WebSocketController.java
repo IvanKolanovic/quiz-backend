@@ -93,7 +93,6 @@ public class WebSocketController {
   public void finishedGame(@Payload UserGame payload) {
     WebsocketPayload<List<Participants>> newPayload = webSocketService.finishedGame(payload);
     if (newPayload == null) return;
-
     newPayload
         .getUsers()
         .forEach(
