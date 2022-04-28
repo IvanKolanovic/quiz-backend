@@ -4,12 +4,12 @@ import com.zaheer.quizbackend.models.SocketRequestType;
 import com.zaheer.quizbackend.models.db.*;
 import com.zaheer.quizbackend.repos.GameRepository;
 import com.zaheer.quizbackend.repos.ParticipantsRepository;
+import com.zaheer.quizbackend.repos.QuestionRepository;
 import com.zaheer.quizbackend.services.BaseService;
 import com.zaheer.quizbackend.services.interfaces.GameService;
 import com.zaheer.quizbackend.services.interfaces.ParticipantsService;
 import com.zaheer.quizbackend.websockets.models.WebsocketPayload;
 import com.zaheer.quizbackend.websockets.models.generics.EvaluatedAnswer;
-import com.zaheer.quizbackend.websockets.models.generics.GameQuestion;
 import com.zaheer.quizbackend.websockets.models.generics.UserGame;
 import com.zaheer.quizbackend.websockets.service.interfaces.WebSocketService;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +30,7 @@ public class WebSocketServiceImpl extends BaseService implements WebSocketServic
   private final ParticipantsService participantsService;
   private final GameRepository gameRepository;
   private final ParticipantsRepository participantsRepository;
+  private final QuestionRepository questionRepository;
 
   @Override
   @Transactional
@@ -70,10 +71,8 @@ public class WebSocketServiceImpl extends BaseService implements WebSocketServic
   @Override
   @Transactional
   public WebsocketPayload<List<Question>> prepareQuestions(Game game) {
-    List<Question> questions =
-        gameService.prepareQuestions(game).stream()
-            .map(GameQuestion::getQuestion)
-            .collect(Collectors.toList());
+    gameService.prepareQuestions(game);
+    List<Question> questions = questionRepository.findAllByGameIdOrderByIdAsc(game.getId());
     List<Participants> participants = participantsService.getParticipantsByGame(game.getId());
     return WebsocketPayload.<List<Question>>builder()
         .users(participants.stream().map(Participants::getUser).collect(Collectors.toList()))
@@ -87,7 +86,6 @@ public class WebSocketServiceImpl extends BaseService implements WebSocketServic
   @Transactional
   public WebsocketPayload<EvaluatedAnswer> evaluateAnswer(UserAnswer userAnswer) {
     EvaluatedAnswer evaluatedAnswer = gameService.evaluateUserAnswer(userAnswer);
-
     List<Participants> participants =
         participantsService.getParticipantsByGame(userAnswer.getGame().getId());
     return WebsocketPayload.<EvaluatedAnswer>builder()
