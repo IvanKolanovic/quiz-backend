@@ -18,7 +18,10 @@ public class GameRoomScheduler {
 
   @Scheduled(fixedDelay = 15000)
   public void deleteEmptyGames() {
-    List<Game> games = gameRepository.findAllByActiveTrueAndPlayers(0);
-    gameRepository.deleteAll(games);
+    List<Game> games = gameRepository.findAllByActiveTrue();
+    games.forEach(
+        game -> {
+          if (game.getPlayers().equals(0)) gameRepository.deleteAll(games);
+        });
   }
 }
