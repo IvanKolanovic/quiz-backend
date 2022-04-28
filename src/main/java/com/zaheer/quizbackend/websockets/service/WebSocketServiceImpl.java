@@ -136,7 +136,6 @@ public class WebSocketServiceImpl extends BaseService implements WebSocketServic
   @Override
   @Transactional
   public WebsocketPayload<Participants> leaveLiveGame(UserGame payload) {
-
     Participants participant =
         participantsRepository.findByUserIdAndGameId(
             payload.getUser().getId(), payload.getGame().getId());
