@@ -33,5 +33,5 @@ public interface WebSocketService {
   WebsocketPayload<List<Participants>> finishedGame(UserGame userGame);
 
   @Transactional
-  WebsocketPayload<Participants> leaveLiveGame(Participants payload);
+  WebsocketPayload<Participants> leaveLiveGame(UserGame payload);
 }

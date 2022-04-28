@@ -7,7 +7,6 @@ import com.zaheer.quizbackend.models.db.User;
 import com.zaheer.quizbackend.models.db.UserAnswer;
 import com.zaheer.quizbackend.repos.GameRepository;
 import com.zaheer.quizbackend.repos.ParticipantsRepository;
-import com.zaheer.quizbackend.repos.UserRepository;
 import com.zaheer.quizbackend.services.BaseService;
 import com.zaheer.quizbackend.services.interfaces.GameService;
 import com.zaheer.quizbackend.services.interfaces.ParticipantsService;
@@ -67,15 +66,7 @@ public class WebSocketServiceImpl extends BaseService implements WebSocketServic
   @Transactional
   public WebsocketPayload<List<Participants>> startGame(Game game) {
     List<Participants> participants = participantsService.getParticipantsByGame(game.getId());
-    participants.forEach(participants1 -> participants1.setInGame(true));
-    participants = participantsRepository.saveAllAndFlush(participants);
-
-    return WebsocketPayload.<List<Participants>>builder()
-        .users(participants.stream().map(Participants::getUser).collect(Collectors.toList()))
-        .type(SocketRequestType.Start_Game)
-        .time(LocalDateTime.now())
-        .content(participants)
-        .build();
+    return gameService.startGame(game, participants);
   }
 
   @Override
@@ -127,6 +118,9 @@ public class WebSocketServiceImpl extends BaseService implements WebSocketServic
       return null;
     }
 
+    game.setActive(false);
+    gameRepository.saveAndFlush(game);
+
     return WebsocketPayload.<List<Participants>>builder()
         .users(participants.stream().map(Participants::getUser).collect(Collectors.toList()))
         .type(SocketRequestType.Evaluate_Answer)
@@ -137,8 +131,12 @@ public class WebSocketServiceImpl extends BaseService implements WebSocketServic
 
   @Override
   @Transactional
-  public WebsocketPayload<Participants> leaveLiveGame(Participants payload) {
-    Participants participants = gameService.leaveLiveGameRoom(payload);
+  public WebsocketPayload<Participants> leaveLiveGame(UserGame payload) {
+
+    Participants participant =
+        participantsRepository.findByUserIdAndGameId(
+            payload.getUser().getId(), payload.getGame().getId());
+    participant = gameService.leaveLiveGameRoom(participant);
     List<Participants> receivers =
         participantsService.getParticipantsByGame(payload.getGame().getId());
 
@@ -146,7 +144,7 @@ public class WebSocketServiceImpl extends BaseService implements WebSocketServic
         .users(receivers.stream().map(Participants::getUser).collect(Collectors.toList()))
         .type(SocketRequestType.Left_Game)
         .time(LocalDateTime.now())
-        .content(participants)
+        .content(participant)
         .build();
   }
 }

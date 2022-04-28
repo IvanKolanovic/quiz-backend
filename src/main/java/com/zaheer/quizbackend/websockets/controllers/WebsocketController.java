@@ -59,7 +59,7 @@ public class WebsocketController {
   }
 
   @MessageMapping("/leave-live-game")
-  public void leaveLiveGame(@Payload Participants payload) {
+  public void leaveLiveGame(@Payload UserGame payload) {
     WebsocketPayload<Participants> newPayload = webSocketService.leaveLiveGame(payload);
     newPayload
         .getUsers()

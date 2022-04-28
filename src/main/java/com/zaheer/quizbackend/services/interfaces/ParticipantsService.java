@@ -14,7 +14,7 @@ public interface ParticipantsService {
   Participants getParticipantById(Long id);
 
   @Transactional
-  Participants updateInGame(Long id, Boolean bool);
+  Participants updateInGame(Participants participants, Boolean bool);
 
   List<Participants> getParticipantsByGame(Long gameId);
 }

@@ -1,10 +1,12 @@
 package com.zaheer.quizbackend.services;
 
 import com.zaheer.quizbackend.exceptions.RequestFailedException;
+import com.zaheer.quizbackend.models.SocketRequestType;
 import com.zaheer.quizbackend.models.db.*;
 import com.zaheer.quizbackend.repos.*;
 import com.zaheer.quizbackend.services.interfaces.CountryService;
 import com.zaheer.quizbackend.services.interfaces.GameService;
+import com.zaheer.quizbackend.websockets.models.WebsocketPayload;
 import com.zaheer.quizbackend.websockets.models.generics.EvaluatedAnswer;
 import com.zaheer.quizbackend.websockets.models.generics.GameQuestion;
 import com.zaheer.quizbackend.websockets.models.generics.UserGame;
@@ -94,14 +96,20 @@ public class GameServiceImpl extends BaseService implements GameService {
 
   @Override
   @Transactional
-  public Game startGame(Game game) {
-    if (game.getPlayers() == 2 && game.getActive()) {
-      game.setStarted(true);
-      participantsService
-          .getParticipantsByGame(game.getId())
-          .forEach(participants -> participantsService.updateInGame(participants.getId(), true));
-      return gameRepository.saveAndFlush(game);
-    } else return null;
+  public WebsocketPayload<List<Participants>> startGame(
+      Game game, List<Participants> participants) {
+    game.setStarted(true);
+    participants =
+        participants.stream()
+            .map(participant -> participantsService.updateInGame(participant, true))
+            .collect(Collectors.toList());
+    gameRepository.saveAndFlush(game);
+    return WebsocketPayload.<List<Participants>>builder()
+        .users(participants.stream().map(Participants::getUser).collect(Collectors.toList()))
+        .type(SocketRequestType.Start_Game)
+        .time(LocalDateTime.now())
+        .content(participants)
+        .build();
   }
 
   @Override

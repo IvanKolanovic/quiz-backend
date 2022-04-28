@@ -1,6 +1,7 @@
 package com.zaheer.quizbackend.services.interfaces;
 
 import com.zaheer.quizbackend.models.db.*;
+import com.zaheer.quizbackend.websockets.models.WebsocketPayload;
 import com.zaheer.quizbackend.websockets.models.generics.EvaluatedAnswer;
 import com.zaheer.quizbackend.websockets.models.generics.GameQuestion;
 import com.zaheer.quizbackend.websockets.models.generics.UserGame;
@@ -19,7 +20,7 @@ public interface GameService {
   Game joinGame(UserGame payload);
 
   @Transactional
-  Game startGame(Game game);
+  WebsocketPayload<List<Participants>> startGame(Game game, List<Participants> participants);
 
   @Transactional
   void checkAndUpdateGameStatus(Game input);

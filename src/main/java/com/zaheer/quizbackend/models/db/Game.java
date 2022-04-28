@@ -2,10 +2,7 @@ package com.zaheer.quizbackend.models.db;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
@@ -17,6 +14,7 @@ import java.util.stream.Collectors;
 @Builder
 @Entity
 @Table(name = "game")
+@ToString
 public class Game {
 
   @Transient List<User> users;

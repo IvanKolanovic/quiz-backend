@@ -39,10 +39,9 @@ public class ParticipantsServiceImpl extends BaseService implements Participants
 
   @Override
   @Transactional
-  public Participants updateInGame(Long id, Boolean bool) {
-    Participants p = getParticipantById(id);
-    p.setInGame(bool);
-    return participantsRepository.saveAndFlush(p);
+  public Participants updateInGame(Participants participants, Boolean bool) {
+    participants.setInGame(bool);
+    return participantsRepository.saveAndFlush(participants);
   }
 
   @Override
