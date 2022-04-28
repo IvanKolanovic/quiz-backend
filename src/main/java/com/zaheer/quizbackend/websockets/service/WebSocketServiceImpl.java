@@ -37,10 +37,9 @@ public class WebSocketServiceImpl extends BaseService implements WebSocketServic
   @Override
   @Transactional
   public WebsocketPayload<String> connected(User user) {
-    log.info("=== User Connected: {}", user);
     return WebsocketPayload.<String>builder()
         .users(List.of(user))
-        .type(SocketRequestType.Connected)
+        .type(SocketRequestTypxe.Connected)
         .time(LocalDateTime.now())
         .content("Welcome " + user.getUsername() + " to Flaginator. Enjoy!")
         .build();
@@ -50,7 +49,6 @@ public class WebSocketServiceImpl extends BaseService implements WebSocketServic
   @Transactional
   public WebsocketPayload<Game> joinGame(UserGame input) {
     Game game = gameService.joinGame(input);
-    log.info("=== Joined game: {}", game);
     return WebsocketPayload.<Game>builder()
         .users(
             participantsService.getParticipantsByGame(game.getId()).stream()
