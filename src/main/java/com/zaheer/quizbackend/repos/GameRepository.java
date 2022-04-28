@@ -16,4 +16,6 @@ public interface GameRepository extends JpaRepository<Game, Long> {
   List<Game> findAllByActiveTrueAndPlayers(Integer num);
 
   List<Game> findAllByActiveTrue();
+
+  List<Game> findAllByActiveTrueAndStartedFalse();
 }

@@ -18,7 +18,7 @@ import java.util.List;
 @Controller
 @RequiredArgsConstructor
 @Slf4j
-public class WebsocketController {
+public class WebSocketController {
 
   private final SimpMessagingTemplate simpMessagingTemplate;
   private final WebSocketService webSocketService;
@@ -44,6 +44,7 @@ public class WebsocketController {
 
   @MessageMapping("/start-game")
   public void startGame(@Payload Game game) {
+    if (game.getStarted()) return;
     log.info("Start game");
     WebsocketPayload<List<Participants>> newPayload = webSocketService.startGame(game);
     newPayload

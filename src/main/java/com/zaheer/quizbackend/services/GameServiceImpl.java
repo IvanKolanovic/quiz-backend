@@ -59,21 +59,19 @@ public class GameServiceImpl extends BaseService implements GameService {
 
   @Override
   public List<Game> getAll() {
-    return gameRepository.findAllByActiveTrue();
+    return gameRepository.findAllByActiveTrueAndStartedFalse();
   }
 
   @Override
   @Transactional
   public Game joinGame(UserGame input) {
-
     Game myGame = input.getGame();
-
     Game g =
         gameRepository
             .findByIdAndActiveTrue(myGame.getId())
             .map(
                 game -> {
-                  if (game.getPlayers() == 2)
+                  if (game.getPlayers().equals(2))
                     throw new RequestFailedException(HttpStatus.CONFLICT, "Game is full.");
                   if (myGame.getName().equals(game.getName())) {
                     if (Optional.ofNullable(myGame.getPassword()).isPresent()) {
@@ -204,6 +202,21 @@ public class GameServiceImpl extends BaseService implements GameService {
 
     return new EvaluatedAnswer(participants, u);
   }
+
+  /*@Override
+  @Transactional
+  public EvaluatedAnswer evaluateUserAnswer(UserAnswer userAnswer) {
+    userAnswer.setAnswerTime(LocalDateTime.now());
+    userAnswer.setIsRight(userAnswer.getChoice().getIsRight());
+
+    Participants participants = participantsRepository.findByUserId(userAnswer.getUser().getId());
+    if (userAnswer.getIsRight()) participants.updateScore(50);
+
+    UserAnswer u = userAnswerRepository.saveAndFlush(userAnswer);
+    participants = participantsRepository.saveAndFlush(participants);
+
+    return new EvaluatedAnswer(participants, u);
+  }*/
 
   @Override
   public boolean isNameInUse(String name) {

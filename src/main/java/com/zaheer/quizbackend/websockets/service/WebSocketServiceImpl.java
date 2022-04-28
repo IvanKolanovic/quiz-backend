@@ -125,6 +125,8 @@ public class WebSocketServiceImpl extends BaseService implements WebSocketServic
     game.setActive(false);
     gameRepository.saveAndFlush(game);
 
+    participants = participantsService.getParticipantsByGame(game.getId());
+
     return WebsocketPayload.<List<Participants>>builder()
         .users(participants.stream().map(Participants::getUser).collect(Collectors.toList()))
         .type(SocketRequestType.Evaluate_Answer)
