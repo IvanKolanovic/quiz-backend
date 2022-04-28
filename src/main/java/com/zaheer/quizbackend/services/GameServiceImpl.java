@@ -124,7 +124,7 @@ public class GameServiceImpl extends BaseService implements GameService {
   @Override
   @Transactional
   public Participants leaveLiveGameRoom(Participants participant) {
-    Game game = get(participant.getId());
+    Game game = get(participant.getGame().getId());
 
     participant.setUserScore(0);
     participant.setInGame(false);
