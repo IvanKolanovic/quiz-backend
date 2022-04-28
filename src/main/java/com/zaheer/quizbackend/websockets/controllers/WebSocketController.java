@@ -81,12 +81,12 @@ public class WebSocketController {
   @MessageMapping("/evaluate-answer")
   public void evaluateUserAnswer(@Payload UserAnswer payload) {
     WebsocketPayload<EvaluatedAnswer> newPayload = webSocketService.evaluateAnswer(payload);
-    newPayload
+ /*   newPayload
         .getUsers()
         .forEach(
             user ->
                 simpMessagingTemplate.convertAndSendToUser(
-                    user.getUsername(), "/queue", newPayload));
+                    user.getUsername(), "/queue", newPayload));*/
   }
 
   @MessageMapping("/finished-game")
