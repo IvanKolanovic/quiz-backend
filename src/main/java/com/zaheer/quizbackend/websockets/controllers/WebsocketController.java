@@ -12,6 +12,7 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -30,6 +31,7 @@ public class WebsocketController {
   }
 
   @MessageMapping("/join-game")
+  @Transactional
   public void joinGame(@Payload UserGame joinGame) {
     WebsocketPayload<Game> newPayload = webSocketService.joinGame(joinGame);
 
@@ -42,6 +44,7 @@ public class WebsocketController {
   }
 
   @MessageMapping("/start-game")
+  @Transactional
   public void startGame(@Payload Game game) {
     log.info("Start game");
     WebsocketPayload<List<Participants>> newPayload = webSocketService.startGame(game);
@@ -55,6 +58,7 @@ public class WebsocketController {
   }
 
   @MessageMapping("/leave-live-game")
+  @Transactional
   public void leaveLiveGame(@Payload UserGame payload) {
     WebsocketPayload<Participants> newPayload = webSocketService.leaveLiveGame(payload);
     newPayload
@@ -66,6 +70,7 @@ public class WebsocketController {
   }
 
   @MessageMapping("/send-questions")
+  @Transactional
   public void sendQuestions(@Payload Game payload) {
     WebsocketPayload<List<Question>> newPayload = webSocketService.prepareQuestions(payload);
     newPayload
@@ -77,6 +82,7 @@ public class WebsocketController {
   }
 
   @MessageMapping("/evaluate-answer")
+  @Transactional
   public void evaluateUserAnswer(@Payload UserAnswer payload) {
     WebsocketPayload<EvaluatedAnswer> newPayload = webSocketService.evaluateAnswer(payload);
     newPayload
@@ -88,6 +94,7 @@ public class WebsocketController {
   }
 
   @MessageMapping("/finished-game")
+  @Transactional
   public void finishedGame(@Payload UserGame payload) {
     WebsocketPayload<List<Participants>> newPayload = webSocketService.finishedGame(payload);
     if (newPayload == null) return;

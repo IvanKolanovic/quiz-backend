@@ -27,7 +27,7 @@ public class Question {
   @JoinColumn(name = "game_id", referencedColumnName = "id")
   private Game game;
 
-  @OneToMany(mappedBy = "question")
+  @OneToMany(mappedBy = "question",cascade = CascadeType.ALL)
   private List<QuestionChoices> questionChoices = List.of();
 
   @JsonIgnore

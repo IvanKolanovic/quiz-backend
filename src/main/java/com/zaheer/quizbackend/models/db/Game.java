@@ -17,6 +17,8 @@ import java.util.stream.Collectors;
 @ToString
 public class Game {
 
+  @Transient List<User> users;
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
@@ -41,7 +43,7 @@ public class Game {
   private Boolean locked;
 
   @JsonIgnore
-  @OneToMany(mappedBy = "game")
+  @OneToMany(mappedBy = "game",cascade = CascadeType.ALL)
   private List<Question> questions = List.of();
 
   @JsonIgnore
@@ -49,7 +51,7 @@ public class Game {
   private List<UserAnswer> userAnswers = List.of();
 
   @JsonIgnore
-  @OneToMany(mappedBy = "game")
+  @OneToMany(mappedBy = "game",cascade = CascadeType.ALL)
   private List<Participants> participants = List.of();
 
   public List<User> getUsers() {
