@@ -31,9 +31,7 @@ public class WebSocketController {
   }
 
   @MessageMapping("/join-game")
-  public void joinGame(@Payload UserGame joinGame) throws InterruptedException {
-    Thread.sleep(1000);
-
+  public void joinGame(@Payload UserGame joinGame) {
     WebsocketPayload<Game> newPayload = webSocketService.joinGame(joinGame);
     newPayload
         .getUsers()

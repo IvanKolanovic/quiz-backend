@@ -40,5 +40,8 @@ public interface GameService {
   @Transactional
   EvaluatedAnswer evaluateUserAnswer(UserAnswer userAnswer);
 
+  @Transactional
+  void applyScore(Participants participant);
+
   boolean isNameInUse(String name);
 }

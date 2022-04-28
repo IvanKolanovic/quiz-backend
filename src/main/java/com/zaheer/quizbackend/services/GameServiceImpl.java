@@ -6,9 +6,9 @@ import com.zaheer.quizbackend.models.db.*;
 import com.zaheer.quizbackend.repos.*;
 import com.zaheer.quizbackend.services.interfaces.CountryService;
 import com.zaheer.quizbackend.services.interfaces.GameService;
+import com.zaheer.quizbackend.services.interfaces.UserStatisticsService;
 import com.zaheer.quizbackend.websockets.models.WebsocketPayload;
 import com.zaheer.quizbackend.websockets.models.generics.EvaluatedAnswer;
-import com.zaheer.quizbackend.websockets.models.generics.GameQuestion;
 import com.zaheer.quizbackend.websockets.models.generics.UserGame;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,6 +36,7 @@ public class GameServiceImpl extends BaseService implements GameService {
   private final QuestionRepository questionRepository;
   private final QuestionChoicesRepository questionChoicesRepository;
   private final UserAnswerRepository userAnswerRepository;
+  private final UserStatisticsService userStatisticsService;
 
   @Override
   public Game create(Game game) {
@@ -152,7 +153,7 @@ public class GameServiceImpl extends BaseService implements GameService {
 
     List<Question> questions = new ArrayList<>();
     for (int i = 0; i < 5; i++) {
-      long rand = randomNumberBetween(0, countryService.getNumOfCountries());
+      long rand = randomNumberBetween(1, countryService.getNumOfCountries() + 1);
       questions.add(
           Question.builder()
               .game(game)
@@ -175,7 +176,7 @@ public class GameServiceImpl extends BaseService implements GameService {
             .build());
 
     for (int i = 0; i < 3; i++) {
-      long rand = randomNumberBetween(0, countryService.getNumOfCountries());
+      long rand = randomNumberBetween(1, countryService.getNumOfCountries() + 1);
 
       Country choice = countryService.getCountry(rand);
 
@@ -194,7 +195,9 @@ public class GameServiceImpl extends BaseService implements GameService {
     userAnswer.setAnswerTime(LocalDateTime.now());
     userAnswer.setIsRight(userAnswer.getChoice().getIsRight());
 
-    Participants participants = participantsRepository.findByUserId(userAnswer.getUser().getId());
+    Participants participants =
+        participantsRepository.findByUserIdAndGameId(
+            userAnswer.getUser().getId(), userAnswer.getGame().getId());
     if (userAnswer.getIsRight()) participants.updateScore(50);
 
     UserAnswer u = userAnswerRepository.saveAndFlush(userAnswer);
@@ -203,20 +206,12 @@ public class GameServiceImpl extends BaseService implements GameService {
     return new EvaluatedAnswer(participants, u);
   }
 
-  /*@Override
+  @Override
   @Transactional
-  public EvaluatedAnswer evaluateUserAnswer(UserAnswer userAnswer) {
-    userAnswer.setAnswerTime(LocalDateTime.now());
-    userAnswer.setIsRight(userAnswer.getChoice().getIsRight());
-
-    Participants participants = participantsRepository.findByUserId(userAnswer.getUser().getId());
-    if (userAnswer.getIsRight()) participants.updateScore(50);
-
-    UserAnswer u = userAnswerRepository.saveAndFlush(userAnswer);
-    participants = participantsRepository.saveAndFlush(participants);
-
-    return new EvaluatedAnswer(participants, u);
-  }*/
+  public void applyScore(Participants participant) {
+    UserStatistics userStatistics = participant.getUser().getUserStatistics();
+    userStatisticsService.updateStatistic(userStatistics.getId(), userStatistics);
+  }
 
   @Override
   public boolean isNameInUse(String name) {
