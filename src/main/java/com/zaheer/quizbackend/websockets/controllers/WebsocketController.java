@@ -55,6 +55,7 @@ public class WebsocketController {
                 simpMessagingTemplate.convertAndSendToUser(
                     participants.getUser().getUsername(), "/queue", newPayload));
     log.info("=== Game Started: {}", newPayload);
+    sendQuestions(game);
   }
 
   @MessageMapping("/leave-live-game")

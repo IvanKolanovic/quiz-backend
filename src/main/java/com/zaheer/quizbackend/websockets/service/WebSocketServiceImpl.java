@@ -34,7 +34,6 @@ public class WebSocketServiceImpl extends BaseService implements WebSocketServic
   private final ParticipantsService participantsService;
   private final GameRepository gameRepository;
   private final ParticipantsRepository participantsRepository;
-  private final UserRepository userRepository;
 
   @Override
   @Transactional
