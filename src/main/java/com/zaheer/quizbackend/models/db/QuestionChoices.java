@@ -12,7 +12,6 @@ import java.util.List;
 @Table(name = "question_choices")
 @Entity
 @Builder
-@ToString
 public class QuestionChoices {
 
   @Id

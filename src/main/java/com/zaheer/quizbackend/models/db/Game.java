@@ -14,7 +14,6 @@ import java.util.stream.Collectors;
 @Builder
 @Entity
 @Table(name = "game")
-@ToString
 public class Game {
 
   @Transient List<User> users;

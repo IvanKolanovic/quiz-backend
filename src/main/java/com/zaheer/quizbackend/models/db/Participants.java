@@ -10,7 +10,6 @@ import javax.persistence.*;
 @Builder
 @Entity
 @Table(name = "participants")
-@ToString
 public class Participants {
 
   @Id

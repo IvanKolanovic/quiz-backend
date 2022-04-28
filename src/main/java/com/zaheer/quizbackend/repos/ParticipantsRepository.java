@@ -6,9 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface ParticipantsRepository extends JpaRepository<Participants, Long> {
-  List<Participants> findAllByGameId(Long gameId);
+  List<Participants> findAllByGameIdAndInGameTrue(Long gameId);
 
   Participants findByUserId(Long id);
 
-  Participants findByUserIdAndGameId(Long id,Long gameId);
+  Participants findByUserIdAndGameIdAndInGameTrue(Long id,Long gameId);
 }

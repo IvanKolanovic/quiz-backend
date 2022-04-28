@@ -138,7 +138,7 @@ public class WebSocketServiceImpl extends BaseService implements WebSocketServic
   @Transactional
   public WebsocketPayload<Participants> leaveLiveGame(UserGame payload) {
     Participants participant =
-        participantsRepository.findByUserIdAndGameId(
+        participantsRepository.findByUserIdAndGameIdAndInGameTrue(
             payload.getUser().getId(), payload.getGame().getId());
     participant = gameService.leaveLiveGameRoom(participant);
     List<Participants> receivers =

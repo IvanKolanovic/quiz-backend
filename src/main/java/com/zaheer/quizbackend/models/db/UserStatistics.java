@@ -11,7 +11,6 @@ import javax.persistence.*;
 @Builder
 @Table(name = "user_statistics")
 @Entity
-@ToString
 public class UserStatistics {
 
   @Id

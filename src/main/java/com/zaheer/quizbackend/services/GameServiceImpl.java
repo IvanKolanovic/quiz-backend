@@ -67,18 +67,21 @@ public class GameServiceImpl extends BaseService implements GameService {
   @Transactional
   public Game joinGame(UserGame input) {
     Game myGame = input.getGame();
+
     Game g =
         gameRepository
             .findByIdAndActiveTrue(myGame.getId())
             .map(
                 game -> {
-                  if (game.getPlayers().equals(2))
+                  if (game.getPlayers() == 2) {
                     throw new RequestFailedException(HttpStatus.CONFLICT, "Game is full.");
-                  if (myGame.getName().equals(game.getName())) {
+                  } else if (myGame.getName().equals(game.getName())) {
                     if (Optional.ofNullable(myGame.getPassword()).isPresent()) {
-                      if (myGame.getPassword().equals(game.getPassword()))
+                      if (myGame.getPassword().equals(game.getPassword())) {
                         game.setPlayers(game.getPlayers() + 1);
-                      else throw new RequestFailedException(HttpStatus.CONFLICT, "Wrong password.");
+                      } else {
+                        throw new RequestFailedException(HttpStatus.CONFLICT, "Wrong password.");
+                      }
                     } else game.setPlayers(game.getPlayers() + 1);
                   } else {
                     throw new RequestFailedException(HttpStatus.CONFLICT, "Wrong game name.");
@@ -89,7 +92,8 @@ public class GameServiceImpl extends BaseService implements GameService {
 
     Participants p = Participants.builder().user(input.getUser()).game(g).build();
     participantsService.create(p);
-
+    List<Participants> participants = participantsService.getParticipantsByGame(myGame.getId());
+    g.setPlayers(participants.size());
     return gameRepository.saveAndFlush(g);
   }
 
@@ -196,7 +200,7 @@ public class GameServiceImpl extends BaseService implements GameService {
     userAnswer.setIsRight(userAnswer.getChoice().getIsRight());
 
     Participants participants =
-        participantsRepository.findByUserIdAndGameId(
+        participantsRepository.findByUserIdAndGameIdAndInGameTrue(
             userAnswer.getUser().getId(), userAnswer.getGame().getId());
     if (userAnswer.getIsRight()) participants.updateScore(50);
 
