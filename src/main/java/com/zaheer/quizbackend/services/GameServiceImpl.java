@@ -98,6 +98,7 @@ public class GameServiceImpl extends BaseService implements GameService {
   @Transactional
   public WebsocketPayload<List<Participants>> startGame(
       Game game, List<Participants> participants) {
+    log.info("Start game u game service");
     game.setStarted(true);
     participants =
         participants.stream()

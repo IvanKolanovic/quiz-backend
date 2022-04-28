@@ -42,11 +42,11 @@ public class WebsocketController {
             user ->
                 simpMessagingTemplate.convertAndSendToUser(
                     user.getUsername(), "/queue", newPayload));
-    log.info("=== Join Game: {}", newPayload);
   }
 
   @MessageMapping("/start-game")
   public void startGame(@Payload Game game) {
+    log.info("Start game");
     WebsocketPayload<List<Participants>> newPayload = webSocketService.startGame(game);
     newPayload
         .getContent()
@@ -54,7 +54,6 @@ public class WebsocketController {
             participants ->
                 simpMessagingTemplate.convertAndSendToUser(
                     participants.getUser().getUsername(), "/queue", newPayload));
-    log.info("=== Game Started: {}", newPayload);
     sendQuestions(game);
   }
 
@@ -67,7 +66,6 @@ public class WebsocketController {
             user ->
                 simpMessagingTemplate.convertAndSendToUser(
                     user.getUsername(), "/queue", newPayload));
-    log.info("=== Left Game: {}", newPayload);
   }
 
   @MessageMapping("/send-questions")
@@ -79,7 +77,6 @@ public class WebsocketController {
             user ->
                 simpMessagingTemplate.convertAndSendToUser(
                     user.getUsername(), "/queue", newPayload));
-    log.info("=== Send Questions: {}", newPayload);
   }
 
   @MessageMapping("/evaluate-answer")
@@ -91,7 +88,6 @@ public class WebsocketController {
             user ->
                 simpMessagingTemplate.convertAndSendToUser(
                     user.getUsername(), "/queue", newPayload));
-    log.info("=== Evaluate Answer: {}", newPayload);
   }
 
   @MessageMapping("/finished-game")
@@ -105,6 +101,5 @@ public class WebsocketController {
             user ->
                 simpMessagingTemplate.convertAndSendToUser(
                     user.getUsername(), "/queue", newPayload));
-    log.info("=== Game Finished: {}", newPayload);
   }
 }
