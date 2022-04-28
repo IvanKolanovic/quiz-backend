@@ -29,7 +29,7 @@ public interface GameService {
   Participants leaveLiveGameRoom(Participants participant);
 
   @Transactional
-  List<GameQuestion> prepareQuestions(Game payload);
+  void prepareQuestions(Game payload);
 
   @Transactional
   List<Question> createQuestions(Game game);

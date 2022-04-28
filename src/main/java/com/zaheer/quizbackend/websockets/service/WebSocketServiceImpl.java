@@ -4,6 +4,7 @@ import com.zaheer.quizbackend.models.SocketRequestType;
 import com.zaheer.quizbackend.models.db.*;
 import com.zaheer.quizbackend.repos.GameRepository;
 import com.zaheer.quizbackend.repos.ParticipantsRepository;
+import com.zaheer.quizbackend.repos.QuestionChoicesRepository;
 import com.zaheer.quizbackend.repos.QuestionRepository;
 import com.zaheer.quizbackend.services.BaseService;
 import com.zaheer.quizbackend.services.interfaces.GameService;
@@ -31,6 +32,7 @@ public class WebSocketServiceImpl extends BaseService implements WebSocketServic
   private final GameRepository gameRepository;
   private final ParticipantsRepository participantsRepository;
   private final QuestionRepository questionRepository;
+  private final QuestionChoicesRepository questionChoicesRepository;
 
   @Override
   @Transactional
@@ -73,6 +75,10 @@ public class WebSocketServiceImpl extends BaseService implements WebSocketServic
   public WebsocketPayload<List<Question>> prepareQuestions(Game game) {
     gameService.prepareQuestions(game);
     List<Question> questions = questionRepository.findAllByGameIdOrderByIdAsc(game.getId());
+    questions.forEach(
+        question ->
+            question.setQuestionChoices(
+                questionChoicesRepository.findAllByQuestionIdOrderByIdAsc(question.getId())));
     List<Participants> participants = participantsService.getParticipantsByGame(game.getId());
     return WebsocketPayload.<List<Question>>builder()
         .users(participants.stream().map(Participants::getUser).collect(Collectors.toList()))

@@ -139,21 +139,13 @@ public class GameServiceImpl extends BaseService implements GameService {
 
   @Override
   @Transactional
-  public List<GameQuestion> prepareQuestions(Game payload) {
+  public void prepareQuestions(Game payload) {
     List<Question> questions = questionRepository.saveAllAndFlush(createQuestions(payload));
     questionChoicesRepository.saveAllAndFlush(
         questions.stream()
             .map(this::createChoices)
             .flatMap(Collection::stream)
             .collect(Collectors.toList()));
-
-    return questions.stream()
-        .map(
-            question ->
-                new GameQuestion(
-                    question,
-                    questionChoicesRepository.findAllByQuestionIdOrderByIdAsc(question.getId())))
-        .collect(Collectors.toList());
   }
 
   @Override
@@ -161,7 +153,7 @@ public class GameServiceImpl extends BaseService implements GameService {
   public List<Question> createQuestions(Game game) {
 
     List<Question> questions = new ArrayList<>();
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 5; i++) {
       long rand = randomNumberBetween(0, countryService.getNumOfCountries());
       questions.add(
           Question.builder()
@@ -195,7 +187,7 @@ public class GameServiceImpl extends BaseService implements GameService {
       choices.add(
           QuestionChoices.builder().question(question).choice(choice).isRight(false).build());
     }
-    return choices;
+    return questionChoicesRepository.saveAllAndFlush(choices);
   }
 
   @Override

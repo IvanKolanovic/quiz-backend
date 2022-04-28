@@ -17,8 +17,6 @@ import java.util.stream.Collectors;
 @ToString
 public class Game {
 
-  @Transient List<User> users;
-
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;

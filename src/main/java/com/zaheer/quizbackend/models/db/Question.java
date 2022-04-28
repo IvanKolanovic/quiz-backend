@@ -15,7 +15,6 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @Table(name = "question")
-@ToString
 public class Question {
 
   @Id
