@@ -39,7 +39,7 @@ public class WebSocketServiceImpl extends BaseService implements WebSocketServic
   public WebsocketPayload<String> connected(User user) {
     return WebsocketPayload.<String>builder()
         .users(List.of(user))
-        .type(SocketRequestTypxe.Connected)
+        .type(SocketRequestType.Connected)
         .time(LocalDateTime.now())
         .content("Welcome " + user.getUsername() + " to Flaginator. Enjoy!")
         .build();
