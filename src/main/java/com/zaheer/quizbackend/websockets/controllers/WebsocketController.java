@@ -1,9 +1,6 @@
 package com.zaheer.quizbackend.websockets.controllers;
 
-import com.zaheer.quizbackend.models.db.Game;
-import com.zaheer.quizbackend.models.db.Participants;
-import com.zaheer.quizbackend.models.db.User;
-import com.zaheer.quizbackend.models.db.UserAnswer;
+import com.zaheer.quizbackend.models.db.*;
 import com.zaheer.quizbackend.websockets.models.WebsocketPayload;
 import com.zaheer.quizbackend.websockets.models.generics.EvaluatedAnswer;
 import com.zaheer.quizbackend.websockets.models.generics.GameQuestion;
@@ -70,7 +67,7 @@ public class WebsocketController {
 
   @MessageMapping("/send-questions")
   public void sendQuestions(@Payload Game payload) {
-    WebsocketPayload<List<GameQuestion>> newPayload = webSocketService.prepareQuestions(payload);
+    WebsocketPayload<List<Question>> newPayload = webSocketService.prepareQuestions(payload);
     newPayload
         .getUsers()
         .forEach(

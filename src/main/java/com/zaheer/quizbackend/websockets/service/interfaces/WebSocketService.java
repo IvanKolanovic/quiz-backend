@@ -1,9 +1,6 @@
 package com.zaheer.quizbackend.websockets.service.interfaces;
 
-import com.zaheer.quizbackend.models.db.Game;
-import com.zaheer.quizbackend.models.db.Participants;
-import com.zaheer.quizbackend.models.db.User;
-import com.zaheer.quizbackend.models.db.UserAnswer;
+import com.zaheer.quizbackend.models.db.*;
 import com.zaheer.quizbackend.websockets.models.WebsocketPayload;
 import com.zaheer.quizbackend.websockets.models.generics.EvaluatedAnswer;
 import com.zaheer.quizbackend.websockets.models.generics.GameQuestion;
@@ -24,7 +21,7 @@ public interface WebSocketService {
   WebsocketPayload<List<Participants>> startGame(Game payload);
 
   @Transactional
-  WebsocketPayload<List<GameQuestion>> prepareQuestions(Game game);
+  WebsocketPayload<List<Question>> prepareQuestions(Game game);
 
   @Transactional
   WebsocketPayload<EvaluatedAnswer> evaluateAnswer(UserAnswer userAnswer);

@@ -1,5 +1,6 @@
 package com.zaheer.quizbackend.models.db;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -23,6 +24,7 @@ public class UserAnswer {
   @JoinColumn(name = "user_id", referencedColumnName = "id")
   private User user;
 
+  @JsonIgnore
   @ManyToOne(optional = false)
   @JoinColumn(name = "question_id", referencedColumnName = "id")
   private Question question;

@@ -19,6 +19,7 @@ public class QuestionChoices {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  @JsonIgnore
   @ManyToOne(optional = false)
   @JoinColumn(name = "question_id", referencedColumnName = "id")
   private Question question;

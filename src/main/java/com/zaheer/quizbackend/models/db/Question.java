@@ -28,7 +28,6 @@ public class Question {
   @JoinColumn(name = "game_id", referencedColumnName = "id")
   private Game game;
 
-  @JsonIgnore
   @OneToMany(mappedBy = "question")
   private List<QuestionChoices> questionChoices = List.of();
 

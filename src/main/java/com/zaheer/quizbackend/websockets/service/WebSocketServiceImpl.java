@@ -1,10 +1,7 @@
 package com.zaheer.quizbackend.websockets.service;
 
 import com.zaheer.quizbackend.models.SocketRequestType;
-import com.zaheer.quizbackend.models.db.Game;
-import com.zaheer.quizbackend.models.db.Participants;
-import com.zaheer.quizbackend.models.db.User;
-import com.zaheer.quizbackend.models.db.UserAnswer;
+import com.zaheer.quizbackend.models.db.*;
 import com.zaheer.quizbackend.repos.GameRepository;
 import com.zaheer.quizbackend.repos.ParticipantsRepository;
 import com.zaheer.quizbackend.services.BaseService;
@@ -66,16 +63,19 @@ public class WebSocketServiceImpl extends BaseService implements WebSocketServic
   @Transactional
   public WebsocketPayload<List<Participants>> startGame(Game game) {
     List<Participants> participants = participantsService.getParticipantsByGame(game.getId());
+    log.info("{}", participants.size());
     return gameService.startGame(game, participants);
   }
 
   @Override
   @Transactional
-  public WebsocketPayload<List<GameQuestion>> prepareQuestions(Game game) {
-    List<GameQuestion> questions = gameService.prepareQuestions(game);
-
+  public WebsocketPayload<List<Question>> prepareQuestions(Game game) {
+    List<Question> questions =
+        gameService.prepareQuestions(game).stream()
+            .map(GameQuestion::getQuestion)
+            .collect(Collectors.toList());
     List<Participants> participants = participantsService.getParticipantsByGame(game.getId());
-    return WebsocketPayload.<List<GameQuestion>>builder()
+    return WebsocketPayload.<List<Question>>builder()
         .users(participants.stream().map(Participants::getUser).collect(Collectors.toList()))
         .type(SocketRequestType.Game_Questions)
         .time(LocalDateTime.now())
