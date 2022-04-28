@@ -64,4 +64,10 @@ public class AuthenticationController {
     public ResponseEntity<Object> updateUserPassword(@RequestBody UserDto userDto) {
         return ResponseEntity.ok(userService.updateUserPassword(userDto));
     }
+
+    @PostMapping("/auth/reset-password")
+    public ResponseEntity<Object> resetPasswordWithToken(@RequestBody UserDto userDto) {
+        userService.sendPasswordResetLinkToUser(userDto.getId());
+        return ResponseEntity.ok().build();
+    }
 }

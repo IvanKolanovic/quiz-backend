@@ -3,7 +3,9 @@ package com.zaheer.quizbackend.services;
 import com.zaheer.quizbackend.dto.UserDto;
 import com.zaheer.quizbackend.exceptions.RequestFailedException;
 import com.zaheer.quizbackend.exceptions.ResourceNotFoundException;
+import com.zaheer.quizbackend.models.db.PasswordToken;
 import com.zaheer.quizbackend.models.db.User;
+import com.zaheer.quizbackend.repos.PasswordTokenRepository;
 import com.zaheer.quizbackend.repos.UserRepository;
 import com.zaheer.quizbackend.services.interfaces.*;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.springframework.http.HttpStatus.CONFLICT;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
@@ -26,6 +29,8 @@ public class UserServiceImpl extends BaseService implements UserService {
     private final UserStatisticsService userStatisticsService;
     private final CountryService countryService;
     private final CurrentUserService currentUserService;
+
+    private final PasswordTokenRepository passwordTokenRepository;
 
     private final NotificationEmailService notificationEmailService;
 
@@ -166,7 +171,7 @@ public class UserServiceImpl extends BaseService implements UserService {
                         .orElseThrow(resourceNotFound("User with id " + id + " does not exist."));
 
         updatedUser.setLearningIndex(updatedUser.getLearningIndex() + learningIndex);
-        return getUser(updatedUser);
+        return getUserForUpdatingIndex(updatedUser);
     }
 
     @Override
@@ -178,10 +183,10 @@ public class UserServiceImpl extends BaseService implements UserService {
                         .orElseThrow(resourceNotFound("User with id " + id + " does not exist."));
 
         updatedUser.setLearningIndex(learningIndex);
-        return getUser(updatedUser);
+        return getUserForUpdatingIndex(updatedUser);
     }
 
-    private User getUser(User updatedUser) {
+    private User getUserForUpdatingIndex(User updatedUser) {
         int numOfCountries = countryService.getNumOfCountries();
         if (updatedUser.getLearningIndex() == 0) {
             updatedUser.setLearningIndex(numOfCountries);
@@ -202,5 +207,23 @@ public class UserServiceImpl extends BaseService implements UserService {
     public boolean isUsernameInUse(String name) {
         Optional<User> dbUser = userRepository.findByUsernameAndActiveTrue(name);
         return dbUser.isPresent();
+    }
+
+    @Override
+    public void sendPasswordResetLinkToUser(final Long userID) {
+        User user = getUser(userID);
+
+        if (user == null) {
+            throw new RequestFailedException(CONFLICT, "User with user id + " + userID + " not found.");
+        }
+
+        notificationEmailService.sendPasswordResetLinkToUser(createPasswordToken(user));
+    }
+
+    private PasswordToken createPasswordToken(User user) {
+        String token = UUID.randomUUID().toString();
+        PasswordToken passwordToken = new PasswordToken(token, user);
+        passwordTokenRepository.save(passwordToken);
+        return passwordToken;
     }
 }
