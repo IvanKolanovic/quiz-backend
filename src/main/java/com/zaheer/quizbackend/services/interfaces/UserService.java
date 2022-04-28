@@ -30,4 +30,6 @@ public interface UserService {
     User updateUserPassword(UserDto userDto);
 
     boolean isUsernameInUse(String name);
+
+    void sendPasswordResetLinkToUser(Long userID);
 }

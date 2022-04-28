@@ -1,7 +1,5 @@
-/*
-package com.zaheer.quizbackend.models;
+package com.zaheer.quizbackend.models.db;
 
-import com.zaheer.quizbackend.models.db.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -37,4 +35,3 @@ public class PasswordToken {
     private LocalDateTime expiryDate;
     private boolean active;
 }
-*/

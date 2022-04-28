@@ -1,5 +1,6 @@
 package com.zaheer.quizbackend.services.interfaces;
 
+import com.zaheer.quizbackend.models.db.PasswordToken;
 import com.zaheer.quizbackend.models.db.User;
 
 public interface NotificationEmailService {
@@ -7,4 +8,6 @@ public interface NotificationEmailService {
     void sendConfirmationEmailOnPasswordChange(User user);
 
     void sendConfirmationEmailOnRegistration(User user);
+
+    void sendPasswordResetLinkToUser(PasswordToken passwordToken);
 }
