@@ -111,7 +111,7 @@ public class UserServiceImpl extends BaseService implements UserService {
                                     if (!user.getEmail().equals(input.getEmail())) {
                                         if (isEmailInUse(input.getEmail())) {
                                             throw new RequestFailedException(
-                                                    CONFLICT, "User email:" + input.getEmail() + " is already taken!");
+                                                    CONFLICT, "User email:" + input.getEmail() + " is already taken!", "Email");
                                         }
                                         user.setEmail(input.getEmail());
                                     }
@@ -119,7 +119,7 @@ public class UserServiceImpl extends BaseService implements UserService {
                                     if (!user.getUsername().equals(input.getUsername())) {
                                         if (isUsernameInUse(input.getUsername())) {
                                             throw new RequestFailedException(
-                                                    CONFLICT, "Username:" + input.getUsername() + " is already taken!");
+                                                    CONFLICT, "Username:" + input.getUsername() + " is already taken!", "Username");
                                         }
                                         user.setUsername(input.getUsername());
                                     }
