@@ -31,9 +31,10 @@ public class WebSocketController {
   }
 
   @MessageMapping("/join-game")
-  public void joinGame(@Payload UserGame joinGame) {
-    WebsocketPayload<Game> newPayload = webSocketService.joinGame(joinGame);
+  public void joinGame(@Payload UserGame joinGame) throws InterruptedException {
+    Thread.sleep(1000);
 
+    WebsocketPayload<Game> newPayload = webSocketService.joinGame(joinGame);
     newPayload
         .getUsers()
         .forEach(
@@ -54,7 +55,7 @@ public class WebSocketController {
                 simpMessagingTemplate.convertAndSendToUser(
                     participants.getUser().getUsername(), "/queue", newPayload));
     game = gameRepository.findByIdAndActiveTrue(game.getId()).get();
-    if (!game.getStarted()) sendQuestions(game);
+    if (game.getStarted()) sendQuestions(game);
   }
 
   @MessageMapping("/leave-live-game")
