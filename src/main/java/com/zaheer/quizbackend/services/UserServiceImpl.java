@@ -130,7 +130,7 @@ public class UserServiceImpl extends BaseService implements UserService {
                                         }
                                         user.setUsername(input.getUsername());
                                     }
-                                    if (user.getRoles().equals("ROLE_ADMIN")) {
+                                    if (user.getRoles().equals("ROLE_ADMIN") && user.getRoles().equals("ROLE_SUPER_ADMIN")) {
                                         user.setRoles(input.getRoles());
                                         user.setLearningIndex(input.getLearningIndex());
                                     }

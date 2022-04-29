@@ -13,7 +13,6 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
   Optional<User> findUserById(Long id);
-
   Optional<User> findByEmailAndActiveTrue(String email);
 
   Optional<User> findByUsernameAndActiveTrue(String name);
@@ -24,15 +23,15 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
   Optional<User> findByEmail(String mail);
 
-  @Query("select u from User u order by u.userStatistics.totalPoints ASC")
+  @Query("select u from User u order by u.userStatistics.totalPoints DESC")
   Page<User> findTop20ByTotalPoints(Pageable pageable);
 
-  @Query("select u from User u order by u.userStatistics.gamesWon ASC")
+  @Query("select u from User u order by u.userStatistics.gamesWon DESC")
   Page<User> findTop20ByGamesWon(Pageable pageable);
 
-  @Query("select u from User u order by u.userStatistics.totalGames ASC")
+  @Query("select u from User u order by u.userStatistics.totalGames DESC")
   Page<User> findTop20ByTotalGames(Pageable pageable);
 
-  @Query("select u from User u order by u.userStatistics.pointAverage ASC")
+  @Query("select u from User u order by u.userStatistics.pointAverage DESC")
   Page<User> findTop20ByPointAverage(Pageable pageable);
 }
