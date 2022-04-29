@@ -18,7 +18,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.springframework.http.HttpStatus.CONFLICT;
-import static org.springframework.http.HttpStatus.FORBIDDEN;
 
 @Service
 @RequiredArgsConstructor
@@ -86,12 +85,20 @@ public class UserServiceImpl extends BaseService implements UserService {
 
     @Override
     @Transactional
-    public User banUser(Long userId) {
-        User user = userRepository.findUserById(userId).orElseThrow(
+    public User banUser(Long userId, Long adminID) {
+
+        User adminUser = userRepository.findUserById(adminID).orElseThrow(
+                () -> new ResourceNotFoundException("Admin user with id:" + userId + " not found."));
+
+        User user = userRepository.findById(userId).orElseThrow(
                 () -> new ResourceNotFoundException("User with id:" + userId + " not found."));
 
-        if (user.getRoles().equals("ROLE_ADMIN")) {
-            throw new RequestFailedException(CONFLICT, "Admin cannot be banned.");
+        if (user.getRoles().equals("ROLE_ADMIN") && adminUser.getRoles().equals("ROLE_ADMIN")) {
+            throw new RequestFailedException(CONFLICT, "Admins cannot ban each other.");
+        }
+
+        if (user.getRoles().equals("ROLE_SUPER_ADMIN")) {
+            throw new RequestFailedException(CONFLICT, "Super admin cannot be banned.");
         }
 
         user.setActive(!user.getActive());
@@ -123,8 +130,10 @@ public class UserServiceImpl extends BaseService implements UserService {
                                         }
                                         user.setUsername(input.getUsername());
                                     }
-                                    user.setRoles(input.getRoles());
-                                    user.setLearningIndex(input.getLearningIndex());
+                                    if (user.getRoles().equals("ROLE_ADMIN")) {
+                                        user.setRoles(input.getRoles());
+                                        user.setLearningIndex(input.getLearningIndex());
+                                    }
                                     user.setFirstName(input.getFirstName());
                                     user.setLastName(input.getLastName());
                                     return user;
@@ -139,7 +148,7 @@ public class UserServiceImpl extends BaseService implements UserService {
     public User updateUserPassword(UserDto userDto) {
 
         if (userDto.getOldPassword() == null && !currentUserService.isLoggedInUserAdmin()) {
-            throw new RequestFailedException(FORBIDDEN, "You must provide an old password.");
+            throw new RequestFailedException(CONFLICT, "You must provide an old password.");
         }
 
         User authorUser = userRepository.findByEmailAndActiveTrue(currentUserService.getLoggedInUserEmail())
@@ -152,7 +161,7 @@ public class UserServiceImpl extends BaseService implements UserService {
 
         if (!authorUser.getRoles().equals("ROLE_ADMIN")) {
             if (!passwordEncoder.matches(userDto.getOldPassword(), updatedUser.getPassword())) {
-                throw new RequestFailedException(FORBIDDEN, "Old password is incorrect.");
+                throw new RequestFailedException(CONFLICT, "Old password is incorrect.");
             }
         }
         updatedUser.setPassword(passwordEncoder.encode(userDto.getNewPassword()));

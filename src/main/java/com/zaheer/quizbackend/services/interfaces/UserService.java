@@ -19,7 +19,7 @@ public interface UserService {
     boolean isEmailInUse(String email);
 
     @Transactional
-    User banUser(Long userId);
+    User banUser(Long userId, Long adminID);
 
     User updateUser(Long id, User input);
 

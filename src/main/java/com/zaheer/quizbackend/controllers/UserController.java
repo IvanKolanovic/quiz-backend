@@ -1,7 +1,7 @@
 package com.zaheer.quizbackend.controllers;
 
 import com.zaheer.quizbackend.models.db.User;
-import com.zaheer.quizbackend.models.security.annotations.isAdmin;
+import com.zaheer.quizbackend.models.security.annotations.isSuperAdminOrAdmin;
 import com.zaheer.quizbackend.repos.UserRepository;
 import com.zaheer.quizbackend.services.interfaces.UserService;
 import lombok.RequiredArgsConstructor;
@@ -18,17 +18,16 @@ public class UserController {
   private final UserService userService;
   private final UserRepository userRepository;
 
-  @isAdmin
   @PutMapping("/user/{id}")
   public ResponseEntity<Object> updateUser(
       @PathVariable(value = "id") Long id, @RequestBody User user) {
     return ResponseEntity.ok(userService.updateUser(id, user));
   }
 
-  @isAdmin
+  @isSuperAdminOrAdmin
   @PutMapping("/user/ban/{id}")
-  public ResponseEntity<Object> banUser(@PathVariable(value = "id") Long id) {
-    return ResponseEntity.ok(userService.banUser(id));
+  public ResponseEntity<Object> banUser(@PathVariable(value = "id") Long id, @RequestParam(name = "adminID") Long adminID) {
+    return ResponseEntity.ok(userService.banUser(id, adminID));
   }
 
   @PutMapping("/user/{id}/updateIndex")
@@ -43,7 +42,7 @@ public class UserController {
     return ResponseEntity.ok(userService.updateUserSetLearningIndex(id, learningIndex));
   }
 
-  @isAdmin
+  @isSuperAdminOrAdmin
   @DeleteMapping("/user/{id}")
   public ResponseEntity<Object> deleteUser(@PathVariable(value = "id") Long id) {
     return ResponseEntity.ok(userService.deleteUser(id));
