@@ -209,9 +209,9 @@ public class GameServiceImpl extends BaseService implements GameService {
 
   @Override
   @Transactional
-  public void applyScore(Participants participant, boolean hasWon) {
+  public void applyScore(Participants participant) {
     UserStatistics userStatistics = participant.getUser().getUserStatistics();
-    userStatisticsService.updateStatistic(userStatistics.getId(), participant, hasWon);
+    userStatisticsService.updateStatistic(userStatistics.getId(), participant, participant.isHasWon());
   }
 
   @Override

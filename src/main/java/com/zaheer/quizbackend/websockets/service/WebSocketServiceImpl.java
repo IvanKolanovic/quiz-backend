@@ -133,7 +133,9 @@ public class WebSocketServiceImpl extends BaseService implements WebSocketServic
     participants.forEach(
         p -> {
           boolean hasWon = p.getId().equals(winner);
-          gameService.applyScore(p, hasWon);
+          p.setHasWon(hasWon);
+          participantsRepository.saveAndFlush(p);
+          gameService.applyScore(p);
         });
 
     return WebsocketPayload.<List<Participants>>builder()

@@ -31,6 +31,8 @@ public class Participants {
   @Column(name = "in_game")
   private Boolean inGame;
 
+  @Transient boolean hasWon;
+
   public void updateScore(int score) {
     this.userScore = this.userScore + score;
   }

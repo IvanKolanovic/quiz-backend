@@ -24,50 +24,49 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 public class AuthenticationController {
 
-    private final AuthenticationManager authenticationManager;
-    private final UserDetailsService userDetailsService;
-    private final UserRepository userRepository;
-    private final UserService userService;
-    private final JwtUtil jwtUtil;
+  private final AuthenticationManager authenticationManager;
+  private final UserDetailsService userDetailsService;
+  private final UserRepository userRepository;
+  private final UserService userService;
+  private final JwtUtil jwtUtil;
 
-    @RequestMapping(value = "/auth/login", method = RequestMethod.POST)
-    public ResponseEntity<?> createAuthToken(
-            @RequestBody AuthenticationRequest authenticationRequest) {
+  @RequestMapping(value = "/auth/login", method = RequestMethod.POST)
+  public ResponseEntity<?> createAuthToken(
+      @RequestBody AuthenticationRequest authenticationRequest) {
 
-        User user =
-                userRepository.findByEmail(authenticationRequest.getEmail()).orElse(null);
+    User user = userRepository.findByEmail(authenticationRequest.getEmail()).orElse(null);
 
-        if (user != null && !user.getActive()) {
-            log.info("User is banned!");
-            throw new RequestFailedException(HttpStatus.CONFLICT, "User is banned!");
-        }
-
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        authenticationRequest.getEmail(), authenticationRequest.getPassword()));
-
-        MyUserDetails userDetails =
-                (MyUserDetails) userDetailsService.loadUserByUsername(authenticationRequest.getEmail());
-
-        String jwt = jwtUtil.generateToken(userDetails);
-
-        return ResponseEntity.ok(
-                new AuthenticationResponse(userDetails.getUser(), jwt, jwtUtil.extractExpiration(jwt)));
+    if (user != null && !user.getActive()) {
+      log.info("User is banned!");
+      throw new RequestFailedException(HttpStatus.CONFLICT, "User is banned!");
     }
 
-    @PostMapping("/auth/register")
-    public ResponseEntity<Object> createUser(@RequestBody User user) {
-        return ResponseEntity.ok(userService.createUser(user));
-    }
+    authenticationManager.authenticate(
+        new UsernamePasswordAuthenticationToken(
+            authenticationRequest.getEmail(), authenticationRequest.getPassword()));
 
-    @PutMapping("/auth/updatePassword")
-    public ResponseEntity<Object> updateUserPassword(@RequestBody UserDto userDto) {
-        return ResponseEntity.ok(userService.updateUserPassword(userDto));
-    }
+    MyUserDetails userDetails =
+        (MyUserDetails) userDetailsService.loadUserByUsername(authenticationRequest.getEmail());
 
-    @PostMapping("/auth/reset-password")
-    public ResponseEntity<Object> resetPasswordWithToken(@RequestBody UserDto userDto) {
-        userService.sendPasswordResetLinkToUser(userDto.getId());
-        return ResponseEntity.ok().build();
-    }
+    String jwt = jwtUtil.generateToken(userDetails);
+
+    return ResponseEntity.ok(
+        new AuthenticationResponse(userDetails.getUser(), jwt, jwtUtil.extractExpiration(jwt)));
+  }
+
+  @PostMapping("/auth/register")
+  public ResponseEntity<Object> createUser(@RequestBody User user) {
+    return ResponseEntity.ok(userService.createUser(user));
+  }
+
+  @PutMapping("/auth/updatePassword")
+  public ResponseEntity<Object> updateUserPassword(@RequestBody UserDto userDto) {
+    return ResponseEntity.ok(userService.updateUserPassword(userDto));
+  }
+
+  @PostMapping("/auth/reset-password")
+  public ResponseEntity<Object> resetPasswordWithToken(@RequestBody UserDto userDto) {
+    userService.sendPasswordResetLinkToUser(userDto.getId());
+    return ResponseEntity.ok().build();
+  }
 }

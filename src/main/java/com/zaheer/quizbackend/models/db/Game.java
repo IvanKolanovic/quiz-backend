@@ -47,7 +47,7 @@ public class Game {
   private List<Question> questions = List.of();
 
   @JsonIgnore
-  @OneToMany(mappedBy = "game")
+  @OneToMany(mappedBy = "game",cascade = CascadeType.ALL)
   private List<UserAnswer> userAnswers = List.of();
 
   @JsonIgnore
