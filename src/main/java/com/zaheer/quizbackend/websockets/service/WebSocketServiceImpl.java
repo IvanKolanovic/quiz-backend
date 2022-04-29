@@ -16,6 +16,7 @@ import com.zaheer.quizbackend.websockets.service.interfaces.WebSocketService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
@@ -35,7 +36,7 @@ public class WebSocketServiceImpl extends BaseService implements WebSocketServic
   private final QuestionChoicesRepository questionChoicesRepository;
 
   @Override
-  @Transactional
+  @Transactional(isolation = Isolation.SERIALIZABLE)
   public WebsocketPayload<String> connected(User user) {
     return WebsocketPayload.<String>builder()
         .users(List.of(user))
@@ -46,7 +47,7 @@ public class WebSocketServiceImpl extends BaseService implements WebSocketServic
   }
 
   @Override
-  @Transactional
+  @Transactional(isolation = Isolation.SERIALIZABLE)
   public WebsocketPayload<Game> joinGame(UserGame input) {
     Game game = gameService.joinGame(input);
     return WebsocketPayload.<Game>builder()
@@ -61,14 +62,14 @@ public class WebSocketServiceImpl extends BaseService implements WebSocketServic
   }
 
   @Override
-  @Transactional
+  @Transactional(isolation = Isolation.SERIALIZABLE)
   public WebsocketPayload<List<Participants>> startGame(Game game) {
     List<Participants> participants = participantsService.getParticipantsByGame(game.getId());
     return gameService.startGame(game, participants);
   }
 
   @Override
-  @Transactional
+  @Transactional(isolation = Isolation.SERIALIZABLE)
   public WebsocketPayload<List<Question>> prepareQuestions(Game game) {
     gameService.prepareQuestions(game);
     List<Question> questions = questionRepository.findAllByGameIdOrderByIdAsc(game.getId());
@@ -86,7 +87,7 @@ public class WebSocketServiceImpl extends BaseService implements WebSocketServic
   }
 
   @Override
-  @Transactional
+  @Transactional(isolation = Isolation.SERIALIZABLE)
   public WebsocketPayload<EvaluatedAnswer> evaluateAnswer(UserAnswer userAnswer) {
     EvaluatedAnswer evaluatedAnswer = gameService.evaluateUserAnswer(userAnswer);
     List<Participants> participants =
@@ -100,7 +101,7 @@ public class WebSocketServiceImpl extends BaseService implements WebSocketServic
   }
 
   @Override
-  @Transactional
+  @Transactional(isolation = Isolation.SERIALIZABLE)
   public WebsocketPayload<List<Participants>> finishedGame(UserGame userGame) {
     Game game = userGame.getGame();
     List<Participants> participants = participantsService.getParticipantsByInGame(game.getId());
@@ -147,7 +148,7 @@ public class WebSocketServiceImpl extends BaseService implements WebSocketServic
   }
 
   @Override
-  @Transactional
+  @Transactional(isolation = Isolation.SERIALIZABLE)
   public WebsocketPayload<Participants> leaveLiveGame(UserGame payload) {
     Participants participant =
         participantsRepository.findByUserIdAndGameId(
