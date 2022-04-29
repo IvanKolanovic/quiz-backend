@@ -63,8 +63,7 @@ public class WebSocketServiceImpl extends BaseService implements WebSocketServic
   @Override
   @Transactional
   public WebsocketPayload<List<Participants>> startGame(Game game) {
-    List<Participants> participants = participantsService.getParticipantsByInGame(game.getId());
-    log.info("{}", participants.size());
+    List<Participants> participants = participantsService.getParticipantsByGame(game.getId());
     return gameService.startGame(game, participants);
   }
 
@@ -106,8 +105,6 @@ public class WebSocketServiceImpl extends BaseService implements WebSocketServic
     Game game = userGame.getGame();
     List<Participants> participants = participantsService.getParticipantsByInGame(game.getId());
 
-    game.setPlayers(game.getPlayers() - 1);
-    game = gameRepository.saveAndFlush(game);
     participants.forEach(
         participant -> {
           if (participant.getUser().getId().equals(userGame.getUser().getId())) {
@@ -116,17 +113,32 @@ public class WebSocketServiceImpl extends BaseService implements WebSocketServic
           }
         });
 
+    participants = participantsService.getParticipantsByInGame(game.getId());
+    game.setPlayers(participants.size());
+    game = gameRepository.saveAndFlush(game);
     if (game.getPlayers() != 0) {
       return null;
     }
 
     game.setActive(false);
     gameRepository.saveAndFlush(game);
-    // participants = participantsService.getParticipantsByGame(game.getId());
-    participants.forEach(gameService::applyScore);
+    participants = participantsService.getParticipantsByGame(game.getId());
+    Long winner;
+    if (participants.get(0).getUserScore() > participants.get(1).getUserScore())
+      winner = participants.get(0).getId();
+    else if (participants.get(0).getUserScore() < participants.get(1).getUserScore())
+      winner = participants.get(1).getId();
+    else winner = null;
+
+    participants.forEach(
+        p -> {
+          boolean hasWon = p.getId().equals(winner);
+          gameService.applyScore(p, hasWon);
+        });
+
     return WebsocketPayload.<List<Participants>>builder()
         .users(participants.stream().map(Participants::getUser).collect(Collectors.toList()))
-        .type(SocketRequestType.Evaluate_Answer)
+        .type(SocketRequestType.Finished_Game)
         .time(LocalDateTime.now())
         .content(participants)
         .build();

@@ -1,5 +1,6 @@
 package com.zaheer.quizbackend.services;
 
+import com.zaheer.quizbackend.models.db.Participants;
 import com.zaheer.quizbackend.models.db.UserStatistics;
 import com.zaheer.quizbackend.repos.RankRepository;
 import com.zaheer.quizbackend.repos.UserStatisticsRepository;
@@ -24,7 +25,7 @@ public class UserStatisticsServiceImpl extends BaseService implements UserStatis
   public UserStatistics createStatistic() {
     return userStatisticsRepository.saveAndFlush(
         UserStatistics.builder()
-            .totalPoints(0.0)
+            .totalPoints(0)
             .gamesWon(0)
             .pointAverage(0.0)
             .totalGames(0)
@@ -57,20 +58,22 @@ public class UserStatisticsServiceImpl extends BaseService implements UserStatis
 
   @Override
   @Transactional
-  public UserStatistics updateStatistic(Long id, UserStatistics input) {
+  public UserStatistics updateStatistic(Long id, Participants input, boolean hasWon) {
 
-    return userStatisticsRepository
-        .findByUserId(id)
-        .map(
-            statistic -> {
-              statistic.setTotalPoints(input.getTotalPoints());
-              statistic.setGamesWon(input.getGamesWon());
-              statistic.setTotalGames(input.getTotalGames());
-              statistic.setPointAverage(input.getTotalPoints() / input.getTotalGames());
-              statistic.setRank(input.getRank());
+    return userStatisticsRepository.saveAndFlush(
+        userStatisticsRepository
+            .findByUserId(id)
+            .map(
+                statistic -> {
+                  statistic.setTotalPoints(statistic.getTotalPoints() + input.getUserScore());
+                  if (hasWon) statistic.setGamesWon(statistic.getGamesWon() + 1);
+                  statistic.setTotalGames(statistic.getTotalGames() + 1);
+                  statistic.setPointAverage(
+                          statistic.getTotalPoints() / (double) statistic.getTotalGames());
+              //    statistic.setRank(input.getRank());
 
-              return statistic;
-            })
-        .orElseThrow(resourceNotFound("Statistic with user id: " + id + " was not found."));
+                  return statistic;
+                })
+            .orElseThrow(resourceNotFound("Statistic with user id: " + id + " was not found.")));
   }
 }

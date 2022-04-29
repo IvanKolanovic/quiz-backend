@@ -27,10 +27,4 @@ public class UserStatisticsController {
   public ResponseEntity<Object> getAllStatistics() {
     return ResponseEntity.ok(userStatisticsService.getAllStatistics());
   }
-
-  @PutMapping("/stat/user/{id}")
-  public ResponseEntity<Object> updateStat(
-      @PathVariable(value = "id") Long id, @RequestBody UserStatistics userStatistics) {
-    return ResponseEntity.ok(userStatisticsService.updateStatistic(id, userStatistics));
-  }
 }

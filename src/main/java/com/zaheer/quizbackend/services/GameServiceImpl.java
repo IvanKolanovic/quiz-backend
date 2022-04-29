@@ -90,6 +90,9 @@ public class GameServiceImpl extends BaseService implements GameService {
             .orElseThrow(resourceNotFound("Game with id: " + myGame.getId() + " was not found."));
     Participants p = Participants.builder().user(input.getUser()).game(g).build();
     participantsService.create(p);
+
+    List<Participants> pp = participantsService.getParticipantsByGame(g.getId());
+    g.setPlayers(pp.size());
     return gameRepository.saveAndFlush(g);
   }
 
@@ -97,12 +100,12 @@ public class GameServiceImpl extends BaseService implements GameService {
   @Transactional
   public WebsocketPayload<List<Participants>> startGame(
       Game game, List<Participants> participants) {
-    log.info("Start game u game service");
     game.setStarted(true);
     participants =
         participants.stream()
             .map(participant -> participantsService.updateInGame(participant, true))
             .collect(Collectors.toList());
+    game.setPlayers(participants.size());
     gameRepository.saveAndFlush(game);
     return WebsocketPayload.<List<Participants>>builder()
         .users(participants.stream().map(Participants::getUser).collect(Collectors.toList()))
@@ -206,9 +209,9 @@ public class GameServiceImpl extends BaseService implements GameService {
 
   @Override
   @Transactional
-  public void applyScore(Participants participant) {
+  public void applyScore(Participants participant, boolean hasWon) {
     UserStatistics userStatistics = participant.getUser().getUserStatistics();
-    userStatisticsService.updateStatistic(userStatistics.getId(), userStatistics);
+    userStatisticsService.updateStatistic(userStatistics.getId(), participant, hasWon);
   }
 
   @Override

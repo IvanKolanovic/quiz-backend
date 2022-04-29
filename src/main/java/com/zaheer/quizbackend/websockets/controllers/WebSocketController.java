@@ -33,7 +33,6 @@ public class WebSocketController {
   @MessageMapping("/join-game")
   public void joinGame(@Payload UserGame joinGame) {
     WebsocketPayload<Game> newPayload = webSocketService.joinGame(joinGame);
-    log.error("newPayload: {}",newPayload);
     newPayload
         .getUsers()
         .forEach(
@@ -45,7 +44,6 @@ public class WebSocketController {
   @MessageMapping("/start-game")
   public void startGame(@Payload Game game) {
     if (game.getStarted()) return;
-    log.info("Start game");
     WebsocketPayload<List<Participants>> newPayload = webSocketService.startGame(game);
     newPayload
         .getContent()

@@ -5,7 +5,8 @@ import lombok.*;
 
 import javax.persistence.*;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -18,7 +19,7 @@ public class UserStatistics {
   private Long id;
 
   @Column(name = "total_points", nullable = false)
-  private Double totalPoints;
+  private Integer totalPoints;
 
   @Column(nullable = false, name = "games_won")
   private Integer gamesWon;
