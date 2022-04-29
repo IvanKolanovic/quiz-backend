@@ -110,30 +110,13 @@ public class UserServiceImpl extends BaseService implements UserService {
     @Override
     @Transactional
     public User updateUser(Long id, User input) {
+
         User updatedUser =
                 userRepository
                         .findById(id)
                         .map(
                                 user -> {
-                                    if (!user.getEmail().equals(input.getEmail())) {
-                                        if (isEmailInUse(input.getEmail())) {
-                                            throw new RequestFailedException(
-                                                    CONFLICT, "User email:" + input.getEmail() + " is already taken!", "Email");
-                                        }
-                                        user.setEmail(input.getEmail());
-                                    }
-
-                                    if (!user.getUsername().equals(input.getUsername())) {
-                                        if (isUsernameInUse(input.getUsername())) {
-                                            throw new RequestFailedException(
-                                                    CONFLICT, "Username:" + input.getUsername() + " is already taken!", "Username");
-                                        }
-                                        user.setUsername(input.getUsername());
-                                    }
-                                    if (user.getRoles().equals("ROLE_ADMIN") && user.getRoles().equals("ROLE_SUPER_ADMIN")) {
-                                        user.setRoles(input.getRoles());
-                                        user.setLearningIndex(input.getLearningIndex());
-                                    }
+                                    checkIfUsernameAndEmailTaken(input, user);
                                     user.setFirstName(input.getFirstName());
                                     user.setLastName(input.getLastName());
                                     return user;
@@ -141,6 +124,45 @@ public class UserServiceImpl extends BaseService implements UserService {
                         .orElseThrow(resourceNotFound("User with id " + id + " does not exist."));
 
         return userRepository.saveAndFlush(updatedUser);
+    }
+
+    @Override
+    @Transactional
+    public User adminUpdateUser(Long id, User input) {
+
+        User updatedUser =
+                userRepository
+                        .findById(id)
+                        .map(
+                                user -> {
+                                    checkIfUsernameAndEmailTaken(input, user);
+                                    user.setRoles(input.getRoles());
+                                    user.setLearningIndex(input.getLearningIndex());
+                                    user.setFirstName(input.getFirstName());
+                                    user.setLastName(input.getLastName());
+                                    return user;
+                                })
+                        .orElseThrow(resourceNotFound("User with id " + id + " does not exist."));
+
+        return userRepository.saveAndFlush(updatedUser);
+    }
+
+    private void checkIfUsernameAndEmailTaken(User input, User user) {
+        if (!user.getEmail().equals(input.getEmail())) {
+            if (isEmailInUse(input.getEmail())) {
+                throw new RequestFailedException(
+                        CONFLICT, "User email:" + input.getEmail() + " is already taken!", "Email");
+            }
+            user.setEmail(input.getEmail());
+        }
+
+        if (!user.getUsername().equals(input.getUsername())) {
+            if (isUsernameInUse(input.getUsername())) {
+                throw new RequestFailedException(
+                        CONFLICT, "Username:" + input.getUsername() + " is already taken!", "Username");
+            }
+            user.setUsername(input.getUsername());
+        }
     }
 
     @Override

@@ -25,6 +25,13 @@ public class UserController {
   }
 
   @isSuperAdminOrAdmin
+  @PutMapping("/user/admin/{id}")
+  public ResponseEntity<Object> adminUpdateUser(
+          @PathVariable(value = "id") Long id, @RequestBody User user) {
+    return ResponseEntity.ok(userService.adminUpdateUser(id, user));
+  }
+
+  @isSuperAdminOrAdmin
   @PutMapping("/user/ban/{id}")
   public ResponseEntity<Object> banUser(@PathVariable(value = "id") Long id, @RequestParam(name = "adminID") Long adminID) {
     return ResponseEntity.ok(userService.banUser(id, adminID));

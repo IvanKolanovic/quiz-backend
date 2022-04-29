@@ -23,6 +23,7 @@ public interface UserService {
 
     User updateUser(Long id, User input);
 
+    User adminUpdateUser(Long id, User input);
     User updateUserLearningIndex(Long id, int learningIndex);
 
     User updateUserSetLearningIndex(Long id, int learningIndex);
