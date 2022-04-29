@@ -3,7 +3,6 @@ package com.zaheer.quizbackend.services.interfaces;
 import com.zaheer.quizbackend.models.db.*;
 import com.zaheer.quizbackend.websockets.models.WebsocketPayload;
 import com.zaheer.quizbackend.websockets.models.generics.EvaluatedAnswer;
-import com.zaheer.quizbackend.websockets.models.generics.GameQuestion;
 import com.zaheer.quizbackend.websockets.models.generics.UserGame;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,7 +25,7 @@ public interface GameService {
   void checkAndUpdateGameStatus(Game input);
 
   @Transactional
-  Participants leaveLiveGameRoom(Participants participant);
+  Participants leaveLiveGameRoom(Participants participant, Game game);
 
   @Transactional
   void prepareQuestions(Game payload);

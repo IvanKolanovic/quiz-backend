@@ -67,7 +67,6 @@ public class GameServiceImpl extends BaseService implements GameService {
   @Transactional
   public Game joinGame(UserGame input) {
     Game myGame = input.getGame();
-
     Game g =
         gameRepository
             .findByIdAndActiveTrue(myGame.getId())
@@ -89,11 +88,8 @@ public class GameServiceImpl extends BaseService implements GameService {
                   return game;
                 })
             .orElseThrow(resourceNotFound("Game with id: " + myGame.getId() + " was not found."));
-
     Participants p = Participants.builder().user(input.getUser()).game(g).build();
     participantsService.create(p);
-    List<Participants> participants = participantsService.getParticipantsByGame(myGame.getId());
-    g.setPlayers(participants.size());
     return gameRepository.saveAndFlush(g);
   }
 
@@ -127,9 +123,7 @@ public class GameServiceImpl extends BaseService implements GameService {
 
   @Override
   @Transactional
-  public Participants leaveLiveGameRoom(Participants participant) {
-    Game game = get(participant.getGame().getId());
-
+  public Participants leaveLiveGameRoom(Participants participant, Game game) {
     participant.setUserScore(0);
     participant.setInGame(false);
     game.setPlayers(game.getPlayers() - 1);

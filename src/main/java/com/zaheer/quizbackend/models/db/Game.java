@@ -8,7 +8,8 @@ import javax.persistence.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -50,7 +51,7 @@ public class Game {
   private List<UserAnswer> userAnswers = List.of();
 
   @JsonIgnore
-  @OneToMany(mappedBy = "game",cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "game")
   private List<Participants> participants = List.of();
 
   public List<User> getUsers() {

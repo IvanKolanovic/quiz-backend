@@ -16,5 +16,7 @@ public interface ParticipantsService {
   @Transactional
   Participants updateInGame(Participants participants, Boolean bool);
 
+  List<Participants> getParticipantsByInGame(Long gameId);
+
   List<Participants> getParticipantsByGame(Long gameId);
 }

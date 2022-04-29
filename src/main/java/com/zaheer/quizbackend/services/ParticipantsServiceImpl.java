@@ -45,7 +45,12 @@ public class ParticipantsServiceImpl extends BaseService implements Participants
   }
 
   @Override
-  public List<Participants> getParticipantsByGame(Long gameId) {
+  public List<Participants> getParticipantsByInGame(Long gameId) {
     return participantsRepository.findAllByGameIdAndInGameTrue(gameId);
+  }
+
+  @Override
+  public List<Participants> getParticipantsByGame(Long gameId) {
+    return participantsRepository.findAllByGameId(gameId);
   }
 }

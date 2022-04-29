@@ -63,7 +63,7 @@ public class WebSocketServiceImpl extends BaseService implements WebSocketServic
   @Override
   @Transactional
   public WebsocketPayload<List<Participants>> startGame(Game game) {
-    List<Participants> participants = participantsService.getParticipantsByGame(game.getId());
+    List<Participants> participants = participantsService.getParticipantsByInGame(game.getId());
     log.info("{}", participants.size());
     return gameService.startGame(game, participants);
   }
@@ -77,7 +77,7 @@ public class WebSocketServiceImpl extends BaseService implements WebSocketServic
         question ->
             question.setQuestionChoices(
                 questionChoicesRepository.findAllByQuestionIdOrderByIdAsc(question.getId())));
-    List<Participants> participants = participantsService.getParticipantsByGame(game.getId());
+    List<Participants> participants = participantsService.getParticipantsByInGame(game.getId());
     return WebsocketPayload.<List<Question>>builder()
         .users(participants.stream().map(Participants::getUser).collect(Collectors.toList()))
         .type(SocketRequestType.Game_Questions)
@@ -91,7 +91,7 @@ public class WebSocketServiceImpl extends BaseService implements WebSocketServic
   public WebsocketPayload<EvaluatedAnswer> evaluateAnswer(UserAnswer userAnswer) {
     EvaluatedAnswer evaluatedAnswer = gameService.evaluateUserAnswer(userAnswer);
     List<Participants> participants =
-        participantsService.getParticipantsByGame(userAnswer.getGame().getId());
+        participantsService.getParticipantsByInGame(userAnswer.getGame().getId());
     return WebsocketPayload.<EvaluatedAnswer>builder()
         .users(participants.stream().map(Participants::getUser).collect(Collectors.toList()))
         .type(SocketRequestType.Evaluate_Answer)
@@ -104,7 +104,7 @@ public class WebSocketServiceImpl extends BaseService implements WebSocketServic
   @Transactional
   public WebsocketPayload<List<Participants>> finishedGame(UserGame userGame) {
     Game game = userGame.getGame();
-    List<Participants> participants = participantsService.getParticipantsByGame(game.getId());
+    List<Participants> participants = participantsService.getParticipantsByInGame(game.getId());
 
     game.setPlayers(game.getPlayers() - 1);
     game = gameRepository.saveAndFlush(game);
@@ -136,11 +136,11 @@ public class WebSocketServiceImpl extends BaseService implements WebSocketServic
   @Transactional
   public WebsocketPayload<Participants> leaveLiveGame(UserGame payload) {
     Participants participant =
-        participantsRepository.findByUserIdAndGameIdAndInGameTrue(
+        participantsRepository.findByUserIdAndGameId(
             payload.getUser().getId(), payload.getGame().getId());
-    participant = gameService.leaveLiveGameRoom(participant);
+    participant = gameService.leaveLiveGameRoom(participant, payload.getGame());
     List<Participants> receivers =
-        participantsService.getParticipantsByGame(payload.getGame().getId());
+        participantsService.getParticipantsByInGame(payload.getGame().getId());
 
     return WebsocketPayload.<Participants>builder()
         .users(receivers.stream().map(Participants::getUser).collect(Collectors.toList()))

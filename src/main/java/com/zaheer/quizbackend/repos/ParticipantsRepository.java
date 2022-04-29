@@ -8,7 +8,9 @@ import java.util.List;
 public interface ParticipantsRepository extends JpaRepository<Participants, Long> {
   List<Participants> findAllByGameIdAndInGameTrue(Long gameId);
 
-  Participants findByUserId(Long id);
+  List<Participants> findAllByGameId(Long gameId);
+
+  Participants findByUserIdAndGameId(Long id,Long gameId);
 
   Participants findByUserIdAndGameIdAndInGameTrue(Long id,Long gameId);
 }
