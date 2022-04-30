@@ -1,6 +1,6 @@
 package com.zaheer.quizbackend.websockets.models;
 
-import com.zaheer.quizbackend.models.SocketRequestType;
+import com.zaheer.quizbackend.models.enums.SocketRequestType;
 import com.zaheer.quizbackend.models.db.User;
 import lombok.*;
 

@@ -1,8 +1,8 @@
 package com.zaheer.quizbackend.services;
 
 import com.zaheer.quizbackend.exceptions.RequestFailedException;
-import com.zaheer.quizbackend.models.SocketRequestType;
 import com.zaheer.quizbackend.models.db.*;
+import com.zaheer.quizbackend.models.enums.SocketRequestType;
 import com.zaheer.quizbackend.repos.*;
 import com.zaheer.quizbackend.services.interfaces.CountryService;
 import com.zaheer.quizbackend.services.interfaces.GameService;
@@ -98,8 +98,7 @@ public class GameServiceImpl extends BaseService implements GameService {
 
   @Override
   @Transactional
-  public WebsocketPayload<List<Participant>> startGame(
-      Game game, List<Participant> participants) {
+  public WebsocketPayload<List<Participant>> startGame(Game game, List<Participant> participants) {
     game.setStarted(true);
     participants =
         participants.stream()
@@ -211,7 +210,8 @@ public class GameServiceImpl extends BaseService implements GameService {
   @Transactional
   public void applyScore(Participant participant) {
     UserStatistics userStatistics = participant.getUser().getUserStatistics();
-    userStatisticsService.updateStatistic(userStatistics.getId(), participant, participant.isHasWon());
+    userStatisticsService.updateStatistic(
+        userStatistics.getId(), participant, participant.isHasWon());
   }
 
   @Override

@@ -1,6 +1,6 @@
 package com.zaheer.quizbackend.websockets.service;
 
-import com.zaheer.quizbackend.models.SocketRequestType;
+import com.zaheer.quizbackend.models.enums.SocketRequestType;
 import com.zaheer.quizbackend.models.db.*;
 import com.zaheer.quizbackend.repos.GameRepository;
 import com.zaheer.quizbackend.repos.ParticipantsRepository;

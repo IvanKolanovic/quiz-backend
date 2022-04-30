@@ -1,4 +1,4 @@
-package com.zaheer.quizbackend.models;
+package com.zaheer.quizbackend.models.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

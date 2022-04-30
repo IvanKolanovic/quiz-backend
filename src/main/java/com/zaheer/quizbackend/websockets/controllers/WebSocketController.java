@@ -2,6 +2,7 @@ package com.zaheer.quizbackend.websockets.controllers;
 
 import com.zaheer.quizbackend.models.db.*;
 import com.zaheer.quizbackend.repos.GameRepository;
+import com.zaheer.quizbackend.services.interfaces.MessageService;
 import com.zaheer.quizbackend.websockets.models.WebsocketPayload;
 import com.zaheer.quizbackend.websockets.models.generics.UserGame;
 import com.zaheer.quizbackend.websockets.service.interfaces.WebSocketService;
@@ -13,6 +14,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -22,6 +24,7 @@ public class WebSocketController {
   private final SimpMessagingTemplate simpMessagingTemplate;
   private final WebSocketService webSocketService;
   private final GameRepository gameRepository;
+  private final MessageService messageService;
 
   @MessageMapping("/user-connected")
   public void connected(@Payload User user) {
@@ -92,5 +95,12 @@ public class WebSocketController {
             user ->
                 simpMessagingTemplate.convertAndSendToUser(
                     user.getUsername(), "/queue", newPayload));
+  }
+
+  @MessageMapping("/chat")
+  public void chatSystem(@Payload(required = false) Message message) {
+    if (Optional.ofNullable(message).isPresent()) messageService.createMessage(message);
+    List<Message> messages = messageService.getLast35Messages();
+    simpMessagingTemplate.convertAndSend("/topic/chat", messages);
   }
 }
