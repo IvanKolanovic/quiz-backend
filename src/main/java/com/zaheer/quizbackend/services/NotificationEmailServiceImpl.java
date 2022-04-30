@@ -30,7 +30,7 @@ public class NotificationEmailServiceImpl implements NotificationEmailService {
                 "<p><b>~Your Flaginator Team</b></p>";
         Email email = Email.builder()
                 .sender("Flaginator")
-                .receivers(new String[]{"flaginator.test@oreple.com"})
+                .receivers(new String[]{user.getEmail()})
                 .bcc(new String[]{"flaginator.test@oreple.com"})
                 .subject("Password change confirmation email")
                 .text(emailText)
@@ -51,7 +51,7 @@ public class NotificationEmailServiceImpl implements NotificationEmailService {
                 "<p><b>~Your Flaginator Team</b></p>";
         Email email = Email.builder()
                 .sender("Flaginator")
-                .receivers(new String[]{"flaginator.test@oreple.com"})
+                .receivers(new String[]{user.getEmail()})
                 .bcc(new String[]{"flaginator.test@oreple.com"})
                 .subject("Welcome to Flaginator")
                 .text(emailText)
