@@ -38,7 +38,7 @@ public class AuthenticationController {
 
     if (user != null && !user.getActive()) {
       log.info("User is banned!");
-      throw new RequestFailedException(HttpStatus.CONFLICT, "User is banned!");
+      throw new RequestFailedException(HttpStatus.CONFLICT, "User is banned!", "Banned");
     }
 
     authenticationManager.authenticate(

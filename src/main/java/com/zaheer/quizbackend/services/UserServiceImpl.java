@@ -94,11 +94,11 @@ public class UserServiceImpl extends BaseService implements UserService {
                 () -> new ResourceNotFoundException("User with id:" + userId + " not found."));
 
         if (user.getRoles().equals("ROLE_ADMIN") && adminUser.getRoles().equals("ROLE_ADMIN")) {
-            throw new RequestFailedException(CONFLICT, "Admins cannot ban each other.");
+            throw new RequestFailedException(CONFLICT, "Admins cannot ban each other.", "adminsForbiddenBan");
         }
 
         if (user.getRoles().equals("ROLE_SUPER_ADMIN")) {
-            throw new RequestFailedException(CONFLICT, "Super admin cannot be banned.");
+            throw new RequestFailedException(CONFLICT, "Super admin cannot be banned.", "superAdminForbiddenBan");
         }
 
         user.setActive(!user.getActive());
