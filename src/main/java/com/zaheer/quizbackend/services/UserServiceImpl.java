@@ -136,6 +136,10 @@ public class UserServiceImpl extends BaseService implements UserService {
                         .findById(id)
                         .map(
                                 user -> {
+                                    if (user.getRoles().equals("ROLE_SUPER_ADMIN")) {
+                                        throw new RequestFailedException(CONFLICT, "Super Admin information cannot be edited by admin.",
+                                            "superAdminEditByAdmin");
+                                    }
                                     checkIfUsernameAndEmailTaken(input, user);
                                     user.setRoles(input.getRoles());
                                     user.setLearningIndex(input.getLearningIndex());
@@ -167,7 +171,6 @@ public class UserServiceImpl extends BaseService implements UserService {
     }
 
     @Override
-    @Transactional
     public User updateUserPassword(UserDto userDto) {
 
         if (userDto.getOldPassword() == null && !currentUserService.isLoggedInUserAdmin()) {
