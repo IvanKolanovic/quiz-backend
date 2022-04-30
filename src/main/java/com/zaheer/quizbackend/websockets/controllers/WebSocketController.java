@@ -47,6 +47,7 @@ public class WebSocketController {
   public void startGame(@Payload Game game) {
     if (game.getStarted()) return;
     WebsocketPayload<List<Participant>> newPayload = webSocketService.startGame(game);
+    if (newPayload == null) return;
     newPayload
         .getContent()
         .forEach(

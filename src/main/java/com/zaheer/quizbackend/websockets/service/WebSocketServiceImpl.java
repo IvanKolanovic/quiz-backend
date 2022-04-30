@@ -81,6 +81,7 @@ public class WebSocketServiceImpl extends BaseService implements WebSocketServic
   @Transactional(isolation = Isolation.SERIALIZABLE)
   public WebsocketPayload<List<Participant>> startGame(Game game) {
     List<Participant> participants = participantsService.getParticipantsByGame(game.getId());
+    if (participants.size() != 2) return null;
     return gameService.startGame(game, participants);
   }
 
