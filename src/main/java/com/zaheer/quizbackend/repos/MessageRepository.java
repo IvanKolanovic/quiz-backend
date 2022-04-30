@@ -10,6 +10,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface MessageRepository extends JpaRepository<Message, Long> {
 
-  @Query("select m from Message m order by m.sentAt DESC")
+  @Query("select m from Message m order by m.sentAt ASC")
   Page<Message> getLast35Messages(Pageable pageable);
 }

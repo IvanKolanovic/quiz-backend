@@ -98,7 +98,8 @@ public class WebSocketController {
   }
 
   @MessageMapping("/chat")
-  public void chatSystem(@Payload(required = false) Message message) {
+  public void chatSystem(@Payload Message message) {
+    log.info("{}",message);
     if (Optional.ofNullable(message).isPresent()) messageService.createMessage(message);
     List<Message> messages = messageService.getLast35Messages();
     simpMessagingTemplate.convertAndSend("/topic/chat", messages);
