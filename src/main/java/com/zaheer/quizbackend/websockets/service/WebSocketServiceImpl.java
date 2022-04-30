@@ -1,8 +1,8 @@
 package com.zaheer.quizbackend.websockets.service;
 
-import com.zaheer.quizbackend.models.enums.SocketRequestType;
+import com.zaheer.quizbackend.exceptions.GameLogicException;
 import com.zaheer.quizbackend.models.db.*;
-import com.zaheer.quizbackend.repos.GameRepository;
+import com.zaheer.quizbackend.models.enums.SocketRequestType;
 import com.zaheer.quizbackend.repos.ParticipantsRepository;
 import com.zaheer.quizbackend.repos.QuestionChoicesRepository;
 import com.zaheer.quizbackend.repos.QuestionRepository;
@@ -30,7 +30,6 @@ public class WebSocketServiceImpl extends BaseService implements WebSocketServic
 
   private final GameService gameService;
   private final ParticipantsService participantsService;
-  private final GameRepository gameRepository;
   private final ParticipantsRepository participantsRepository;
   private final QuestionRepository questionRepository;
   private final QuestionChoicesRepository questionChoicesRepository;
@@ -49,7 +48,24 @@ public class WebSocketServiceImpl extends BaseService implements WebSocketServic
   @Override
   @Transactional(isolation = Isolation.SERIALIZABLE)
   public WebsocketPayload<Game> joinGame(UserGame input) {
-    Game game = gameService.joinGame(input);
+    Object obj = gameService.joinGame(input);
+
+    if (obj instanceof GameLogicException) {
+      GameLogicException ex = (GameLogicException) obj;
+      List<User> users =
+          participantsService.getParticipantsByGame(input.getGame().getId()).stream()
+              .map(Participant::getUser)
+              .collect(Collectors.toList());
+      users.add(input.getUser());
+      return WebsocketPayload.<Game>builder()
+          .users(users)
+          .type(ex.getType())
+          .time(LocalDateTime.now())
+          .content(null)
+          .build();
+    }
+
+    Game game = (Game) obj;
     return WebsocketPayload.<Game>builder()
         .users(
             participantsService.getParticipantsByGame(game.getId()).stream()
@@ -102,11 +118,11 @@ public class WebSocketServiceImpl extends BaseService implements WebSocketServic
 
   @Override
   @Transactional(isolation = Isolation.SERIALIZABLE)
-  public WebsocketPayload<List<Participant>> finishedGame2(Long gameId, Long userId) {
+  public WebsocketPayload<List<Participant>> finishedGame(Long gameId, Long userId) {
     try {
       Thread.sleep(1000);
     } catch (InterruptedException ignored) {
-      log.error("Jebem ti Thread i Deadlock mrtvi");
+      log.error("Jebem ti Thread i Deadlock mrtvi!");
     }
 
     Participant participant = participantsService.getParticipant(gameId, userId);
@@ -123,14 +139,7 @@ public class WebSocketServiceImpl extends BaseService implements WebSocketServic
     game.setActive(false);
     game.setPlayers(inGameParticipants.size());
     List<Participant> participants = participantsService.getParticipantsByGame(gameId);
-
-    if (participants.get(0).getUserScore() > participants.get(1).getUserScore()) {
-      participants.get(0).setHasWon(true);
-      participants.get(1).setHasWon(false);
-    } else if (participants.get(0).getUserScore() < participants.get(1).getUserScore()) {
-      participants.get(1).setHasWon(true);
-      participants.get(0).setHasWon(false);
-    }
+    participants = gameService.updateWinner(participants);
 
     participants.forEach(gameService::applyScore);
     return WebsocketPayload.<List<Participant>>builder()

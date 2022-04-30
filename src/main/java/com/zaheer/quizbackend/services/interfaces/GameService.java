@@ -16,7 +16,7 @@ public interface GameService {
   List<Game> getAll();
 
   @Transactional
-  Game joinGame(UserGame payload);
+  Object joinGame(UserGame payload);
 
   @Transactional
   WebsocketPayload<List<Participant>> startGame(Game game, List<Participant> participants);
@@ -43,4 +43,7 @@ public interface GameService {
   void applyScore(Participant participant);
 
   boolean isNameInUse(String name);
+
+    @Transactional
+    List<Participant> updateWinner(List<Participant> participants);
 }

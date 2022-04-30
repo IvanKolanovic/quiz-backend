@@ -1,5 +1,6 @@
 package com.zaheer.quizbackend.services;
 
+import com.zaheer.quizbackend.exceptions.GameLogicException;
 import com.zaheer.quizbackend.exceptions.RequestFailedException;
 import com.zaheer.quizbackend.models.db.*;
 import com.zaheer.quizbackend.models.enums.SocketRequestType;
@@ -65,35 +66,33 @@ public class GameServiceImpl extends BaseService implements GameService {
 
   @Override
   @Transactional
-  public Game joinGame(UserGame input) {
+  public Object joinGame(UserGame input) {
     Game myGame = input.getGame();
-    Game g =
+    Game game =
         gameRepository
             .findByIdAndActiveTrue(myGame.getId())
-            .map(
-                game -> {
-                  if (game.getPlayers() == 2) {
-                    throw new RequestFailedException(HttpStatus.CONFLICT, "Game is full.");
-                  } else if (myGame.getName().equals(game.getName())) {
-                    if (Optional.ofNullable(myGame.getPassword()).isPresent()) {
-                      if (myGame.getPassword().equals(game.getPassword())) {
-                        game.setPlayers(game.getPlayers() + 1);
-                      } else {
-                        throw new RequestFailedException(HttpStatus.CONFLICT, "Wrong password.");
-                      }
-                    } else game.setPlayers(game.getPlayers() + 1);
-                  } else {
-                    throw new RequestFailedException(HttpStatus.CONFLICT, "Wrong game name.");
-                  }
-                  return game;
-                })
             .orElseThrow(resourceNotFound("Game with id: " + myGame.getId() + " was not found."));
-    Participant p = Participant.builder().user(input.getUser()).game(g).build();
+
+    if (game.getPlayers() == 2) {
+      return new GameLogicException(SocketRequestType.Game_Full);
+    } else if (myGame.getName().equals(game.getName())) {
+      if (Optional.ofNullable(myGame.getPassword()).isPresent()) {
+        if (myGame.getPassword().equals(game.getPassword())) {
+          game.setPlayers(game.getPlayers() + 1);
+        } else {
+          return new GameLogicException(SocketRequestType.Wrong_Password);
+        }
+      } else game.setPlayers(game.getPlayers() + 1);
+    } else {
+      throw new RequestFailedException(HttpStatus.CONFLICT, "Wrong game name.");
+    }
+
+    Participant p = Participant.builder().user(input.getUser()).game(game).build();
     participantsService.create(p);
 
-    List<Participant> pp = participantsService.getParticipantsByGame(g.getId());
-    g.setPlayers(pp.size());
-    return gameRepository.saveAndFlush(g);
+    List<Participant> pp = participantsService.getParticipantsByGame(game.getId());
+    game.setPlayers(pp.size());
+    return gameRepository.saveAndFlush(game);
   }
 
   @Override
@@ -198,7 +197,7 @@ public class GameServiceImpl extends BaseService implements GameService {
     Participant participants =
         participantsRepository.findByUserIdAndGameIdAndInGameTrue(
             userAnswer.getUser().getId(), userAnswer.getGame().getId());
-    if (userAnswer.getIsRight()) participants.updateScore(50);
+    if (userAnswer.getIsRight()) participants.updateScore(20);
 
     UserAnswer u = userAnswerRepository.saveAndFlush(userAnswer);
     participants = participantsRepository.saveAndFlush(participants);
@@ -211,12 +210,35 @@ public class GameServiceImpl extends BaseService implements GameService {
   public void applyScore(Participant participant) {
     UserStatistics userStatistics = participant.getUser().getUserStatistics();
     userStatisticsService.updateStatistic(
-        userStatistics.getId(), participant, participant.isHasWon());
+        userStatistics.getId(), participant, participant.getHasWon());
   }
 
   @Override
   public boolean isNameInUse(String name) {
     Optional<Game> game = gameRepository.findByNameAndActiveTrue(name);
     return game.isPresent();
+  }
+
+  @Override
+  @Transactional
+  public List<Participant> updateWinner(List<Participant> participants) {
+
+    if (participants.get(0).getUserScore() > participants.get(1).getUserScore()) {
+      participants.get(0).setHasWon(true);
+      participants.get(1).setHasWon(false);
+    } else if (participants.get(0).getUserScore() < participants.get(1).getUserScore()) {
+      participants.get(1).setHasWon(true);
+      participants.get(0).setHasWon(false);
+    } else {
+      if (participants.get(0).getFinishedAt().isBefore(participants.get(1).getFinishedAt())) {
+        participants.get(0).setHasWon(true);
+        participants.get(1).setHasWon(false);
+      } else {
+        participants.get(1).setHasWon(true);
+        participants.get(0).setHasWon(false);
+      }
+    }
+
+    return participantsRepository.saveAllAndFlush(participants);
   }
 }

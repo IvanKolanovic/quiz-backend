@@ -28,4 +28,8 @@ public class Rank {
   @JsonIgnore
   @OneToMany(mappedBy = "rank", fetch = FetchType.LAZY)
   private List<UserStatistics> userStatistics;
+
+  public Rank(Long id) {
+    this.id = id;
+  }
 }

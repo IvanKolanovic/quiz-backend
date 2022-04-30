@@ -1,6 +1,7 @@
 package com.zaheer.quizbackend.services;
 
 import com.zaheer.quizbackend.models.db.Participant;
+import com.zaheer.quizbackend.models.db.Rank;
 import com.zaheer.quizbackend.models.db.UserStatistics;
 import com.zaheer.quizbackend.repos.RankRepository;
 import com.zaheer.quizbackend.repos.UserStatisticsRepository;
@@ -70,7 +71,31 @@ public class UserStatisticsServiceImpl extends BaseService implements UserStatis
                   statistic.setTotalGames(statistic.getTotalGames() + 1);
                   statistic.setPointAverage(
                       statistic.getTotalPoints() / (double) statistic.getTotalGames());
-                  //    statistic.setRank(input.getRank());
+
+                  if (statistic.getTotalPoints() < 1000) statistic.setRank(new Rank(1L));
+                  else if (statistic.getTotalPoints() > 7000) statistic.setRank(new Rank(7L));
+                  else
+                    switch ((statistic.getTotalPoints() / 1000)) {
+                      case 1:
+                        statistic.setRank(new Rank(2L));
+                        break;
+                      case 2:
+                        statistic.setRank(new Rank(3L));
+                        break;
+                      case 3:
+                        statistic.setRank(new Rank(4L));
+                        break;
+                      case 4:
+                        statistic.setRank(new Rank(5L));
+                        break;
+                      case 5:
+                        statistic.setRank(new Rank(6L));
+                        break;
+                      case 6:
+                      case 7:
+                        statistic.setRank(new Rank(7L));
+                        break;
+                    }
 
                   return statistic;
                 })

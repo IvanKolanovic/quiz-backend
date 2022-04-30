@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -24,6 +25,7 @@ public class ParticipantsServiceImpl extends BaseService implements Participants
   public Participant create(Participant participants) {
     participants.setUserScore(0);
     participants.setInGame(false);
+    participants.setHasWon(null);
     return participantsRepository.saveAndFlush(participants);
   }
 
@@ -40,6 +42,7 @@ public class ParticipantsServiceImpl extends BaseService implements Participants
   @Override
   @Transactional(propagation = Propagation.SUPPORTS, isolation = Isolation.SERIALIZABLE)
   public Participant updateInGame(Participant participants, Boolean bool) {
+    participants.setFinishedAt(LocalDateTime.now());
     participants.setInGame(bool);
     return participantsRepository.save(participants);
   }

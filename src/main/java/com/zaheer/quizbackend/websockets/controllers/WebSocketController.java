@@ -87,7 +87,7 @@ public class WebSocketController {
   @MessageMapping("/finished-game")
   public void finishedGame(@Payload UserGame payload) {
     WebsocketPayload<List<Participant>> newPayload =
-        webSocketService.finishedGame2(payload.getGame().getId(), payload.getUser().getId());
+        webSocketService.finishedGame(payload.getGame().getId(), payload.getUser().getId());
     if (newPayload == null) return;
     newPayload
         .getUsers()

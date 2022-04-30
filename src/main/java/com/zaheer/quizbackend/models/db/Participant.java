@@ -3,6 +3,7 @@ package com.zaheer.quizbackend.models.db;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -11,7 +12,11 @@ import javax.persistence.*;
 @Builder
 @Entity
 @Table(name = "participants")
+@ToString
 public class Participant {
+
+  @Column(name = "has_won")
+  Boolean hasWon;
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,7 +36,8 @@ public class Participant {
   @Column(name = "in_game")
   private Boolean inGame;
 
-  @Transient boolean hasWon;
+  @Column(name = "finished_at")
+  private LocalDateTime finishedAt;
 
   public void updateScore(int score) {
     this.userScore = this.userScore + score;

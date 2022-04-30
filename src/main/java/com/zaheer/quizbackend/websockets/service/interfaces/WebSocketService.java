@@ -27,7 +27,7 @@ public interface WebSocketService {
   WebsocketPayload<EvaluatedAnswer> evaluateAnswer(UserAnswer userAnswer);
 
   @Transactional(isolation = Isolation.SERIALIZABLE)
-  WebsocketPayload<List<Participant>> finishedGame2(Long gameId, Long userId);
+  WebsocketPayload<List<Participant>> finishedGame(Long gameId, Long userId);
 
   @Transactional
   WebsocketPayload<Participant> leaveLiveGame(UserGame payload);

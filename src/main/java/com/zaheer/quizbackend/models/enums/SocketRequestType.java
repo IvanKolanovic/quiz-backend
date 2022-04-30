@@ -12,6 +12,7 @@ public enum SocketRequestType {
   Game_Questions,
   Evaluate_Answer,
   Finished_Game,
+  Wrong_Password,
+  Game_Full,
   Start_Game;
-
 }
