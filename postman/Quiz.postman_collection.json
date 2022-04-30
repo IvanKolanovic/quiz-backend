@@ -97,7 +97,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"id\" : \"2\",\r\n    \"oldPassword\": \"test\",\r\n    \"newPassword\": \"test2\"\r\n}",
+							"raw": "{\r\n    \"id\" : \"2\",\r\n    \"oldPassword\": \"test2\",\r\n    \"newPassword\": \"test\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -337,9 +337,6 @@
 				{
 					"name": "PUT Ban user",
 					"request": {
-						"auth": {
-							"type": "noauth"
-						},
 						"method": "PUT",
 						"header": [
 							{
@@ -354,13 +351,14 @@
 							}
 						],
 						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "adminID",
+									"value": "1",
+									"type": "text"
 								}
-							}
+							]
 						},
 						"url": {
 							"raw": "{{url}}/user/ban/2",
