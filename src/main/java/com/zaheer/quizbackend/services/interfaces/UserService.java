@@ -33,4 +33,8 @@ public interface UserService {
     boolean isUsernameInUse(String name);
 
     void sendPasswordResetLinkToUser(Long userID);
+
+    User verifyTokenAndReturnEmail(String token);
+
+    void setNewPassword(UserDto userDto);
 }

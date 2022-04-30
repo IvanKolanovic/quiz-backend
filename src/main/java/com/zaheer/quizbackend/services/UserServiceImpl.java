@@ -13,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -173,15 +174,12 @@ public class UserServiceImpl extends BaseService implements UserService {
             throw new RequestFailedException(CONFLICT, "You must provide an old password.");
         }
 
-        User authorUser = userRepository.findByEmailAndActiveTrue(currentUserService.getLoggedInUserEmail())
-                .orElseThrow(resourceNotFound("User with username " + currentUserService.getLoggedInUserEmail() + " does not exist."));
-
         User updatedUser =
                 userRepository
                         .findUserById(userDto.getId())
                         .orElseThrow(resourceNotFound("User with id " + userDto.getId() + " does not exist."));
 
-        if (!authorUser.getRoles().equals("ROLE_ADMIN")) {
+        if (!currentUserService.isLoggedInUserAdmin()) {
             if (!passwordEncoder.matches(userDto.getOldPassword(), updatedUser.getPassword())) {
                 throw new RequestFailedException(CONFLICT, "Old password is incorrect.");
             }
@@ -256,5 +254,41 @@ public class UserServiceImpl extends BaseService implements UserService {
         PasswordToken passwordToken = new PasswordToken(token, user);
         passwordTokenRepository.save(passwordToken);
         return passwordToken;
+    }
+
+    @Override
+    public User verifyTokenAndReturnEmail(final String token) {
+        PasswordToken passwordToken = passwordTokenRepository.findByToken(token)
+                .orElseThrow(resourceNotFound("Token does not exist"));
+
+        verifyToken(passwordToken);
+        return User.builder().email(passwordToken.getUser().getEmail()).build();
+    }
+
+    private void verifyToken(final PasswordToken passwordToken) {
+        if (passwordToken.getExpiryDate().isBefore(LocalDateTime.now())) {
+            throw new RequestFailedException(CONFLICT, "Token has expired", "tokenExpired");
+        }
+
+        if(!passwordToken.isActive()) {
+            throw new RequestFailedException(CONFLICT, "Token has already been used");
+        }
+    }
+
+    @Override
+    public void setNewPassword(final UserDto userDto) {
+        final List<PasswordToken> passwordTokens = passwordTokenRepository
+                .findByUser_IdAndActiveIsTrueAndExpiryDateAfter(userDto.getId(), LocalDateTime.now());
+
+        if (!passwordTokens.isEmpty()) {
+            updateUserPassword(userDto);
+            passwordTokens.forEach(token -> {
+                token.setActive(false);
+                passwordTokenRepository.save(token);
+            });
+        }
+        else {
+            throw new RequestFailedException(CONFLICT, "Token does not exist", "tokenNotExist");
+        }
     }
 }

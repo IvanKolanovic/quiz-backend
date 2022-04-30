@@ -11,5 +11,5 @@ public interface PasswordTokenRepository extends JpaRepository<PasswordToken, Lo
 
     Optional<PasswordToken> findByToken(String token);
 
-    List<PasswordToken> findByUser_UsernameAndActiveIsTrueAndExpiryDateAfter(String username, LocalDateTime today);
+    List<PasswordToken> findByUser_IdAndActiveIsTrueAndExpiryDateAfter(Long id, LocalDateTime today);
 }

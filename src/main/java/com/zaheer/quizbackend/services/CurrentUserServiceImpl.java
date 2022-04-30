@@ -25,7 +25,7 @@ public class CurrentUserServiceImpl extends BaseService implements CurrentUserSe
     public boolean isLoggedInUserAdmin() {
         User loggedInUser = userRepository.findByEmailAndActiveTrue(getLoggedInUserEmail())
                 .orElseThrow(resourceNotFound("User does not exist."));
-        return loggedInUser.getRoles().equals("ROLE_ADMIN");
+        return loggedInUser.getRoles().equals("ROLE_ADMIN") || loggedInUser.getRoles().equals("ROLE_SUPER_ADMIN");
     }
 
 
