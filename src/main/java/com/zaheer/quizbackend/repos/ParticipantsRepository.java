@@ -1,16 +1,17 @@
 package com.zaheer.quizbackend.repos;
 
-import com.zaheer.quizbackend.models.db.Participants;
+import com.zaheer.quizbackend.models.db.Participant;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-public interface ParticipantsRepository extends JpaRepository<Participants, Long> {
-  List<Participants> findAllByGameIdAndInGameTrue(Long gameId);
+public interface ParticipantsRepository extends JpaRepository<Participant, Long> {
+  List<Participant> findAllByGameIdAndInGameTrue(Long gameId);
 
-  List<Participants> findAllByGameId(Long gameId);
+  List<Participant> findAllByGameId(Long gameId);
 
-  Participants findByUserIdAndGameId(Long id,Long gameId);
+  Participant findByUserIdAndGameId(Long id, Long gameId);
 
-  Participants findByUserIdAndGameIdAndInGameTrue(Long id,Long gameId);
+  Participant findByUserIdAndGameIdAndInGameTrue(Long id, Long gameId);
 }

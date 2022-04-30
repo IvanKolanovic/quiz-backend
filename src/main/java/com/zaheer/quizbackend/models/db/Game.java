@@ -52,9 +52,9 @@ public class Game {
 
   @JsonIgnore
   @OneToMany(mappedBy = "game")
-  private List<Participants> participants = List.of();
+  private List<Participant> participants = List.of();
 
   public List<User> getUsers() {
-    return participants.stream().map(Participants::getUser).collect(Collectors.toList());
+    return participants.stream().map(Participant::getUser).collect(Collectors.toList());
   }
 }

@@ -19,13 +19,13 @@ public interface GameService {
   Game joinGame(UserGame payload);
 
   @Transactional
-  WebsocketPayload<List<Participants>> startGame(Game game, List<Participants> participants);
+  WebsocketPayload<List<Participant>> startGame(Game game, List<Participant> participants);
 
   @Transactional
   void checkAndUpdateGameStatus(Game input);
 
   @Transactional
-  Participants leaveLiveGameRoom(Participants participant, Game game);
+  Participant leaveLiveGameRoom(Participant participant, Game game);
 
   @Transactional
   void prepareQuestions(Game payload);
@@ -40,7 +40,7 @@ public interface GameService {
   EvaluatedAnswer evaluateUserAnswer(UserAnswer userAnswer);
 
   @Transactional
-  void applyScore(Participants participant);
+  void applyScore(Participant participant);
 
   boolean isNameInUse(String name);
 }

@@ -1,11 +1,13 @@
 package com.zaheer.quizbackend.services;
 
-import com.zaheer.quizbackend.models.db.Participants;
+import com.zaheer.quizbackend.models.db.Participant;
 import com.zaheer.quizbackend.repos.ParticipantsRepository;
 import com.zaheer.quizbackend.services.interfaces.ParticipantsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -19,38 +21,37 @@ public class ParticipantsServiceImpl extends BaseService implements Participants
 
   @Override
   @Transactional
-  public Participants create(Participants participants) {
+  public Participant create(Participant participants) {
     participants.setUserScore(0);
     participants.setInGame(false);
     return participantsRepository.saveAndFlush(participants);
   }
 
   @Override
-  public List<Participants> getParticipants() {
+  public List<Participant> getParticipants() {
     return participantsRepository.findAll();
   }
 
   @Override
-  public Participants getParticipantById(Long id) {
-    return participantsRepository
-        .findById(id)
-        .orElseThrow(resourceNotFound("Participant with id: " + id + " was not found."));
+  public Participant getParticipant(Long gameId, Long userId) {
+    return participantsRepository.findByUserIdAndGameId(userId, gameId);
   }
 
   @Override
-  @Transactional
-  public Participants updateInGame(Participants participants, Boolean bool) {
+  @Transactional(propagation = Propagation.SUPPORTS, isolation = Isolation.SERIALIZABLE)
+  public Participant updateInGame(Participant participants, Boolean bool) {
     participants.setInGame(bool);
-    return participantsRepository.saveAndFlush(participants);
+    return participantsRepository.save(participants);
   }
 
   @Override
-  public List<Participants> getParticipantsByInGame(Long gameId) {
+  @Transactional(propagation = Propagation.SUPPORTS)
+  public List<Participant> getParticipantsByInGame(Long gameId) {
     return participantsRepository.findAllByGameIdAndInGameTrue(gameId);
   }
 
   @Override
-  public List<Participants> getParticipantsByGame(Long gameId) {
+  public List<Participant> getParticipantsByGame(Long gameId) {
     return participantsRepository.findAllByGameId(gameId);
   }
 }

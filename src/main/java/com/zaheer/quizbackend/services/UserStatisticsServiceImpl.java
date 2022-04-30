@@ -1,6 +1,6 @@
 package com.zaheer.quizbackend.services;
 
-import com.zaheer.quizbackend.models.db.Participants;
+import com.zaheer.quizbackend.models.db.Participant;
 import com.zaheer.quizbackend.models.db.UserStatistics;
 import com.zaheer.quizbackend.repos.RankRepository;
 import com.zaheer.quizbackend.repos.UserStatisticsRepository;
@@ -58,7 +58,7 @@ public class UserStatisticsServiceImpl extends BaseService implements UserStatis
 
   @Override
   @Transactional
-  public UserStatistics updateStatistic(Long id, Participants input, boolean hasWon) {
+  public UserStatistics updateStatistic(Long id, Participant input, boolean hasWon) {
 
     return userStatisticsRepository.saveAndFlush(
         userStatisticsRepository
@@ -69,8 +69,8 @@ public class UserStatisticsServiceImpl extends BaseService implements UserStatis
                   if (hasWon) statistic.setGamesWon(statistic.getGamesWon() + 1);
                   statistic.setTotalGames(statistic.getTotalGames() + 1);
                   statistic.setPointAverage(
-                          statistic.getTotalPoints() / (double) statistic.getTotalGames());
-              //    statistic.setRank(input.getRank());
+                      statistic.getTotalPoints() / (double) statistic.getTotalGames());
+                  //    statistic.setRank(input.getRank());
 
                   return statistic;
                 })

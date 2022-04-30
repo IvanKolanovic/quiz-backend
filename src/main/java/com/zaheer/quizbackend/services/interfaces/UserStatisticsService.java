@@ -1,6 +1,6 @@
 package com.zaheer.quizbackend.services.interfaces;
 
-import com.zaheer.quizbackend.models.db.Participants;
+import com.zaheer.quizbackend.models.db.Participant;
 import com.zaheer.quizbackend.models.db.UserStatistics;
 
 import java.util.List;
@@ -14,5 +14,5 @@ public interface UserStatisticsService {
 
   List<UserStatistics> getAllStatistics();
 
-  UserStatistics updateStatistic(Long id, Participants input, boolean hasWon);
+  UserStatistics updateStatistic(Long id, Participant input, boolean hasWon);
 }

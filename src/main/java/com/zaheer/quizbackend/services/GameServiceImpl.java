@@ -88,18 +88,18 @@ public class GameServiceImpl extends BaseService implements GameService {
                   return game;
                 })
             .orElseThrow(resourceNotFound("Game with id: " + myGame.getId() + " was not found."));
-    Participants p = Participants.builder().user(input.getUser()).game(g).build();
+    Participant p = Participant.builder().user(input.getUser()).game(g).build();
     participantsService.create(p);
 
-    List<Participants> pp = participantsService.getParticipantsByGame(g.getId());
+    List<Participant> pp = participantsService.getParticipantsByGame(g.getId());
     g.setPlayers(pp.size());
     return gameRepository.saveAndFlush(g);
   }
 
   @Override
   @Transactional
-  public WebsocketPayload<List<Participants>> startGame(
-      Game game, List<Participants> participants) {
+  public WebsocketPayload<List<Participant>> startGame(
+      Game game, List<Participant> participants) {
     game.setStarted(true);
     participants =
         participants.stream()
@@ -107,8 +107,8 @@ public class GameServiceImpl extends BaseService implements GameService {
             .collect(Collectors.toList());
     game.setPlayers(participants.size());
     gameRepository.saveAndFlush(game);
-    return WebsocketPayload.<List<Participants>>builder()
-        .users(participants.stream().map(Participants::getUser).collect(Collectors.toList()))
+    return WebsocketPayload.<List<Participant>>builder()
+        .users(participants.stream().map(Participant::getUser).collect(Collectors.toList()))
         .type(SocketRequestType.Start_Game)
         .time(LocalDateTime.now())
         .content(participants)
@@ -126,7 +126,7 @@ public class GameServiceImpl extends BaseService implements GameService {
 
   @Override
   @Transactional
-  public Participants leaveLiveGameRoom(Participants participant, Game game) {
+  public Participant leaveLiveGameRoom(Participant participant, Game game) {
     participant.setUserScore(0);
     participant.setInGame(false);
     game.setPlayers(game.getPlayers() - 1);
@@ -196,7 +196,7 @@ public class GameServiceImpl extends BaseService implements GameService {
     userAnswer.setAnswerTime(LocalDateTime.now());
     userAnswer.setIsRight(userAnswer.getChoice().getIsRight());
 
-    Participants participants =
+    Participant participants =
         participantsRepository.findByUserIdAndGameIdAndInGameTrue(
             userAnswer.getUser().getId(), userAnswer.getGame().getId());
     if (userAnswer.getIsRight()) participants.updateScore(50);
@@ -209,7 +209,7 @@ public class GameServiceImpl extends BaseService implements GameService {
 
   @Override
   @Transactional
-  public void applyScore(Participants participant) {
+  public void applyScore(Participant participant) {
     UserStatistics userStatistics = participant.getUser().getUserStatistics();
     userStatisticsService.updateStatistic(userStatistics.getId(), participant, participant.isHasWon());
   }

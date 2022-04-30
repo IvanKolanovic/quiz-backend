@@ -1,22 +1,22 @@
 package com.zaheer.quizbackend.services.interfaces;
 
-import com.zaheer.quizbackend.models.db.Participants;
+import com.zaheer.quizbackend.models.db.Participant;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 public interface ParticipantsService {
   @Transactional
-  Participants create(Participants participants);
+  Participant create(Participant participants);
 
-  List<Participants> getParticipants();
+  List<Participant> getParticipants();
 
-  Participants getParticipantById(Long id);
+  Participant getParticipant(Long gameId, Long userId);
 
   @Transactional
-  Participants updateInGame(Participants participants, Boolean bool);
+  Participant updateInGame(Participant participants, Boolean bool);
 
-  List<Participants> getParticipantsByInGame(Long gameId);
+  List<Participant> getParticipantsByInGame(Long gameId);
 
-  List<Participants> getParticipantsByGame(Long gameId);
+  List<Participant> getParticipantsByGame(Long gameId);
 }

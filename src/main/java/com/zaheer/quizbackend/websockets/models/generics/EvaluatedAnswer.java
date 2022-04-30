@@ -1,6 +1,6 @@
 package com.zaheer.quizbackend.websockets.models.generics;
 
-import com.zaheer.quizbackend.models.db.Participants;
+import com.zaheer.quizbackend.models.db.Participant;
 import com.zaheer.quizbackend.models.db.UserAnswer;
 import lombok.*;
 
@@ -12,6 +12,6 @@ import lombok.*;
 @ToString
 public class EvaluatedAnswer {
 
-  private Participants user;
+  private Participant user;
   private UserAnswer userAnswer;
 }

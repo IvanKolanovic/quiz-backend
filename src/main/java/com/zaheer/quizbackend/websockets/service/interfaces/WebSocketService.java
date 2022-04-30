@@ -3,8 +3,8 @@ package com.zaheer.quizbackend.websockets.service.interfaces;
 import com.zaheer.quizbackend.models.db.*;
 import com.zaheer.quizbackend.websockets.models.WebsocketPayload;
 import com.zaheer.quizbackend.websockets.models.generics.EvaluatedAnswer;
-import com.zaheer.quizbackend.websockets.models.generics.GameQuestion;
 import com.zaheer.quizbackend.websockets.models.generics.UserGame;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -18,7 +18,7 @@ public interface WebSocketService {
   WebsocketPayload<Game> joinGame(UserGame game);
 
   @Transactional
-  WebsocketPayload<List<Participants>> startGame(Game payload);
+  WebsocketPayload<List<Participant>> startGame(Game payload);
 
   @Transactional
   WebsocketPayload<List<Question>> prepareQuestions(Game game);
@@ -26,9 +26,9 @@ public interface WebSocketService {
   @Transactional
   WebsocketPayload<EvaluatedAnswer> evaluateAnswer(UserAnswer userAnswer);
 
-  @Transactional
-  WebsocketPayload<List<Participants>> finishedGame(UserGame userGame);
+  @Transactional(isolation = Isolation.SERIALIZABLE)
+  WebsocketPayload<List<Participant>> finishedGame2(Long gameId, Long userId);
 
   @Transactional
-  WebsocketPayload<Participants> leaveLiveGame(UserGame payload);
+  WebsocketPayload<Participant> leaveLiveGame(UserGame payload);
 }

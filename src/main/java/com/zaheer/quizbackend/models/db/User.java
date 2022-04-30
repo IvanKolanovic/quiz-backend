@@ -54,6 +54,6 @@ public class User {
   private List<UserAnswer> userAnswers = List.of();
 
   @JsonIgnore
-  @OneToMany(mappedBy = "user")
-  private List<Participants> participants = List.of();
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+  private List<Participant> participants = List.of();
 }
