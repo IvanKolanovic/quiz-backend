@@ -13,10 +13,10 @@ update user
 set username = 'admin'
 where id = 1;
 update user
-set username = 'sluggm'
+set username = 'mili'
 where id = 2;
 update user
-set username = 'torcida'
+set username = 'sluggm'
 where id = 3;
 
 

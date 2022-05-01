@@ -37,7 +37,7 @@ INSERT INTO country(name,capital,continent,description,name_abbr) VALUES ('China
 INSERT INTO country(name,capital,continent,description,name_abbr) VALUES ('Colombia','Bogota','America','1,427,647,786','CO');
 INSERT INTO country(name,capital,continent,description,name_abbr) VALUES ('Comoros','Moroni','Africa','49,661,048','KM');
 INSERT INTO country(name,capital,continent,description,name_abbr) VALUES ('Costa Rica','San José','America','4,999,441','CR');
-INSERT INTO country(name,capital,continent,description,name_abbr) VALUES ('Croatia','Zagreb','Europe','4,156,405','HR');
+INSERT INTO country(name,capital,continent,description,name_abbr) VALUES ('Croatia','Zagreb','Europe','4,059,162','HR');
 INSERT INTO country(name,capital,continent,description,name_abbr) VALUES ('Cuba','Havana','America','11,338,134','CU');
 INSERT INTO country(name,capital,continent,description,name_abbr) VALUES ('Cyprus','Nicosia','Europe','1,170,125','CY');
 INSERT INTO country(name,capital,continent,description,name_abbr) VALUES ('Czech Republic','Prague','Europe','10,665,677','CZ');
@@ -89,7 +89,7 @@ INSERT INTO country(name,capital,continent,description,name_abbr) VALUES ('Kenya
 INSERT INTO country(name,capital,continent,description,name_abbr) VALUES ('Kiribati','Tarawa','Oceania','115,847','KI');
 INSERT INTO country(name,capital,continent,description,name_abbr) VALUES ('Korea, North','Pyongyang','Asia','4,137,312','KP');
 INSERT INTO country(name,capital,continent,description,name_abbr) VALUES ('Korea, South','Seoul','Asia','6,304,030','KR');
-INSERT INTO country(name,capital,continent,description,name_abbr) VALUES ('Kosovo','Pristina','Europe','7,061,507','XK');
+INSERT INTO country(name,capital,continent,description,name_abbr) VALUES ('Kosovo','Pristina','Europe','1,873,507','XK');
 INSERT INTO country(name,capital,continent,description,name_abbr) VALUES ('Kuwait','Kuwait City','Asia','1,928,459','KW');
 INSERT INTO country(name,capital,continent,description,name_abbr) VALUES ('Kyrgyzstan','Bishkek','Asia','6,859,408','KG');
 INSERT INTO country(name,capital,continent,description,name_abbr) VALUES ('Laos','Vientiane','Asia','2,108,328','LA');
@@ -153,7 +153,7 @@ INSERT INTO country(name,capital,continent,description,name_abbr) VALUES ('San M
 INSERT INTO country(name,capital,continent,description,name_abbr) VALUES ('São Tomé and Príncipe','São Tomé','Africa','211,028','ST');
 INSERT INTO country(name,capital,continent,description,name_abbr) VALUES ('Saudi Arabia','Riyadh','Asia','33,702,756','SA');
 INSERT INTO country(name,capital,continent,description,name_abbr) VALUES ('Senegal','Dakar','Africa','15,854,323','SN');
-INSERT INTO country(name,capital,continent,description,name_abbr) VALUES ('Serbia','Belgrade','Europe','8,802,754','RS');
+INSERT INTO country(name,capital,continent,description,name_abbr) VALUES ('Serbia','Belgrade','Europe','8,673,273','RS');
 INSERT INTO country(name,capital,continent,description,name_abbr) VALUES ('Seychelles','Victoria','Africa','97,096','SC');
 INSERT INTO country(name,capital,continent,description,name_abbr) VALUES ('Sierra Leone','Freetown','Africa','7,650,150','SL');
 INSERT INTO country(name,capital,continent,description,name_abbr) VALUES ('Singapore','Singapore','Asia','5,757,499','SG');
@@ -161,7 +161,7 @@ INSERT INTO country(name,capital,continent,description,name_abbr) VALUES ('Slova
 INSERT INTO country(name,capital,continent,description,name_abbr) VALUES ('Slovenia','Ljubljana','Europe','2,077,837','SI');
 INSERT INTO country(name,capital,continent,description,name_abbr) VALUES ('Solomon Islands','Honiara','Oceania','652,857','SB');
 INSERT INTO country(name,capital,continent,description,name_abbr) VALUES ('Somalia','Mogadishu','Africa','15,008,226','SO');
-INSERT INTO country(name,capital,continent,description,name_abbr) VALUES ('South Africa','Pretoria','Africa','57,792,518','SA');
+INSERT INTO country(name,capital,continent,description,name_abbr) VALUES ('South Africa','Pretoria','Africa','57,792,518','ZA');
 INSERT INTO country(name,capital,continent,description,name_abbr) VALUES ('South Sudan','Juba','Africa','10,975,927','SS');
 INSERT INTO country(name,capital,continent,description,name_abbr) VALUES ('Spain','Madrid','Europe','46,692,858','ES');
 INSERT INTO country(name,capital,continent,description,name_abbr) VALUES ('Sri Lanka','Sri Jayawardenapura Kotte','Asia','21,228,763','LK');

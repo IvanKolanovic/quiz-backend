@@ -31,9 +31,6 @@ public class EmailServiceImpl implements EmailService {
             message.setFrom(email.getSender());
         }
         message.setTo(email.getReceivers());
-        if (email.getBcc() != null) {
-            message.setBcc(email.getBcc());
-        }
         message.setSubject(email.getSubject());
         message.setText(email.getText(), true);
     }
