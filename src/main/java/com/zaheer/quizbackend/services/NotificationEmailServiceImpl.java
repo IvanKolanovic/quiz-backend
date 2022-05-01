@@ -26,7 +26,7 @@ public class NotificationEmailServiceImpl implements NotificationEmailService {
         String emailText = "<p>Dear " + user.getFirstName() + ", your password was successfully changed on " + LocalDate.now() + " : " + LocalDateTime.now() +
                 "<br" + "</p>" +
                 "<p>You can now login with your new password.</p>" +
-                "<a href='https://www.quiz.marko-juric.from.hr/auth/login'>Flaginator Login</a>" +
+                "<a href='https://quiz.marko-juric.from.hr/auth/login'>Flaginator Login</a>" +
                 "<p><b>~Your Flaginator Team</b></p>";
         Email email = Email.builder()
                 .sender("Flaginator")
@@ -47,7 +47,7 @@ public class NotificationEmailServiceImpl implements NotificationEmailService {
         String emailText = "<p>Dear " + user.getFirstName() + ", you have successfully created your account on Flaginator.</p>" +
                 "<p>You can now login with your email and the password you provided.</p>" +
                 "<p>Your email: " + user.getEmail() + "<br>" +
-                "<a href='https://www.quiz.marko-juric.from.hr/auth/login'>Flaginator Login</a>" +
+                "<a href='https://quiz.marko-juric.from.hr/auth/login'>Flaginator Login</a>" +
                 "<p><b>~Your Flaginator Team</b></p>";
         Email email = Email.builder()
                 .sender("Flaginator")
