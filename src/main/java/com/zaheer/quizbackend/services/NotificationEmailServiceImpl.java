@@ -23,7 +23,7 @@ public class NotificationEmailServiceImpl implements NotificationEmailService {
 
     @Override
     public void sendConfirmationEmailOnPasswordChange(User user) {
-        String emailText = "<p>Dear " + user.getFirstName() + ", your password was successfully changed on " + LocalDate.now() + " : " + LocalDateTime.now() +
+        String emailText = "<p>Dear " + user.getFirstName() + ", your password was successfully changed on " + LocalDate.now() +
                 "<br" + "</p>" +
                 "<p>You can now login with your new password.</p>" +
                 "<a href='https://quiz.marko-juric.from.hr/auth/login'>Flaginator Login</a>" +
@@ -46,7 +46,7 @@ public class NotificationEmailServiceImpl implements NotificationEmailService {
     public void sendConfirmationEmailOnRegistration(User user) {
         String emailText = "<p>Dear " + user.getFirstName() + ", you have successfully created your account on Flaginator.</p>" +
                 "<p>You can now login with your email and the password you provided.</p>" +
-                "<p>Your email: " + user.getEmail() + "<br>" +
+                "<p>Your email: " + user.getEmail() + "</p>" +
                 "<a href='https://quiz.marko-juric.from.hr/auth/login'>Flaginator Login</a>" +
                 "<p><b>~Your Flaginator Team</b></p>";
         Email email = Email.builder()
