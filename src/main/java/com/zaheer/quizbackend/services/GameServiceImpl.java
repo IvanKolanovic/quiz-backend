@@ -90,7 +90,7 @@ public class GameServiceImpl extends BaseService implements GameService {
     Participant p = Participant.builder().user(input.getUser()).game(game).build();
     participantsService.create(p);
 
-    List<Participant> pp = participantsService.getParticipantsByGame(game.getId());
+    List<Participant> pp = participantsService.getParticipantsByGameAndHasLeftFalse(game.getId());
     game.setPlayers(pp.size());
     return gameRepository.saveAndFlush(game);
   }
@@ -99,6 +99,7 @@ public class GameServiceImpl extends BaseService implements GameService {
   @Transactional
   public WebsocketPayload<List<Participant>> startGame(Game game, List<Participant> participants) {
     game.setStarted(true);
+    game.setStartedAt(LocalDateTime.now());
     participants =
         participants.stream()
             .map(participant -> participantsService.updateInGame(participant, true))
@@ -124,15 +125,26 @@ public class GameServiceImpl extends BaseService implements GameService {
 
   @Override
   @Transactional
-  public Participant leaveLiveGameRoom(Participant participant, Game game) {
+  public Participant leaveLiveGame(Participant participant, Game game) {
     participant.setUserScore(0);
     participant.setInGame(false);
+    participant.setHasLeft(true);
     game.setPlayers(game.getPlayers() - 1);
 
     gameRepository.saveAndFlush(game);
     participantsRepository.saveAndFlush(participant);
+    applyScore(participant);
     checkAndUpdateGameStatus(game);
     return participant;
+  }
+
+  @Override
+  @Transactional
+  public void leaveGameRoom(Participant participant, Game game) {
+    game.setPlayers(game.getPlayers() - 1);
+    participantsRepository.delete(participant);
+    if (game.getPlayers() == 0) gameRepository.delete(game);
+    else gameRepository.saveAndFlush(game);
   }
 
   @Override
@@ -223,19 +235,33 @@ public class GameServiceImpl extends BaseService implements GameService {
   @Transactional
   public List<Participant> updateWinner(List<Participant> participants) {
 
+    if (participants.size() == 1) {
+      participants.get(0).setHasWon(true);
+      participants.get(0).setInGame(false);
+      return participantsRepository.saveAllAndFlush(participants);
+    }
+
     if (participants.get(0).getUserScore() > participants.get(1).getUserScore()) {
       participants.get(0).setHasWon(true);
       participants.get(1).setHasWon(false);
+      participants.get(0).setInGame(false);
+      participants.get(1).setInGame(false);
     } else if (participants.get(0).getUserScore() < participants.get(1).getUserScore()) {
       participants.get(1).setHasWon(true);
       participants.get(0).setHasWon(false);
+      participants.get(0).setInGame(false);
+      participants.get(1).setInGame(false);
     } else {
       if (participants.get(0).getFinishedAt().isBefore(participants.get(1).getFinishedAt())) {
         participants.get(0).setHasWon(true);
         participants.get(1).setHasWon(false);
+        participants.get(0).setInGame(false);
+        participants.get(1).setInGame(false);
       } else {
         participants.get(1).setHasWon(true);
         participants.get(0).setHasWon(false);
+        participants.get(0).setInGame(false);
+        participants.get(1).setInGame(false);
       }
     }
 

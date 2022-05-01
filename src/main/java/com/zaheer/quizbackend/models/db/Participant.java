@@ -36,6 +36,9 @@ public class Participant {
   @Column(name = "in_game")
   private Boolean inGame;
 
+  @Column(name = "has_left")
+  private Boolean hasLeft;
+
   @Column(name = "finished_at")
   private LocalDateTime finishedAt;
 

@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -53,7 +54,7 @@ public class WebSocketServiceImpl extends BaseService implements WebSocketServic
     if (obj instanceof GameLogicException) {
       GameLogicException ex = (GameLogicException) obj;
       List<User> users =
-          participantsService.getParticipantsByGame(input.getGame().getId()).stream()
+          participantsService.getParticipantsByGameAndHasLeftFalse(input.getGame().getId()).stream()
               .map(Participant::getUser)
               .collect(Collectors.toList());
       users.add(input.getUser());
@@ -68,7 +69,7 @@ public class WebSocketServiceImpl extends BaseService implements WebSocketServic
     Game game = (Game) obj;
     return WebsocketPayload.<Game>builder()
         .users(
-            participantsService.getParticipantsByGame(game.getId()).stream()
+            participantsService.getParticipantsByGameAndHasLeftFalse(game.getId()).stream()
                 .map(Participant::getUser)
                 .collect(Collectors.toList()))
         .type(SocketRequestType.Join_Game)
@@ -80,7 +81,8 @@ public class WebSocketServiceImpl extends BaseService implements WebSocketServic
   @Override
   @Transactional(isolation = Isolation.SERIALIZABLE)
   public WebsocketPayload<List<Participant>> startGame(Game game) {
-    List<Participant> participants = participantsService.getParticipantsByGame(game.getId());
+    List<Participant> participants =
+        participantsService.getParticipantsByGameAndHasLeftFalse(game.getId());
     if (participants.size() != 2) return null;
     return gameService.startGame(game, participants);
   }
@@ -130,16 +132,18 @@ public class WebSocketServiceImpl extends BaseService implements WebSocketServic
     Game game = gameService.get(gameId);
 
     participantsService.updateInGame(participant, false);
-    List<Participant> inGameParticipants =
-        participantsService.getParticipantsByInGame(game.getId());
+    List<Participant> participants =
+        participantsService.findAllByGameIdAndHasLeftFalseAndInGameTrue(gameId);
+
     // check if one player is still playing
-    if (inGameParticipants.size() != 0) {
+    if (participants.size() != 0) {
       return null;
     }
 
+    participants = participantsService.getParticipantsByGameAndHasLeftFalse(gameId);
+
     game.setActive(false);
-    game.setPlayers(inGameParticipants.size());
-    List<Participant> participants = participantsService.getParticipantsByGame(gameId);
+    game.setPlayers(participants.size());
     participants = gameService.updateWinner(participants);
 
     participants.forEach(gameService::applyScore);
@@ -153,13 +157,29 @@ public class WebSocketServiceImpl extends BaseService implements WebSocketServic
 
   @Override
   @Transactional(isolation = Isolation.SERIALIZABLE)
-  public WebsocketPayload<Participant> leaveLiveGame(UserGame payload) {
+  public WebsocketPayload<Participant> leave(UserGame payload) {
     Participant participant =
         participantsRepository.findByUserIdAndGameId(
             payload.getUser().getId(), payload.getGame().getId());
-    participant = gameService.leaveLiveGameRoom(participant, payload.getGame());
-    List<Participant> receivers =
-        participantsService.getParticipantsByInGame(payload.getGame().getId());
+
+    if (payload.getGame().getStarted() && payload.getGame().getActive())
+      participant = gameService.leaveLiveGame(participant, payload.getGame());
+    else if (payload.getGame().getActive())
+      gameService.leaveGameRoom(participant, payload.getGame());
+
+    List<Participant> receivers = new ArrayList<>();
+
+    if (payload.getGame().getStarted()) {
+      receivers = participantsService.getParticipantsByInGame(payload.getGame().getId());
+    } else {
+      receivers.add(participant);
+      return WebsocketPayload.<Participant>builder()
+          .users(receivers.stream().map(Participant::getUser).collect(Collectors.toList()))
+          .type(SocketRequestType.Left_Game)
+          .time(LocalDateTime.now())
+          .content(null)
+          .build();
+    }
 
     return WebsocketPayload.<Participant>builder()
         .users(receivers.stream().map(Participant::getUser).collect(Collectors.toList()))

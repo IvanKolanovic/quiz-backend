@@ -18,5 +18,7 @@ public interface ParticipantsService {
 
   List<Participant> getParticipantsByInGame(Long gameId);
 
-  List<Participant> getParticipantsByGame(Long gameId);
+  List<Participant> getParticipantsByGameAndHasLeftFalse(Long gameId);
+
+  List<Participant> findAllByGameIdAndHasLeftFalseAndInGameTrue(Long gameId);
 }

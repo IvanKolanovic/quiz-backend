@@ -25,7 +25,10 @@ public interface GameService {
   void checkAndUpdateGameStatus(Game input);
 
   @Transactional
-  Participant leaveLiveGameRoom(Participant participant, Game game);
+  Participant leaveLiveGame(Participant participant, Game game);
+
+  @Transactional
+  void leaveGameRoom(Participant participant, Game game);
 
   @Transactional
   void prepareQuestions(Game payload);

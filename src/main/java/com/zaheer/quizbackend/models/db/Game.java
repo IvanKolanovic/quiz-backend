@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,12 +43,15 @@ public class Game {
   @Column(name = "locked")
   private Boolean locked;
 
+  @Column(name = "started_at")
+  private LocalDateTime startedAt;
+
   @JsonIgnore
-  @OneToMany(mappedBy = "game",cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "game", cascade = CascadeType.ALL)
   private List<Question> questions = List.of();
 
   @JsonIgnore
-  @OneToMany(mappedBy = "game",cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "game", cascade = CascadeType.ALL)
   private List<UserAnswer> userAnswers = List.of();
 
   @JsonIgnore

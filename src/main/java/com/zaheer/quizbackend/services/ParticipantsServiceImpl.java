@@ -26,6 +26,7 @@ public class ParticipantsServiceImpl extends BaseService implements Participants
     participants.setUserScore(0);
     participants.setInGame(false);
     participants.setHasWon(null);
+    participants.setHasLeft(false);
     return participantsRepository.saveAndFlush(participants);
   }
 
@@ -44,6 +45,7 @@ public class ParticipantsServiceImpl extends BaseService implements Participants
   public Participant updateInGame(Participant participants, Boolean bool) {
     participants.setFinishedAt(LocalDateTime.now());
     participants.setInGame(bool);
+    participants.setHasLeft(false);
     return participantsRepository.save(participants);
   }
 
@@ -54,7 +56,12 @@ public class ParticipantsServiceImpl extends BaseService implements Participants
   }
 
   @Override
-  public List<Participant> getParticipantsByGame(Long gameId) {
-    return participantsRepository.findAllByGameId(gameId);
+  public List<Participant> getParticipantsByGameAndHasLeftFalse(Long gameId) {
+    return participantsRepository.findAllByGameIdAndHasLeftFalse(gameId);
+  }
+
+  @Override
+  public List<Participant> findAllByGameIdAndHasLeftFalseAndInGameTrue(Long gameId) {
+    return participantsRepository.findAllByGameIdAndHasLeftFalseAndInGameTrue(gameId);
   }
 }

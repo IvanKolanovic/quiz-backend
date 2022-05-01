@@ -60,7 +60,7 @@ public class WebSocketController {
 
   @MessageMapping("/leave-live-game")
   public void leaveLiveGame(@Payload UserGame payload) {
-    WebsocketPayload<Participant> newPayload = webSocketService.leaveLiveGame(payload);
+    WebsocketPayload<Participant> newPayload = webSocketService.leave(payload);
     newPayload
         .getUsers()
         .forEach(
