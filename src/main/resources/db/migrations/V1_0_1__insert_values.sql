@@ -30,12 +30,12 @@ VALUES (DEFAULT, DEFAULT, DEFAULT);
 
 -- Insert Users
 INSERT INTO user (email, password, roles, first_name, last_name, user_statistics_id)
-VALUES ('admin@rit.com', '$2a$10$.xaYSfiMMA1mWtZcNe9HjODlWtaOBoq6azpoEy445YFX8alxHPJJC', 'ROLE_ADMIN', 'Ivan',
-        'Kolanovic', 1);
+VALUES ('admin@rit.com', '$2a$10$.xaYSfiMMA1mWtZcNe9HjODlWtaOBoq6azpoEy445YFX8alxHPJJC', 'ROLE_ADMIN', 'Admin',
+        'Admin', 1);
 INSERT INTO user (email, password, roles, first_name, last_name, user_statistics_id)
-VALUES ('mili@rit.com', '$2a$10$.xaYSfiMMA1mWtZcNe9HjODlWtaOBoq6azpoEy445YFX8alxHPJJC', 'ROLE_USER', 'Marko',
+VALUES ('mm7026@rit.edu', '$2a$10$.xaYSfiMMA1mWtZcNe9HjODlWtaOBoq6azpoEy445YFX8alxHPJJC', 'ROLE_USER', 'Marko',
         'Milic Bucevic', 2);
 INSERT INTO user (email, password, roles, first_name, last_name, user_statistics_id)
-VALUES ('juric@rit.com', '$2a$10$.xaYSfiMMA1mWtZcNe9HjODlWtaOBoq6azpoEy445YFX8alxHPJJC', 'ROLE_USER', 'Marko',
+VALUES ('mj4997@rit.edu', '$2a$10$.xaYSfiMMA1mWtZcNe9HjODlWtaOBoq6azpoEy445YFX8alxHPJJC', 'ROLE_USER', 'Marko',
         'Juric', 3);
 

@@ -1,6 +1,5 @@
 package com.zaheer.quizbackend.controllers;
 
-import com.zaheer.quizbackend.dto.PasswordTokenDto;
 import com.zaheer.quizbackend.dto.UserDto;
 import com.zaheer.quizbackend.exceptions.RequestFailedException;
 import com.zaheer.quizbackend.models.db.User;
@@ -63,23 +62,5 @@ public class AuthenticationController {
   @PutMapping("/auth/updatePassword")
   public ResponseEntity<Object> updateUserPassword(@RequestBody UserDto userDto) {
     return ResponseEntity.ok(userService.updateUserPassword(userDto));
-  }
-
-  @PostMapping("/auth/reset-password")
-  public ResponseEntity<Object> resetPasswordWithToken(@RequestBody UserDto userDto) {
-    userService.sendPasswordResetLinkToUser(userDto.getId());
-    return ResponseEntity.ok().build();
-  }
-
-  @PostMapping("/auth/reset-password/verify-token")
-  public ResponseEntity<Object> verifyTokenAndReturnEmail(@RequestBody PasswordTokenDto passwordTokenDto) {
-    userService.verifyTokenAndReturnEmail(passwordTokenDto.getToken());
-    return ResponseEntity.ok().build();
-  }
-
-  @PostMapping("/auth/reset-password/set-password")
-  public ResponseEntity<Object> setNewPassword(@RequestBody UserDto userDto) {
-    userService.setNewPassword(userDto);
-    return ResponseEntity.ok().build();
   }
 }

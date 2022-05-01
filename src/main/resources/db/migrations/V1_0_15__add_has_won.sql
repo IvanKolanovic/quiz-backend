@@ -12,7 +12,7 @@ ALTER TABLE user_statistics
     add point_average FLOAT(10,2) unsigned NOT NULL DEFAULT 0;
 
 update rank
-set `name` = 'Challanger'
+set `name` = 'Challenger'
 where id = 7;
 
 

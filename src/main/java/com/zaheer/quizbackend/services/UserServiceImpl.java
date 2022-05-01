@@ -3,9 +3,7 @@ package com.zaheer.quizbackend.services;
 import com.zaheer.quizbackend.dto.UserDto;
 import com.zaheer.quizbackend.exceptions.RequestFailedException;
 import com.zaheer.quizbackend.exceptions.ResourceNotFoundException;
-import com.zaheer.quizbackend.models.db.PasswordToken;
 import com.zaheer.quizbackend.models.db.User;
-import com.zaheer.quizbackend.repos.PasswordTokenRepository;
 import com.zaheer.quizbackend.repos.UserRepository;
 import com.zaheer.quizbackend.services.interfaces.*;
 import lombok.RequiredArgsConstructor;
@@ -13,10 +11,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import static org.springframework.http.HttpStatus.CONFLICT;
 
@@ -29,9 +25,6 @@ public class UserServiceImpl extends BaseService implements UserService {
     private final UserStatisticsService userStatisticsService;
     private final CountryService countryService;
     private final CurrentUserService currentUserService;
-
-    private final PasswordTokenRepository passwordTokenRepository;
-
     private final NotificationEmailService notificationEmailService;
 
     @Override
@@ -239,59 +232,5 @@ public class UserServiceImpl extends BaseService implements UserService {
     public boolean isUsernameInUse(String name) {
         Optional<User> dbUser = userRepository.findByUsernameAndActiveTrue(name);
         return dbUser.isPresent();
-    }
-
-    @Override
-    public void sendPasswordResetLinkToUser(final Long userID) {
-        User user = getUser(userID);
-
-        if (user == null) {
-            throw new RequestFailedException(CONFLICT, "User with user id + " + userID + " not found.");
-        }
-
-        notificationEmailService.sendPasswordResetLinkToUser(createPasswordToken(user));
-    }
-
-    private PasswordToken createPasswordToken(User user) {
-        String token = UUID.randomUUID().toString();
-        PasswordToken passwordToken = new PasswordToken(token, user);
-        passwordTokenRepository.save(passwordToken);
-        return passwordToken;
-    }
-
-    @Override
-    public User verifyTokenAndReturnEmail(final String token) {
-        PasswordToken passwordToken = passwordTokenRepository.findByToken(token)
-                .orElseThrow(resourceNotFound("Token does not exist"));
-
-        verifyToken(passwordToken);
-        return User.builder().email(passwordToken.getUser().getEmail()).build();
-    }
-
-    private void verifyToken(final PasswordToken passwordToken) {
-        if (passwordToken.getExpiryDate().isBefore(LocalDateTime.now())) {
-            throw new RequestFailedException(CONFLICT, "Token has expired", "tokenExpired");
-        }
-
-        if(!passwordToken.isActive()) {
-            throw new RequestFailedException(CONFLICT, "Token has already been used");
-        }
-    }
-
-    @Override
-    public void setNewPassword(final UserDto userDto) {
-        final List<PasswordToken> passwordTokens = passwordTokenRepository
-                .findByUser_IdAndActiveIsTrueAndExpiryDateAfter(userDto.getId(), LocalDateTime.now());
-
-        if (!passwordTokens.isEmpty()) {
-            updateUserPassword(userDto);
-            passwordTokens.forEach(token -> {
-                token.setActive(false);
-                passwordTokenRepository.save(token);
-            });
-        }
-        else {
-            throw new RequestFailedException(CONFLICT, "Token does not exist", "tokenNotExist");
-        }
     }
 }
